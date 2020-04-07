@@ -38,8 +38,8 @@ const columnsSlice = createSlice({
       columnsAdapter.setAll(state, columns);
     },
     [createColumn.fulfilled]: (state, action) => {
-      console.log(action.payload);
-      columnsAdapter.addOne(state, action.payload.column);
+      const { column } = action.payload;
+      columnsAdapter.addOne(state, column);
     }
   }
 });

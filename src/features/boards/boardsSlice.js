@@ -51,13 +51,13 @@ const boardsSlice = createSlice({
       state.current = state.ids.find(id => state.entities[id].is_current);
     },
     [createBoard.fulfilled]: (state, action) => {
-      boardsAdapter.addOne(state, action.payload.board);
-      state.current = action.payload.board.uuid;
+      const { board } = action.payload;
+      boardsAdapter.addOne(state, board);
+      state.current = board.uuid;
     },
     "columns/create/fulfilled": (state, action) => {
-      state.entities[action.payload.uuid].columns.push(
-        action.payload.column.uuid
-      );
+      const { uuid: boardId, column } = action.payload;
+      state.entities[boardId].columns.push(column.uuid);
     }
   }
 });

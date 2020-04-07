@@ -41,9 +41,9 @@ const App = () => {
 
   const addBoard = () => {
     const board = {
-      uuid: "board3",
-      title: "Board Three",
-      slug: "board-two",
+      uuid: "board1",
+      title: "Board One",
+      slug: "board-one",
       color: "yellow",
       is_current: true,
       is_starred: false,
