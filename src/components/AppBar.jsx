@@ -45,8 +45,9 @@ const AppBar = () => {
                 fontWeight="700"
                 cursor="pointer"
                 value="test"
+                onChange={() => {}}
               >
-                <option>HELLO</option>
+                <option value="change">HELLO</option>
               </Select>
             </ListItem>
           </ButtonGroup>

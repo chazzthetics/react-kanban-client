@@ -10,11 +10,23 @@ const boardsAdapter = createEntityAdapter({
 });
 
 export const fetchBoards = createAsyncThunk(
-  "boards",
+  "boards/fetch",
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get("http://react-kanban.local/api/boards");
       return data;
+    } catch (ex) {
+      rejectWithValue(ex.response.data);
+    }
+  }
+);
+
+export const createBoard = createAsyncThunk(
+  "boards/create",
+  async (board, { rejectWithValue }) => {
+    try {
+      await axios.post("http://react-kanban.local/api/boards", board);
+      return { board };
     } catch (ex) {
       rejectWithValue(ex.response.data);
     }
@@ -37,6 +49,15 @@ const boardsSlice = createSlice({
       }));
       boardsAdapter.setAll(state, boards);
       state.current = state.ids.find(id => state.entities[id].is_current);
+    },
+    [createBoard.fulfilled]: (state, action) => {
+      boardsAdapter.addOne(state, action.payload.board);
+      state.current = action.payload.board.uuid;
+    },
+    "columns/create/fulfilled": (state, action) => {
+      state.entities[action.payload.uuid].columns.push(
+        action.payload.column.uuid
+      );
     }
   }
 });

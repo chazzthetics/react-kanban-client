@@ -10,18 +10,21 @@ const columnsAdapter = createEntityAdapter({
   selectId: column => column.uuid
 });
 
-//TODO: Delete
-// export const fetchColumns = createAsyncThunk(
-//   "columns",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const { data } = await axios.get("http://react-kanban.local/api/columns");
-//       return data;
-//     } catch (ex) {
-//       rejectWithValue(ex.response.data);
-//     }
-//   }
-// );
+export const createColumn = createAsyncThunk(
+  "columns/create",
+  async ({ column, uuid }, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `http://react-kanban.local/api/boards/${uuid}/columns`,
+        column
+      );
+
+      return { column, uuid };
+    } catch (ex) {
+      rejectWithValue(ex.response.data);
+    }
+  }
+);
 
 const columnsSlice = createSlice({
   name: "columns",
@@ -33,6 +36,10 @@ const columnsSlice = createSlice({
         board.columns.map(column => ({ ...column, is_editing: false }))
       );
       columnsAdapter.setAll(state, columns);
+    },
+    [createColumn.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      columnsAdapter.addOne(state, action.payload.column);
     }
   }
 });
