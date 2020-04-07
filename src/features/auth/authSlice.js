@@ -1,0 +1,44 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (
+    credentials = { email: "jdoe@test.com", password: "password" },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "http://react-kanban.local/api/auth/login",
+        credentials
+      );
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${data.access_token}`;
+      return data;
+    } catch (ex) {
+      rejectWithValue(ex.response.data);
+    }
+  }
+);
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    access_token: null,
+    isAuthenticated: false,
+    user: null,
+    status: "idle"
+  },
+  reducers: {},
+  extraReducers: {
+    [login.fulfilled]: (state, action) => {
+      state.isAuthenticated = true;
+      state.access_token = action.payload.access_token;
+      state.user = action.payload.user;
+    }
+  }
+});
+
+export default authSlice.reducer;
