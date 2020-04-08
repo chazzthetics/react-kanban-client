@@ -18,8 +18,7 @@ import {
   removeTask
 } from "../features/tasks/tasksSlice";
 import { nanoid } from "nanoid";
-// import AppBar from "../components/AppBar";
-import RawBar from "../components/RawBar";
+import AppBar from "../components/AppBar";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -98,8 +97,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {/* <AppBar /> */}
-      <RawBar />
+      <AppBar />
       <div>
         <button onClick={handleLogin}>Login</button>
         <button onClick={handleGetBoards}>Get Boards</button>

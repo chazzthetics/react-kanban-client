@@ -1,6 +1,10 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { boardsSelectors, boardChanged } from "../features/boards/boardsSlice";
+import {
+  boardsSelectors,
+  selectCurrentBoard,
+  changeBoard
+} from "../features/boards/boardsSlice";
 import {
   Box,
   Flex,
@@ -18,17 +22,16 @@ import { GoMarkGithub } from "react-icons/go";
 
 const AppBar = () => {
   const boards = useSelector(state => boardsSelectors.selectAll(state));
-  const { current } = useSelector(state => state.boards);
+  const current = useSelector(selectCurrentBoard);
 
   const dispatch = useDispatch();
   const handleSelectChange = useCallback(
     e => {
-      dispatch(boardChanged({ boardId: e.target.value }));
+      dispatch(changeBoard(e.target.value));
     },
     [dispatch]
   );
 
-  console.log("render from AppBar");
   return (
     <Box as="header" bg={"gray.400"} h="2.5rem" p={4}>
       <Flex as="nav" align="center" justify="space-between" h="100%">
@@ -116,4 +119,4 @@ const AppBar = () => {
   );
 };
 
-export default AppBar;
+export default memo(AppBar);

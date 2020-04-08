@@ -1,7 +1,8 @@
 import {
   createSlice,
   createEntityAdapter,
-  createAsyncThunk
+  createAsyncThunk,
+  createSelector
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -46,11 +47,21 @@ const boardsSlice = createSlice({
       const { board } = action.payload;
       boardsAdapter.addOne(state, board);
       state.current = board.uuid;
+      boardsAdapter.updateMany(
+        state,
+        state.ids
+          .filter(id => id !== board.uuid)
+          .map(id => (state.entities[id].is_current = false))
+      );
     },
     boardRemoved(state, action) {
       const { boardId } = action.payload;
       boardsAdapter.removeOne(state, boardId);
       state.current = state.ids[state.ids.length - 1];
+      boardsAdapter.updateOne(state, {
+        id: state.current,
+        changes: { is_current: true }
+      });
     }
   },
   extraReducers: {
@@ -93,10 +104,15 @@ export const boardsSelectors = boardsAdapter.getSelectors(
 export const { boardChanged, boardCreated, boardRemoved } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
+export const selectCurrentBoard = createSelector(
+  [state => state.boards.current],
+  current => current
+);
+
 export const changeBoard = boardId => async dispatch => {
   try {
     dispatch(boardChanged({ boardId }));
-    console.log(boardId);
+
     await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, null, {
       params: {
         current: true
