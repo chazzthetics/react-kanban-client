@@ -2,14 +2,21 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import {
-  fetchBoards,
+  hydrate,
   createBoard,
   boardsSelectors
 } from "../features/boards/boardsSlice";
 import {
   columnsSelectors,
+  removeColumn,
   createColumn
 } from "../features/columns/columnsSlice";
+import {
+  tasksSelectors,
+  createTask,
+  removeTask
+} from "../features/tasks/tasksSlice";
+import { nanoid } from "nanoid";
 import AppBar from "../components/AppBar";
 
 const App = () => {
@@ -19,7 +26,7 @@ const App = () => {
   };
 
   const handleGetBoards = () => {
-    dispatch(fetchBoards());
+    dispatch(hydrate());
   };
 
   const currentBoard = useSelector(state => state.boards.current);
@@ -27,21 +34,32 @@ const App = () => {
     boardsSelectors.selectById(state, currentBoard)
   )?.columns.length;
 
-  console.log(columnCount);
   const addColumn = () => {
     const column = {
-      uuid: "column1x",
+      uuid: nanoid(),
       title: "Column One",
       position: columnCount,
       is_locked: false,
-      is_editing: false
+      is_editing: false,
+      tasks: []
     };
-    dispatch(createColumn({ column, uuid: currentBoard }));
+    dispatch(createColumn({ column, boardId: currentBoard }));
+  };
+
+  const addTask = columnId => {
+    const task = {
+      uuid: nanoid(),
+      content: "Another task",
+      is_locked: false,
+      is_editing: false,
+      position: 1
+    };
+    dispatch(createTask({ task, columnId }));
   };
 
   const addBoard = () => {
     const board = {
-      uuid: "board1",
+      uuid: nanoid(),
       title: "Board One",
       slug: "board-one",
       color: "yellow",
@@ -53,8 +71,17 @@ const App = () => {
     dispatch(createBoard(board));
   };
 
+  const handleRemoveColumn = columnId => {
+    dispatch(removeColumn({ columnId, boardId: currentBoard }));
+  };
+
   const boards = useSelector(state => boardsSelectors.selectEntities(state));
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
+  const tasks = useSelector(state => tasksSelectors.selectEntities(state));
+
+  const handleDeleteTask = ({ taskId, columnId }) => {
+    dispatch(removeTask({ taskId, columnId }));
+  };
 
   return (
     <div className="App">
@@ -69,7 +96,25 @@ const App = () => {
       <h1>{boards[currentBoard]?.title}</h1>
       <div>
         {boards[currentBoard]?.columns.map(column => (
-          <li key={column}>{columns[column].title}</li>
+          <div key={column}>
+            <h1>{columns[column].title}</h1>
+            <button onClick={() => handleRemoveColumn(column)}>
+              Delete Column
+            </button>
+            {columns[column].tasks.map(task => (
+              <div key={task}>
+                <li>{tasks[task].content}</li>
+                <button
+                  onClick={() =>
+                    handleDeleteTask({ taskId: task, columnId: column })
+                  }
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+            <button onClick={() => addTask(column)}>Add Task</button>
+          </div>
         ))}
       </div>
     </div>
