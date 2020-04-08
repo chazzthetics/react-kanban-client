@@ -46,6 +46,7 @@ const boardsSlice = createSlice({
     boardCreated(state, action) {
       const { board } = action.payload;
       boardsAdapter.addOne(state, board);
+
       state.current = board.uuid;
       boardsAdapter.updateMany(
         state,
@@ -57,10 +58,18 @@ const boardsSlice = createSlice({
     boardRemoved(state, action) {
       const { boardId } = action.payload;
       boardsAdapter.removeOne(state, boardId);
+
       state.current = state.ids[state.ids.length - 1];
       boardsAdapter.updateOne(state, {
         id: state.current,
         changes: { is_current: true }
+      });
+    },
+    boardTitleUpdated(state, action) {
+      const { boardId, newTitle } = action.payload;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { title: newTitle, slug: slugify(newTitle) }
       });
     }
   },
@@ -101,12 +110,22 @@ const boardsSlice = createSlice({
 export const boardsSelectors = boardsAdapter.getSelectors(
   state => state.boards
 );
-export const { boardChanged, boardCreated, boardRemoved } = boardsSlice.actions;
+export const {
+  boardChanged,
+  boardCreated,
+  boardRemoved,
+  boardTitleUpdated
+} = boardsSlice.actions;
 export default boardsSlice.reducer;
 
-export const selectCurrentBoard = createSelector(
+export const selectCurrentBoardId = createSelector(
   [state => state.boards.current],
   current => current
+);
+
+export const selectCurrentBoard = createSelector(
+  [boardsSelectors.selectEntities, selectCurrentBoardId],
+  (boards, current) => boards[current]
 );
 
 export const changeBoard = boardId => async dispatch => {
@@ -140,3 +159,32 @@ export const removeBoard = boardId => async dispatch => {
     console.error(ex.response.data);
   }
 };
+
+export const updateBoardTitle = ({ boardId, newTitle }) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const oldTitle = getState().boards.entities[boardId].title;
+    if (newTitle === oldTitle) return;
+
+    if (newTitle === "") {
+      // Restore original title
+      dispatch(boardTitleUpdated({ boardId, newTitle: oldTitle }));
+    } else {
+      dispatch(boardTitleUpdated({ boardId, newTitle }));
+      await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
+        title: newTitle
+      });
+    }
+  } catch (ex) {
+    console.error(ex.response.data);
+  }
+};
+
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");
+}

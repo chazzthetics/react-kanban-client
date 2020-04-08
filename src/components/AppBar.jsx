@@ -1,8 +1,9 @@
 import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
 import {
   boardsSelectors,
-  selectCurrentBoard,
+  selectCurrentBoardId,
   changeBoard
 } from "../features/boards/boardsSlice";
 import {
@@ -22,15 +23,22 @@ import { GoMarkGithub } from "react-icons/go";
 
 const AppBar = () => {
   const boards = useSelector(state => boardsSelectors.selectAll(state));
-  const current = useSelector(selectCurrentBoard);
+  const current = useSelector(selectCurrentBoardId);
+
+  const { user } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
+
   const handleSelectChange = useCallback(
     e => {
       dispatch(changeBoard(e.target.value));
     },
     [dispatch]
   );
+
+  const handleLogin = useCallback(() => {
+    dispatch(login());
+  }, [dispatch]);
 
   return (
     <Box as="header" bg={"gray.400"} h="2.5rem" p={4}>
@@ -110,7 +118,14 @@ const AppBar = () => {
               />
             </ListItem>
             <ListItem>
-              <Avatar bg="green.400" size="sm" color="#fff" />
+              <Avatar
+                bg="green.400"
+                size="sm"
+                color="#fff"
+                cursor="pointer"
+                name={user && user.name}
+                onClick={handleLogin}
+              />
             </ListItem>
           </ButtonGroup>
         </List>
