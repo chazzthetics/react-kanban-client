@@ -25,25 +25,52 @@ const boardsSlice = createSlice({
   name: "boards",
   initialState: boardsAdapter.getInitialState({
     status: "idle",
-    current: null
+    current: ""
   }),
   reducers: {
+    boardChanged(state, action) {
+      const { boardId } = action.payload;
+      state.current = boardId;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { is_current: true }
+      });
+      boardsAdapter.updateMany(
+        state,
+        state.ids
+          .filter(id => id !== boardId)
+          .map(id => (state.entities[id].is_current = false))
+      );
+    },
     boardCreated(state, action) {
       const { board } = action.payload;
       boardsAdapter.addOne(state, board);
       state.current = board.uuid;
+    },
+    boardRemoved(state, action) {
+      const { boardId } = action.payload;
+      boardsAdapter.removeOne(state, boardId);
+      state.current = state.ids[state.ids.length - 1];
     }
   },
   extraReducers: {
+    [hydrate.pending]: state => {
+      if (state.status === "idle") {
+        state.status = "pending";
+      }
+    },
     [hydrate.fulfilled]: (state, action) => {
-      const boards = action.payload.map(board => ({
-        ...board,
-        is_editing: false,
-        columns: board.columns.map(column => column.uuid)
-      }));
-      boardsAdapter.setAll(state, boards);
-      state.current =
-        state.ids.find(id => state.entities[id].is_current) || null;
+      if (state.status === "pending") {
+        const boards = action.payload.map(board => ({
+          ...board,
+          is_editing: false,
+          columns: board.columns.map(column => column.uuid)
+        }));
+        boardsAdapter.setAll(state, boards);
+        state.current =
+          state.ids.find(id => state.entities[id].is_current) || state.ids[0];
+        state.status = "success";
+      }
     },
     "columns/columnCreated": (state, action) => {
       const { boardId, column } = action.payload;
@@ -63,13 +90,36 @@ const boardsSlice = createSlice({
 export const boardsSelectors = boardsAdapter.getSelectors(
   state => state.boards
 );
-export const { boardCreated } = boardsSlice.actions;
+export const { boardChanged, boardCreated, boardRemoved } = boardsSlice.actions;
 export default boardsSlice.reducer;
+
+export const changeBoard = boardId => async dispatch => {
+  try {
+    dispatch(boardChanged({ boardId }));
+    console.log(boardId);
+    await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, null, {
+      params: {
+        current: true
+      }
+    });
+  } catch (ex) {
+    console.error(ex.response.data);
+  }
+};
 
 export const createBoard = board => async dispatch => {
   try {
     dispatch(boardCreated({ board }));
     await axios.post("http://react-kanban.local/api/boards", board);
+  } catch (ex) {
+    console.error(ex);
+  }
+};
+
+export const removeBoard = boardId => async dispatch => {
+  try {
+    dispatch(boardRemoved({ boardId }));
+    await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
   } catch (ex) {
     console.error(ex.response.data);
   }

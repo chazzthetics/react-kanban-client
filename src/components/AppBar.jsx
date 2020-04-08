@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { boardsSelectors, boardChanged } from "../features/boards/boardsSlice";
 import {
   Box,
   Flex,
@@ -15,6 +17,18 @@ import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
 
 const AppBar = () => {
+  const boards = useSelector(state => boardsSelectors.selectAll(state));
+  const { current } = useSelector(state => state.boards);
+
+  const dispatch = useDispatch();
+  const handleSelectChange = useCallback(
+    e => {
+      dispatch(boardChanged({ boardId: e.target.value }));
+    },
+    [dispatch]
+  );
+
+  console.log("render from AppBar");
   return (
     <Box as="header" bg={"gray.400"} h="2.5rem" p={4}>
       <Flex as="nav" align="center" justify="space-between" h="100%">
@@ -44,10 +58,14 @@ const AppBar = () => {
                 color="#fff"
                 fontWeight="700"
                 cursor="pointer"
-                value="test"
-                onChange={() => {}}
+                value={current}
+                onChange={handleSelectChange}
               >
-                <option value="change">HELLO</option>
+                {boards.map(board => (
+                  <option key={board.uuid} value={board.uuid}>
+                    {board.title}
+                  </option>
+                ))}
               </Select>
             </ListItem>
           </ButtonGroup>

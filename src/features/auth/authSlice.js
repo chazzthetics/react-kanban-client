@@ -33,10 +33,18 @@ const authSlice = createSlice({
   },
   reducers: {},
   extraReducers: {
+    [login.pending]: state => {
+      if (state.status === "idle") {
+        state.status = "pending";
+      }
+    },
     [login.fulfilled]: (state, action) => {
-      state.isAuthenticated = true;
-      state.access_token = action.payload.access_token;
-      state.user = action.payload.user;
+      if (state.status === "pending") {
+        state.isAuthenticated = true;
+        state.access_token = action.payload.access_token;
+        state.user = action.payload.user;
+        state.status = "success";
+      }
     }
   }
 });

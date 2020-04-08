@@ -4,6 +4,7 @@ import { login } from "../features/auth/authSlice";
 import {
   hydrate,
   createBoard,
+  removeBoard,
   boardsSelectors
 } from "../features/boards/boardsSlice";
 import {
@@ -17,7 +18,8 @@ import {
   removeTask
 } from "../features/tasks/tasksSlice";
 import { nanoid } from "nanoid";
-import AppBar from "../components/AppBar";
+// import AppBar from "../components/AppBar";
+import RawBar from "../components/RawBar";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -60,8 +62,8 @@ const App = () => {
   const addBoard = () => {
     const board = {
       uuid: nanoid(),
-      title: "Board One",
-      slug: "board-one",
+      title: "Board Five",
+      slug: "board-five",
       color: "yellow",
       is_current: true,
       is_starred: false,
@@ -75,6 +77,11 @@ const App = () => {
     dispatch(removeColumn({ columnId, boardId: currentBoard }));
   };
 
+  const handleRemoveBoard = () => {
+    dispatch(removeBoard(currentBoard));
+  };
+
+  const { isAuthenticated } = useSelector(state => state.auth);
   const boards = useSelector(state => boardsSelectors.selectEntities(state));
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
   const tasks = useSelector(state => tasksSelectors.selectEntities(state));
@@ -83,9 +90,16 @@ const App = () => {
     dispatch(removeTask({ taskId, columnId }));
   };
 
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(hydrate());
+    }
+  }, [dispatch, isAuthenticated]);
+
   return (
     <div className="App">
-      <AppBar />
+      {/* <AppBar /> */}
+      <RawBar />
       <div>
         <button onClick={handleLogin}>Login</button>
         <button onClick={handleGetBoards}>Get Boards</button>
@@ -94,6 +108,7 @@ const App = () => {
       </div>
       <h1>App</h1>
       <h1>{boards[currentBoard]?.title}</h1>
+      <button onClick={handleRemoveBoard}>Remove Board</button>
       <div>
         {boards[currentBoard]?.columns.map(column => (
           <div key={column}>
