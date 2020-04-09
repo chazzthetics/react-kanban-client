@@ -2,11 +2,6 @@ import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import {
-  boardsSelectors,
-  selectCurrentBoardId,
-  changeBoard
-} from "../features/boards/boardsSlice";
-import {
   Box,
   Flex,
   List,
@@ -14,7 +9,6 @@ import {
   ListItem,
   Link,
   IconButton,
-  Select,
   Heading,
   Avatar
 } from "@chakra-ui/core";

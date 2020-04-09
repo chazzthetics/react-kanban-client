@@ -8,7 +8,7 @@ const tasksAdapter = createEntityAdapter({
 
 const tasksSlice = createSlice({
   name: "tasks",
-  initialState: tasksAdapter.getInitialState({ junk: null }),
+  initialState: tasksAdapter.getInitialState(),
   reducers: {
     taskCreated(state, action) {
       const { task } = action.payload;

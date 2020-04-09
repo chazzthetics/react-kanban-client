@@ -85,7 +85,14 @@ const boardsSlice = createSlice({
       });
     },
     boardStarToggled(state, action) {
-      const { boardId, is_starred } = action.payload;
+      const {
+        boardId,
+        is_starred,
+        status = "success",
+        error = null
+      } = action.payload;
+      state.error = error;
+      state.status = status;
       boardsAdapter.updateOne(state, {
         id: boardId,
         changes: { is_starred: !is_starred }
@@ -100,7 +107,7 @@ const boardsSlice = createSlice({
       }
     },
     [hydrate.fulfilled]: (state, action) => {
-      if (state.status === "pending") {
+      if (state.status === "pending" && state.status !== "error") {
         const boards = action.payload.map(board => ({
           ...board,
           columns: board.columns.map(column => column.uuid)
@@ -162,7 +169,7 @@ const handleError = (error, prevState, restore) => dispatch => {
 };
 
 export const changeBoard = boardId => async (dispatch, getState) => {
-  const previousBoard = getState().boards.current;
+  const { current: previousBoard } = getPreviousValue(getState());
 
   try {
     dispatch(boardChanged({ boardId }));
@@ -197,7 +204,15 @@ export const removeBoard = boardId => async dispatch => {
     dispatch(boardRemoved({ boardId }));
     await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(
+      handleError(
+        ex,
+        {
+          /* TODO: */
+        },
+        boardCreated
+      )
+    );
   }
 };
 
@@ -205,7 +220,8 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
   dispatch,
   getState
 ) => {
-  const oldTitle = getState().boards.entities[boardId].title;
+  const { title: oldTitle } = getPreviousValue(getState(), boardId);
+
   try {
     if (newTitle === oldTitle) return;
 
@@ -226,13 +242,24 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
 };
 
 export const toggleBoardStar = boardId => async (dispatch, getState) => {
+  const { is_starred } = getPreviousValue(getState(), boardId);
+
   try {
-    const is_starred = getState().boards.entities[boardId].is_starred;
     dispatch(boardStarToggled({ boardId, is_starred }));
     await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
       is_starred
     });
   } catch (ex) {
-    console.error(ex);
+    dispatch(
+      handleError(ex, { boardId, is_starred: !is_starred }, boardStarToggled)
+    );
   }
 };
+
+function getPreviousValue(state, entityId, entity = "boards") {
+  if (entityId) {
+    return state[entity].entities[entityId];
+  }
+
+  return state[entity];
+}

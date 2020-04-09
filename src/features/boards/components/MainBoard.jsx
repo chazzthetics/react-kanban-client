@@ -7,6 +7,7 @@ import {
   selectCurrentBoardId
 } from "../boardsSlice";
 import { columnsSelectors, createColumn } from "../../columns/columnsSlice";
+import { tasksSelectors, createTask } from "../../tasks/tasksSlice";
 import { useForm } from "react-hook-form";
 import { nanoid } from "../../../utils/nanoid";
 
@@ -24,29 +25,68 @@ const MainBoard = () => {
     boardsSelectors.selectById(state, currentBoardId)
   )?.columns.length;
 
+  const taskCount = useSelector(state =>
+    columnsSelectors.selectById(state, "bGnHH7u6kdWuNkdvo5eCZ")
+  )?.tasks.length;
   const onSubmit = React.useCallback(
     data => {
-      const column = {
-        uuid: nanoid(),
-        title: data.columnTitle,
-        position: columnCount,
-        is_locked: false,
-        is_editing: false,
-        tasks: []
-      };
-      dispatch(createColumn({ column, boardId: currentBoardId }));
-      reset();
+      if (data.columnTitle) {
+        const column = {
+          uuid: nanoid(),
+          title: data.columnTitle,
+          position: columnCount,
+          is_locked: false,
+          is_editing: false,
+          tasks: []
+        };
+        dispatch(createColumn({ column, boardId: currentBoardId }));
+        reset();
+      } else {
+        const task = {
+          uuid: nanoid(),
+          content: data.taskContent,
+          is_locked: false,
+          is_editing: false,
+          position: taskCount
+        };
+        dispatch(createTask({ task, columnId: "bGnHH7u6kdWuNkdvo5eCZ" }));
+        reset();
+      }
     },
-    [dispatch, columnCount, currentBoardId, reset]
+    [dispatch, columnCount, currentBoardId, reset, taskCount]
   );
 
+  const tasks = useSelector(state => tasksSelectors.selectEntities(state));
   return (
     <div className="MainBoard">
       <BoardHeader />
-      <div className="ColumnList">
+      <div className="ColumnList" style={{ display: "flex" }}>
         {currentBoard &&
           currentBoard.columns.map(column => (
-            <div key={column}>{allColumns[column].title}</div>
+            <div
+              key={column}
+              style={{
+                margin: "0 20px",
+                border: "1px solid black",
+                height: "14rem"
+              }}
+            >
+              {allColumns[column].title}
+              {allColumns[column].tasks.map(task => (
+                <p key={task}>{tasks[task]["content"]}</p>
+              ))}
+              <div className="TaskForm">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <input
+                    type="text"
+                    placeholder="Add Task"
+                    style={{ border: "1px solid black" }}
+                    ref={register}
+                    name="taskContent"
+                  />
+                </form>
+              </div>
+            </div>
           ))}
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
