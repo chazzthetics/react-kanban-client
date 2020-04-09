@@ -5,6 +5,7 @@ import {
   createSelector
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { slugify } from "../../utils/slugify";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
@@ -71,6 +72,13 @@ const boardsSlice = createSlice({
         id: boardId,
         changes: { title: newTitle, slug: slugify(newTitle) }
       });
+    },
+    boardStarToggled(state, action) {
+      const { boardId, is_starred } = action.payload;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { is_starred: !is_starred }
+      });
     }
   },
   extraReducers: {
@@ -83,7 +91,6 @@ const boardsSlice = createSlice({
       if (state.status === "pending") {
         const boards = action.payload.map(board => ({
           ...board,
-          is_editing: false,
           columns: board.columns.map(column => column.uuid)
         }));
         boardsAdapter.setAll(state, boards);
@@ -114,7 +121,8 @@ export const {
   boardChanged,
   boardCreated,
   boardRemoved,
-  boardTitleUpdated
+  boardTitleUpdated,
+  boardStarToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
@@ -133,9 +141,7 @@ export const changeBoard = boardId => async dispatch => {
     dispatch(boardChanged({ boardId }));
 
     await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, null, {
-      params: {
-        current: true
-      }
+      params: { current: true }
     });
   } catch (ex) {
     console.error(ex.response.data);
@@ -182,9 +188,14 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
   }
 };
 
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^\w ]+/g, "")
-    .replace(/ +/g, "-");
-}
+export const toggleBoardStar = boardId => async (dispatch, getState) => {
+  try {
+    const is_starred = getState().boards.entities[boardId].is_starred;
+    dispatch(boardStarToggled({ boardId, is_starred }));
+    await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
+      is_starred
+    });
+  } catch (ex) {
+    console.error(ex);
+  }
+};

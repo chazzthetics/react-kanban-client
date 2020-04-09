@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentBoard, updateBoardTitle } from "../boardsSlice";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
@@ -13,14 +13,14 @@ const BoardTitle = () => {
     setTitle(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     dispatch(
       updateBoardTitle({
         boardId: currentBoard.uuid,
         newTitle: title
       })
     );
-  };
+  }, [dispatch, title, currentBoard]);
 
   useEffect(() => {
     if (currentBoard) {
