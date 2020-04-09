@@ -20,21 +20,11 @@ import {
 } from "@chakra-ui/core";
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
+import SelectBoardInput from "../features/boards/components/SelectBoardInput";
 
 const AppBar = () => {
-  const boards = useSelector(state => boardsSelectors.selectAll(state));
-  const current = useSelector(selectCurrentBoardId);
-
   const { user } = useSelector(state => state.auth);
-
   const dispatch = useDispatch();
-
-  const handleSelectChange = useCallback(
-    e => {
-      dispatch(changeBoard(e.target.value));
-    },
-    [dispatch]
-  );
 
   const handleLogin = useCallback(() => {
     dispatch(login());
@@ -61,23 +51,7 @@ const AppBar = () => {
               </Link>
             </ListItem>
             <ListItem d="flex" alignItems="center">
-              <Select
-                size="sm"
-                borderRadius={4}
-                bg="rgba(0,0,0,0.3)"
-                border="none"
-                color="#fff"
-                fontWeight="700"
-                cursor="pointer"
-                value={current}
-                onChange={handleSelectChange}
-              >
-                {boards.map(board => (
-                  <option key={board.uuid} value={board.uuid}>
-                    {board.title}
-                  </option>
-                ))}
-              </Select>
+              <SelectBoardInput />
             </ListItem>
           </ButtonGroup>
         </List>

@@ -9,9 +9,9 @@ const BoardTitle = () => {
 
   const [title, setTitle] = useState("");
 
-  const handleChange = e => {
+  const handleChange = useCallback(e => {
     setTitle(e.target.value);
-  };
+  }, []);
 
   const handleSubmit = useCallback(() => {
     dispatch(
@@ -20,7 +20,7 @@ const BoardTitle = () => {
         newTitle: title
       })
     );
-  }, [dispatch, title, currentBoard]);
+  }, [dispatch, currentBoard, title]);
 
   useEffect(() => {
     if (currentBoard) {

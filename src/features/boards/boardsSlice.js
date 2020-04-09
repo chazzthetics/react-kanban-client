@@ -32,10 +32,10 @@ const boardsSlice = createSlice({
   }),
   reducers: {
     boardChanged(state, action) {
-      const { boardId } = action.payload;
+      const { boardId, status = "success", error = null } = action.payload;
+      state.error = error;
+      state.status = status;
       state.current = boardId;
-      state.status = "success";
-      state.error = null;
       boardsAdapter.updateOne(state, {
         id: boardId,
         changes: { is_current: true }
@@ -70,7 +70,15 @@ const boardsSlice = createSlice({
       });
     },
     boardTitleUpdated(state, action) {
-      const { boardId, newTitle } = action.payload;
+      const {
+        boardId,
+        newTitle,
+        status = "success",
+        error = null
+      } = action.payload;
+      state.error = error;
+      state.status = status;
+
       boardsAdapter.updateOne(state, {
         id: boardId,
         changes: { title: newTitle, slug: slugify(newTitle) }
@@ -82,17 +90,13 @@ const boardsSlice = createSlice({
         id: boardId,
         changes: { is_starred: !is_starred }
       });
-    },
-    boardError(state, action) {
-      const { error } = action.payload;
-      state.status = "error";
-      state.error = error;
     }
   },
   extraReducers: {
     [hydrate.pending]: state => {
-      if (state.status === "idle") {
+      if (state.status === "idle" || state.status === "error") {
         state.status = "pending";
+        state.error = null;
       }
     },
     [hydrate.fulfilled]: (state, action) => {
@@ -133,8 +137,7 @@ export const {
   boardCreated,
   boardRemoved,
   boardTitleUpdated,
-  boardStarToggled,
-  boardError
+  boardStarToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
@@ -148,6 +151,16 @@ export const selectCurrentBoard = createSelector(
   (boards, current) => boards[current]
 );
 
+const handleError = (error, prevState, restore) => dispatch => {
+  dispatch(
+    restore({
+      ...prevState,
+      status: "error",
+      error: error.response.data.message || "Something went wrong..."
+    })
+  );
+};
+
 export const changeBoard = boardId => async (dispatch, getState) => {
   const previousBoard = getState().boards.current;
 
@@ -158,8 +171,7 @@ export const changeBoard = boardId => async (dispatch, getState) => {
       params: { current: true }
     });
   } catch (ex) {
-    dispatch(boardError({ error: ex.response.data.message }));
-    dispatch(boardChanged({ boardId: previousBoard }));
+    dispatch(handleError(ex, { boardId: previousBoard }, boardChanged));
   }
 };
 
@@ -168,7 +180,15 @@ export const createBoard = board => async dispatch => {
     dispatch(boardCreated({ board }));
     await axios.post("http://react-kanban.local/api/boards", board);
   } catch (ex) {
-    console.error(ex);
+    dispatch(
+      handleError(
+        ex,
+        {
+          /* TODO: */
+        },
+        boardCreated
+      )
+    );
   }
 };
 
@@ -185,8 +205,8 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
   dispatch,
   getState
 ) => {
+  const oldTitle = getState().boards.entities[boardId].title;
   try {
-    const oldTitle = getState().boards.entities[boardId].title;
     if (newTitle === oldTitle) return;
 
     if (newTitle === "") {
@@ -199,7 +219,9 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
       });
     }
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(
+      handleError(ex, { boardId, newTitle: oldTitle }, boardTitleUpdated)
+    );
   }
 };
 
