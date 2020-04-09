@@ -27,12 +27,15 @@ const boardsSlice = createSlice({
   name: "boards",
   initialState: boardsAdapter.getInitialState({
     status: "idle",
-    current: ""
+    current: "",
+    error: null
   }),
   reducers: {
     boardChanged(state, action) {
       const { boardId } = action.payload;
       state.current = boardId;
+      state.status = "success";
+      state.error = null;
       boardsAdapter.updateOne(state, {
         id: boardId,
         changes: { is_current: true }
@@ -79,6 +82,11 @@ const boardsSlice = createSlice({
         id: boardId,
         changes: { is_starred: !is_starred }
       });
+    },
+    boardError(state, action) {
+      const { error } = action.payload;
+      state.status = "error";
+      state.error = error;
     }
   },
   extraReducers: {
@@ -98,6 +106,9 @@ const boardsSlice = createSlice({
           state.ids.find(id => state.entities[id].is_current) || state.ids[0];
         state.status = "success";
       }
+    },
+    [hydrate.rejected]: (state, action) => {
+      // TODO:
     },
     "columns/columnCreated": (state, action) => {
       const { boardId, column } = action.payload;
@@ -122,7 +133,8 @@ export const {
   boardCreated,
   boardRemoved,
   boardTitleUpdated,
-  boardStarToggled
+  boardStarToggled,
+  boardError
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
@@ -136,7 +148,9 @@ export const selectCurrentBoard = createSelector(
   (boards, current) => boards[current]
 );
 
-export const changeBoard = boardId => async dispatch => {
+export const changeBoard = boardId => async (dispatch, getState) => {
+  const previousBoard = getState().boards.current;
+
   try {
     dispatch(boardChanged({ boardId }));
 
@@ -144,7 +158,8 @@ export const changeBoard = boardId => async dispatch => {
       params: { current: true }
     });
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(boardError({ error: ex.response.data.message }));
+    dispatch(boardChanged({ boardId: previousBoard }));
   }
 };
 
