@@ -158,6 +158,11 @@ export const selectCurrentBoard = createSelector(
   (boards, current) => boards[current]
 );
 
+export const selectBoardColumnCount = createSelector(
+  [state => state.boards.current, state => state.boards.entities],
+  (current, boards) => boards[current].columns.length
+);
+
 const handleError = (error, prevState, restore) => dispatch => {
   dispatch(
     restore({
