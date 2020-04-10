@@ -6,21 +6,22 @@ import {
   removeBoard,
   selectCurrentBoardId,
   boardsSelectors,
-  selectCurrentBoard,
-  reorderColumn
+  selectCurrentBoard
 } from "../boardsSlice";
 import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
-import { columnsSelectors } from "../../columns/columnsSlice";
+import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 
 const MainBoard = () => {
   //TODO: move out later
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
 
-  const deleteBoard = React.useCallback(() => {
+  const handleRemoveBoard = React.useCallback(() => {
     dispatch(removeBoard(currentBoardId));
   }, [dispatch, currentBoardId]);
+
+  const handleClearBoard = React.useCallback(() => {}, []);
 
   const currentBoard = useSelector(selectCurrentBoard);
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
@@ -60,9 +61,19 @@ const MainBoard = () => {
           background: "red",
           color: "white"
         }}
-        onClick={deleteBoard}
+        onClick={handleRemoveBoard}
       >
         Delete Board
+      </button>
+      <button
+        type="button"
+        style={{
+          padding: ".6rem 1rem",
+          background: "lightblue"
+        }}
+        onClick={handleClearBoard}
+      >
+        Clear Board
       </button>
       <DragDropContext onDragEnd={handleDragEnd}>
         <ColumnList />

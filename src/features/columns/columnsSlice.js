@@ -19,19 +19,19 @@ const columnsSlice = createSlice({
     error: null
   }),
   reducers: {
-    columnCreated(state, action) {
+    created(state, action) {
       const { column, status = "success", error = null } = action.payload;
       columnsAdapter.addOne(state, column);
       state.status = status;
       state.error = error;
     },
-    columnRemoved(state, action) {
+    removed(state, action) {
       const { columnId, status = "success", error = null } = action.payload;
       columnsAdapter.removeOne(state, columnId);
       state.status = status;
       state.error = error;
     },
-    columnTitleUpdated(state, action) {
+    titleUpdated(state, action) {
       const {
         columnId,
         newTitle,
@@ -44,6 +44,13 @@ const columnsSlice = createSlice({
       });
       state.status = status;
       state.error = error;
+    },
+    reordered(state, action) {
+      const { newOrder } = action.payload;
+      columnsAdapter.updateMany(
+        state,
+        newOrder.map((id, index) => (state.entities[id].position = index))
+      );
     }
   },
   extraReducers: {
@@ -57,18 +64,15 @@ const columnsSlice = createSlice({
       columnsAdapter.setAll(state, columns);
       state.status = "success";
     },
-    "boards/columnReordered": (state, action) => {
-      const { newOrder } = action.payload;
-      columnsAdapter.updateMany(
-        state,
-        newOrder.map((id, index) => (state.entities[id].position = index))
-      );
+    "boards/removed": (state, action) => {
+      const { columns } = action.payload;
+      columnsAdapter.removeMany(state, columns);
     },
-    "tasks/taskCreated": (state, action) => {
+    "tasks/created": (state, action) => {
       const { columnId, task } = action.payload;
       state.entities[columnId].tasks.push(task.uuid);
     },
-    "tasks/taskRemoved": (state, action) => {
+    "tasks/removed": (state, action) => {
       const { taskId, columnId } = action.payload;
       const tasks = state.entities[columnId].tasks;
       const removeIndex = tasks.indexOf(taskId);
@@ -80,9 +84,11 @@ const columnsSlice = createSlice({
 });
 
 export const {
-  columnCreated,
-  columnRemoved,
-  columnTitleUpdated
+  created,
+  removed,
+  cleared,
+  titleUpdated,
+  reordered
 } = columnsSlice.actions;
 export default columnsSlice.reducer;
 
@@ -101,15 +107,13 @@ export const makeSelectColumnTaskCount = () =>
 // Thunks
 export const createColumn = ({ column, boardId }) => async dispatch => {
   try {
-    dispatch(columnCreated({ column, boardId }));
+    dispatch(created({ column, boardId }));
     await axios.post(
       `http://react-kanban.local/api/boards/${boardId}/columns`,
       column
     );
   } catch (ex) {
-    dispatch(
-      handleError(ex, columnRemoved, { columnId: column.uuid, boardId })
-    );
+    dispatch(handleError(ex, removed, { columnId: column.uuid, boardId }));
   }
 };
 
@@ -120,10 +124,10 @@ export const removeColumn = ({ columnId, boardId }) => async (
   const column = getPreviousValue(getState(), "columns", columnId);
 
   try {
-    dispatch(columnRemoved({ columnId, boardId }));
+    dispatch(removed({ columnId, boardId }));
     await axios.delete(`http://react-kanban.local/api/columns/${columnId}`);
   } catch (ex) {
-    dispatch(handleError(ex, columnCreated, { column, boardId }));
+    dispatch(handleError(ex, created, { column, boardId }));
   }
 };
 
@@ -138,16 +142,29 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
 
     if (newTitle === "") {
       // Restore original title
-      dispatch(columnTitleUpdated({ columnId, newTitle: oldTitle }));
+      dispatch(titleUpdated({ columnId, newTitle: oldTitle }));
     } else {
-      dispatch(columnTitleUpdated({ columnId, newTitle }));
+      dispatch(titleUpdated({ columnId, newTitle }));
       await axios.patch(`http://react-kanban.local/api/columns/${columnId}`, {
         title: newTitle
       });
     }
   } catch (ex) {
-    dispatch(
-      handleError(ex, columnTitleUpdated, { columnId, newTitle: oldTitle })
+    dispatch(handleError(ex, titleUpdated, { columnId, newTitle: oldTitle }));
+  }
+};
+
+export const reorderColumn = ({ boardId, newOrder }) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch(reordered({ boardId, newOrder }));
+    await axios.patch(
+      `http://react-kanban.local/api/boards/${boardId}/columns/reorder`,
+      { newOrder }
     );
+  } catch (ex) {
+    //TODO:
   }
 };

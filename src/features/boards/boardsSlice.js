@@ -33,7 +33,7 @@ const boardsSlice = createSlice({
     error: null
   }),
   reducers: {
-    boardChanged(state, action) {
+    changed(state, action) {
       const { boardId, status = "success", error = null } = action.payload;
       state.error = error;
       state.status = status;
@@ -49,7 +49,7 @@ const boardsSlice = createSlice({
           .map(id => (state.entities[id].is_current = false))
       );
     },
-    boardCreated(state, action) {
+    created(state, action) {
       const { board, status = "success", error = null } = action.payload;
       state.current = board.uuid || "";
       state.status = status;
@@ -63,7 +63,7 @@ const boardsSlice = createSlice({
           .map(id => (state.entities[id].is_current = false))
       );
     },
-    boardRemoved(state, action) {
+    removed(state, action) {
       const { boardId, status = "success", error = null } = action.payload;
       state.status = status;
       state.error = error;
@@ -75,7 +75,7 @@ const boardsSlice = createSlice({
 
       state.current = state.ids[state.ids.length - 1] || "";
     },
-    boardTitleUpdated(state, action) {
+    titleUpdated(state, action) {
       const {
         boardId,
         newTitle,
@@ -90,7 +90,7 @@ const boardsSlice = createSlice({
         changes: { title: newTitle, slug: slugify(newTitle) }
       });
     },
-    boardStarToggled(state, action) {
+    starToggled(state, action) {
       const {
         boardId,
         is_starred,
@@ -102,20 +102,6 @@ const boardsSlice = createSlice({
       boardsAdapter.updateOne(state, {
         id: boardId,
         changes: { is_starred: !is_starred }
-      });
-    },
-    columnReordered(state, action) {
-      const {
-        boardId,
-        newOrder,
-        status = "success",
-        error = null
-      } = action.payload;
-      state.error = error;
-      state.status = status;
-      boardsAdapter.updateOne(state, {
-        id: boardId,
-        changes: { columns: newOrder }
       });
     }
   },
@@ -143,28 +129,34 @@ const boardsSlice = createSlice({
     [hydrate.rejected]: (state, action) => {
       // TODO:
     },
-    "columns/columnCreated": (state, action) => {
+    "columns/created": (state, action) => {
       const { boardId, column } = action.payload;
       state.entities[boardId].columns.push(column.uuid);
     },
-    "columns/columnRemoved": (state, action) => {
+    "columns/removed": (state, action) => {
       const { columnId, boardId } = action.payload;
       const columns = state.entities[boardId].columns;
       const removeIndex = columns.indexOf(columnId);
       if (removeIndex >= 0) {
         columns.splice(removeIndex, 1);
       }
+    },
+    "columns/reordered": (state, action) => {
+      const { boardId, newOrder } = action.payload;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { columns: newOrder }
+      });
     }
   }
 });
 
 export const {
-  boardChanged,
-  boardCreated,
-  boardRemoved,
-  boardTitleUpdated,
-  boardStarToggled,
-  columnReordered
+  changed,
+  created,
+  removed,
+  titleUpdated,
+  starToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
@@ -193,36 +185,39 @@ export const changeBoard = boardId => async (dispatch, getState) => {
   const { current: previousBoard } = getPreviousValue(getState(), "boards");
 
   try {
-    dispatch(boardChanged({ boardId }));
+    dispatch(changed({ boardId }));
 
     await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, null, {
       params: { current: true }
     });
   } catch (ex) {
-    dispatch(handleError(ex, boardChanged, { boardId: previousBoard }));
+    dispatch(handleError(ex, changed, { boardId: previousBoard }));
   }
 };
 
 export const createBoard = board => async dispatch => {
   try {
-    dispatch(boardCreated({ board }));
+    dispatch(created({ board }));
     await axios.post("http://react-kanban.local/api/boards", board);
   } catch (ex) {
-    dispatch(handleError(ex, boardRemoved, { boardId: board.uuid }));
+    dispatch(handleError(ex, removed, { boardId: board.uuid }));
   }
 };
 
 export const removeBoard = boardId => async (dispatch, getState) => {
   const board = getPreviousValue(getState(), "boards", boardId);
   const hasBoard = getPreviousValue(getState(), "boards").ids.length > 0;
+  const tasks = board.columns.flatMap(
+    column => getPreviousValue(getState(), "columns", column).tasks
+  );
 
   try {
     if (hasBoard) {
-      dispatch(boardRemoved({ boardId }));
+      dispatch(removed({ boardId, columns: board.columns, tasks }));
       await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
     }
   } catch (ex) {
-    dispatch(handleError(ex, boardCreated, { board }));
+    dispatch(handleError(ex, created, { board }));
   }
 };
 
@@ -237,17 +232,15 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
 
     if (newTitle === "") {
       // Restore original title
-      dispatch(boardTitleUpdated({ boardId, newTitle: oldTitle }));
+      dispatch(titleUpdated({ boardId, newTitle: oldTitle }));
     } else {
-      dispatch(boardTitleUpdated({ boardId, newTitle }));
+      dispatch(titleUpdated({ boardId, newTitle }));
       await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
         title: newTitle
       });
     }
   } catch (ex) {
-    dispatch(
-      handleError(ex, boardTitleUpdated, { boardId, newTitle: oldTitle })
-    );
+    dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));
   }
 };
 
@@ -255,20 +248,13 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
   const { is_starred } = getPreviousValue(getState(), "boards", boardId);
 
   try {
-    dispatch(boardStarToggled({ boardId, is_starred }));
+    dispatch(starToggled({ boardId, is_starred }));
     await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
       is_starred
     });
   } catch (ex) {
     dispatch(
-      handleError(ex, boardStarToggled, { boardId, is_starred: !is_starred })
+      handleError(ex, starToggled, { boardId, is_starred: !is_starred })
     );
   }
-};
-
-export const reorderColumn = ({ boardId, newOrder }) => async (
-  dispatch,
-  getState
-) => {
-  dispatch(columnReordered({ boardId, newOrder }));
 };
