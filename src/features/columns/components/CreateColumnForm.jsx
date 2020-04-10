@@ -6,7 +6,7 @@ import {
 } from "../../boards/boardsSlice";
 import { createColumn } from "../columnsSlice";
 import { useForm } from "react-hook-form";
-import { nanoid } from "../../../utils/nanoid";
+import { makeColumn } from "../../../utils/makeEntity";
 
 const CreateColumnForm = () => {
   const dispatch = useDispatch();
@@ -37,16 +37,5 @@ const CreateColumnForm = () => {
     </form>
   );
 };
-
-function makeColumn(title, position) {
-  return {
-    uuid: nanoid(),
-    title,
-    position,
-    is_locked: false,
-    is_editing: false,
-    tasks: []
-  };
-}
 
 export default CreateColumnForm;

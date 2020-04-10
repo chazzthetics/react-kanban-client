@@ -1,4 +1,8 @@
-import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createEntityAdapter,
+  createSelector
+} from "@reduxjs/toolkit";
 import axios from "axios";
 import { hydrate } from "../boards/boardsSlice";
 
@@ -45,13 +49,19 @@ const columnsSlice = createSlice({
   }
 });
 
+export const { columnCreated, columnRemoved } = columnsSlice.actions;
+export default columnsSlice.reducer;
+
 export const columnsSelectors = columnsAdapter.getSelectors(
   state => state.columns
 );
 
-export const { columnCreated, columnRemoved } = columnsSlice.actions;
-
-export default columnsSlice.reducer;
+export const makeSelectColumnTaskCount = () =>
+  createSelector(
+    [columnsSelectors.selectEntities, (_, columnId) => columnId],
+    (columns, columnId) =>
+      columns[columnId] ? columns[columnId].tasks.length : []
+  );
 
 export const createColumn = ({ column, boardId }) => async dispatch => {
   try {

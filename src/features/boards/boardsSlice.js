@@ -136,9 +136,6 @@ const boardsSlice = createSlice({
   }
 });
 
-export const boardsSelectors = boardsAdapter.getSelectors(
-  state => state.boards
-);
 export const {
   boardChanged,
   boardCreated,
@@ -147,6 +144,10 @@ export const {
   boardStarToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
+
+export const boardsSelectors = boardsAdapter.getSelectors(
+  state => state.boards
+);
 
 export const selectCurrentBoardId = createSelector(
   [state => state.boards.current],
@@ -159,8 +160,8 @@ export const selectCurrentBoard = createSelector(
 );
 
 export const selectBoardColumnCount = createSelector(
-  [state => state.boards.current, state => state.boards.entities],
-  (current, boards) => boards[current].columns.length
+  [boardsSelectors.selectEntities, state => state.boards.current],
+  (boards, current) => (boards[current] ? boards[current].columns.length : [])
 );
 
 const handleError = (error, prevState, restore) => dispatch => {
