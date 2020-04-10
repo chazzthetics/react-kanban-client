@@ -57,6 +57,13 @@ const columnsSlice = createSlice({
       columnsAdapter.setAll(state, columns);
       state.status = "success";
     },
+    "boards/columnReordered": (state, action) => {
+      const { newOrder } = action.payload;
+      columnsAdapter.updateMany(
+        state,
+        newOrder.map((id, index) => (state.entities[id].position = index))
+      );
+    },
     "tasks/taskCreated": (state, action) => {
       const { columnId, task } = action.payload;
       state.entities[columnId].tasks.push(task.uuid);

@@ -1,44 +1,58 @@
 import React from "react";
 import BoardHeader from "./BoardHeader";
-import ColumnList from "../../columns/components/ColumnList";
-import CreateColumnForm from "../../columns/components/CreateColumnForm";
 import { useSelector, useDispatch } from "react-redux";
-import { createBoard, removeBoard, selectCurrentBoardId } from "../boardsSlice";
-import { makeBoard } from "../../../utils/makeEntity";
-import { useForm } from "react-hook-form";
+import { DragDropContext } from "react-beautiful-dnd";
+import {
+  removeBoard,
+  selectCurrentBoardId,
+  boardsSelectors,
+  selectCurrentBoard,
+  reorderColumn
+} from "../boardsSlice";
+import CreateBoardForm from "./CreateBoardForm";
+import ColumnList from "../../columns/components/ColumnList";
+import { columnsSelectors } from "../../columns/columnsSlice";
 
 const MainBoard = () => {
   //TODO: move out later
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
+
   const deleteBoard = React.useCallback(() => {
     dispatch(removeBoard(currentBoardId));
   }, [dispatch, currentBoardId]);
 
-  const { register, handleSubmit, reset } = useForm();
+  const currentBoard = useSelector(selectCurrentBoard);
+  const columns = useSelector(state => columnsSelectors.selectEntities(state));
 
-  const onSubmit = React.useCallback(
-    data => {
-      const board = makeBoard(data.title, "green");
-      dispatch(createBoard(board));
-      reset();
-    },
-    [dispatch, reset]
-  );
+  const handleDragEnd = result => {
+    const { source, destination, type } = result;
+
+    if (!destination) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const startColumn = columns[source.droppableId];
+    const endColumn = columns[destination.droppableId];
+
+    console.log(type);
+    if (type === "column-board") {
+      const newOrder = [...currentBoard.columns];
+      const [removed] = newOrder.splice(source.index, 1);
+      newOrder.splice(destination.index, 0, removed);
+      console.log(newOrder);
+      dispatch(reorderColumn({ boardId: currentBoardId, newOrder }));
+    }
+  };
 
   return (
     <div className="MainBoard">
       <BoardHeader />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          placeholder="Create new board"
-          style={{ border: "1px solid black" }}
-          name="title"
-          ref={register}
-        />
-        <button type="submit">Add</button>
-      </form>
+      <CreateBoardForm />
       <button
         type="button"
         style={{
@@ -50,8 +64,9 @@ const MainBoard = () => {
       >
         Delete Board
       </button>
-      <ColumnList />
-      <CreateColumnForm />
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <ColumnList />
+      </DragDropContext>
     </div>
   );
 };

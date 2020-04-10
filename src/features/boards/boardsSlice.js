@@ -103,6 +103,20 @@ const boardsSlice = createSlice({
         id: boardId,
         changes: { is_starred: !is_starred }
       });
+    },
+    columnReordered(state, action) {
+      const {
+        boardId,
+        newOrder,
+        status = "success",
+        error = null
+      } = action.payload;
+      state.error = error;
+      state.status = status;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { columns: newOrder }
+      });
     }
   },
   extraReducers: {
@@ -149,7 +163,8 @@ export const {
   boardCreated,
   boardRemoved,
   boardTitleUpdated,
-  boardStarToggled
+  boardStarToggled,
+  columnReordered
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
@@ -249,4 +264,11 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
       handleError(ex, boardStarToggled, { boardId, is_starred: !is_starred })
     );
   }
+};
+
+export const reorderColumn = ({ boardId, newOrder }) => async (
+  dispatch,
+  getState
+) => {
+  dispatch(columnReordered({ boardId, newOrder }));
 };
