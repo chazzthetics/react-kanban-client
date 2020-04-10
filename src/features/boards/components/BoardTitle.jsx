@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useEditable } from "../../../hooks/useEditable";
 import { selectCurrentBoard, updateBoardTitle } from "../boardsSlice";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
@@ -7,11 +8,7 @@ const BoardTitle = () => {
   const dispatch = useDispatch();
   const currentBoard = useSelector(selectCurrentBoard);
 
-  const [title, setTitle] = useState("");
-
-  const handleChange = useCallback(e => {
-    setTitle(e.target.value);
-  }, []);
+  const [title, handleChange] = useEditable(currentBoard, "title");
 
   const handleSubmit = useCallback(() => {
     dispatch(
@@ -22,13 +19,7 @@ const BoardTitle = () => {
     );
   }, [dispatch, currentBoard, title]);
 
-  useEffect(() => {
-    if (currentBoard) {
-      setTitle(currentBoard.title);
-    }
-  }, [currentBoard]);
-
-  return (
+  return currentBoard ? (
     <div className="BoardTitle">
       <Editable onSubmit={handleSubmit} value={title}>
         <EditablePreview
@@ -42,7 +33,7 @@ const BoardTitle = () => {
         <EditableInput onChange={handleChange} />
       </Editable>
     </div>
-  );
+  ) : null;
 };
 
 export default BoardTitle;

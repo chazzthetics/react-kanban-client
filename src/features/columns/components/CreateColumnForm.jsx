@@ -15,6 +15,7 @@ const CreateColumnForm = () => {
   const position = useSelector(selectBoardColumnCount);
 
   const { register, handleSubmit, reset } = useForm();
+
   const onSubmit = useCallback(
     data => {
       const column = makeColumn(data.columnTitle, position);

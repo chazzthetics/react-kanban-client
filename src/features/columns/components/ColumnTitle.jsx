@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { useEditable } from "../../../hooks/useEditable";
 import { columnsSelectors, updateColumnTitle } from "../columnsSlice";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
@@ -10,21 +11,11 @@ const ColumnTitle = ({ columnId }) => {
     columnsSelectors.selectById(state, columnId)
   );
 
-  const [title, setTitle] = useState("");
-
-  const handleChange = useCallback(e => {
-    setTitle(e.target.value);
-  }, []);
+  const [title, handleChange] = useEditable(column, "title");
 
   const handleSubmit = useCallback(() => {
     dispatch(updateColumnTitle({ columnId, newTitle: title }));
   }, [dispatch, columnId, title]);
-
-  useEffect(() => {
-    if (column) {
-      setTitle(column.title);
-    }
-  }, [column]);
 
   return (
     <div className="ColumnTitle">

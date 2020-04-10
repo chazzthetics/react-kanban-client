@@ -6,6 +6,8 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { slugify } from "../../utils/slugify";
+import { getPreviousValue } from "../../utils/getPreviousValue";
+import { handleError } from "../../utils/handleError";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
@@ -48,10 +50,12 @@ const boardsSlice = createSlice({
       );
     },
     boardCreated(state, action) {
-      const { board } = action.payload;
+      const { board, status = "success", error = null } = action.payload;
+      state.current = board.uuid || "";
+      state.status = status;
+      state.error = error;
       boardsAdapter.addOne(state, board);
 
-      state.current = board.uuid;
       boardsAdapter.updateMany(
         state,
         state.ids
@@ -60,14 +64,16 @@ const boardsSlice = createSlice({
       );
     },
     boardRemoved(state, action) {
-      const { boardId } = action.payload;
+      const { boardId, status = "success", error = null } = action.payload;
+      state.status = status;
+      state.error = error;
       boardsAdapter.removeOne(state, boardId);
-
-      state.current = state.ids[state.ids.length - 1];
       boardsAdapter.updateOne(state, {
         id: state.current,
         changes: { is_current: true }
       });
+
+      state.current = state.ids[state.ids.length - 1] || "";
     },
     boardTitleUpdated(state, action) {
       const {
@@ -114,7 +120,9 @@ const boardsSlice = createSlice({
         }));
         boardsAdapter.setAll(state, boards);
         state.current =
-          state.ids.find(id => state.entities[id].is_current) || state.ids[0];
+          state.ids.find(id => state.entities[id].is_current) ||
+          state.ids[0] ||
+          "";
         state.status = "success";
       }
     },
@@ -145,6 +153,7 @@ export const {
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
+// Selectors
 export const boardsSelectors = boardsAdapter.getSelectors(
   state => state.boards
 );
@@ -164,18 +173,9 @@ export const selectBoardColumnCount = createSelector(
   (boards, current) => (boards[current] ? boards[current].columns.length : [])
 );
 
-const handleError = (error, prevState, restore) => dispatch => {
-  dispatch(
-    restore({
-      ...prevState,
-      status: "error",
-      error: error.response.data.message || "Something went wrong..."
-    })
-  );
-};
-
+// Thunks
 export const changeBoard = boardId => async (dispatch, getState) => {
-  const { current: previousBoard } = getPreviousValue(getState());
+  const { current: previousBoard } = getPreviousValue(getState(), "boards");
 
   try {
     dispatch(boardChanged({ boardId }));
@@ -184,7 +184,7 @@ export const changeBoard = boardId => async (dispatch, getState) => {
       params: { current: true }
     });
   } catch (ex) {
-    dispatch(handleError(ex, { boardId: previousBoard }, boardChanged));
+    dispatch(handleError(ex, boardChanged, { boardId: previousBoard }));
   }
 };
 
@@ -193,32 +193,21 @@ export const createBoard = board => async dispatch => {
     dispatch(boardCreated({ board }));
     await axios.post("http://react-kanban.local/api/boards", board);
   } catch (ex) {
-    dispatch(
-      handleError(
-        ex,
-        {
-          /* TODO: */
-        },
-        boardCreated
-      )
-    );
+    dispatch(handleError(ex, boardRemoved, { boardId: board.uuid }));
   }
 };
 
-export const removeBoard = boardId => async dispatch => {
+export const removeBoard = boardId => async (dispatch, getState) => {
+  const board = getPreviousValue(getState(), "boards", boardId);
+  const hasBoard = getPreviousValue(getState(), "boards").ids.length > 0;
+
   try {
-    dispatch(boardRemoved({ boardId }));
-    await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
+    if (hasBoard) {
+      dispatch(boardRemoved({ boardId }));
+      await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
+    }
   } catch (ex) {
-    dispatch(
-      handleError(
-        ex,
-        {
-          /* TODO: */
-        },
-        boardCreated
-      )
-    );
+    dispatch(handleError(ex, boardCreated, { board }));
   }
 };
 
@@ -226,7 +215,7 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
   dispatch,
   getState
 ) => {
-  const { title: oldTitle } = getPreviousValue(getState(), boardId);
+  const { title: oldTitle } = getPreviousValue(getState(), "boards", boardId);
 
   try {
     if (newTitle === oldTitle) return;
@@ -242,13 +231,13 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
     }
   } catch (ex) {
     dispatch(
-      handleError(ex, { boardId, newTitle: oldTitle }, boardTitleUpdated)
+      handleError(ex, boardTitleUpdated, { boardId, newTitle: oldTitle })
     );
   }
 };
 
 export const toggleBoardStar = boardId => async (dispatch, getState) => {
-  const { is_starred } = getPreviousValue(getState(), boardId);
+  const { is_starred } = getPreviousValue(getState(), "boards", boardId);
 
   try {
     dispatch(boardStarToggled({ boardId, is_starred }));
@@ -257,15 +246,7 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
     });
   } catch (ex) {
     dispatch(
-      handleError(ex, { boardId, is_starred: !is_starred }, boardStarToggled)
+      handleError(ex, boardStarToggled, { boardId, is_starred: !is_starred })
     );
   }
 };
-
-function getPreviousValue(state, entityId, entity = "boards") {
-  if (entityId) {
-    return state[entity].entities[entityId];
-  }
-
-  return state[entity];
-}

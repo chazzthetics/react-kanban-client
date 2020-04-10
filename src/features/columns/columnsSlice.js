@@ -5,6 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { hydrate } from "../boards/boardsSlice";
+import { getPreviousValue } from "../../utils/getPreviousValue";
+import { handleError } from "../../utils/handleError";
 
 const columnsAdapter = createEntityAdapter({
   selectId: column => column.uuid
@@ -12,22 +14,36 @@ const columnsAdapter = createEntityAdapter({
 
 const columnsSlice = createSlice({
   name: "columns",
-  initialState: columnsAdapter.getInitialState(),
+  initialState: columnsAdapter.getInitialState({
+    status: "idle",
+    error: null
+  }),
   reducers: {
     columnCreated(state, action) {
-      const { column } = action.payload;
+      const { column, status = "success", error = null } = action.payload;
       columnsAdapter.addOne(state, column);
+      state.status = status;
+      state.error = error;
     },
     columnRemoved(state, action) {
-      const { columnId } = action.payload;
+      const { columnId, status = "success", error = null } = action.payload;
       columnsAdapter.removeOne(state, columnId);
+      state.status = status;
+      state.error = error;
     },
     columnTitleUpdated(state, action) {
-      const { columnId, newTitle } = action.payload;
+      const {
+        columnId,
+        newTitle,
+        status = "success",
+        error = null
+      } = action.payload;
       columnsAdapter.updateOne(state, {
         id: columnId,
         changes: { title: newTitle }
       });
+      state.status = status;
+      state.error = error;
     }
   },
   extraReducers: {
@@ -35,11 +51,11 @@ const columnsSlice = createSlice({
       const columns = action.payload.flatMap(board =>
         board.columns.map(column => ({
           ...column,
-          tasks: column.tasks.map(task => task.uuid),
-          is_editing: false
+          tasks: column.tasks.map(task => task.uuid)
         }))
       );
       columnsAdapter.setAll(state, columns);
+      state.status = "success";
     },
     "tasks/taskCreated": (state, action) => {
       const { columnId, task } = action.payload;
@@ -84,16 +100,23 @@ export const createColumn = ({ column, boardId }) => async dispatch => {
       column
     );
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(
+      handleError(ex, columnRemoved, { columnId: column.uuid, boardId })
+    );
   }
 };
 
-export const removeColumn = ({ columnId, boardId }) => async dispatch => {
+export const removeColumn = ({ columnId, boardId }) => async (
+  dispatch,
+  getState
+) => {
+  const column = getPreviousValue(getState(), "columns", columnId);
+
   try {
     dispatch(columnRemoved({ columnId, boardId }));
     await axios.delete(`http://react-kanban.local/api/columns/${columnId}`);
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(handleError(ex, columnCreated, { column, boardId }));
   }
 };
 
@@ -101,7 +124,7 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
   dispatch,
   getState
 ) => {
-  const { title: oldTitle } = getPreviousValue(getState(), columnId);
+  const { title: oldTitle } = getPreviousValue(getState(), "columns", columnId);
 
   try {
     if (newTitle === oldTitle) return;
@@ -116,14 +139,8 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
       });
     }
   } catch (ex) {
-    console.error(ex.response.data);
+    dispatch(
+      handleError(ex, columnTitleUpdated, { columnId, newTitle: oldTitle })
+    );
   }
 };
-
-function getPreviousValue(state, entityId, entity = "columns") {
-  if (entityId) {
-    return state[entity].entities[entityId];
-  }
-
-  return state[entity];
-}
