@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { columnsSelectors } from "../columnsSlice";
+import { columnsSelectors, updateColumnTitle } from "../columnsSlice";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
-const ColumnTitle = ({ columnTitle }) => {
+const ColumnTitle = ({ columnId }) => {
   const dispatch = useDispatch();
+  const column = useSelector(state =>
+    columnsSelectors.selectById(state, columnId)
+  );
 
   const [title, setTitle] = useState("");
 
@@ -14,14 +17,14 @@ const ColumnTitle = ({ columnTitle }) => {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    console.log("title");
-  }, []);
+    dispatch(updateColumnTitle({ columnId, newTitle: title }));
+  }, [dispatch, columnId, title]);
 
   useEffect(() => {
-    if (columnTitle) {
-      setTitle(columnTitle);
+    if (column) {
+      setTitle(column.title);
     }
-  }, [columnTitle]);
+  }, [column]);
 
   return (
     <div className="ColumnTitle">
@@ -41,7 +44,7 @@ const ColumnTitle = ({ columnTitle }) => {
 };
 
 ColumnTitle.propTypes = {
-  columnTitle: PropTypes.string.isRequired
+  columnId: PropTypes.string.isRequired
 };
 
 export default ColumnTitle;

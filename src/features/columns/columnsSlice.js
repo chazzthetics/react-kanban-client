@@ -21,6 +21,13 @@ const columnsSlice = createSlice({
     columnRemoved(state, action) {
       const { columnId } = action.payload;
       columnsAdapter.removeOne(state, columnId);
+    },
+    columnTitleUpdated(state, action) {
+      const { columnId, newTitle } = action.payload;
+      columnsAdapter.updateOne(state, {
+        id: columnId,
+        changes: { title: newTitle }
+      });
     }
   },
   extraReducers: {
@@ -49,9 +56,14 @@ const columnsSlice = createSlice({
   }
 });
 
-export const { columnCreated, columnRemoved } = columnsSlice.actions;
+export const {
+  columnCreated,
+  columnRemoved,
+  columnTitleUpdated
+} = columnsSlice.actions;
 export default columnsSlice.reducer;
 
+// Selectors
 export const columnsSelectors = columnsAdapter.getSelectors(
   state => state.columns
 );
@@ -63,6 +75,7 @@ export const makeSelectColumnTaskCount = () =>
       columns[columnId] ? columns[columnId].tasks.length : []
   );
 
+// Thunks
 export const createColumn = ({ column, boardId }) => async dispatch => {
   try {
     dispatch(columnCreated({ column, boardId }));
@@ -83,3 +96,34 @@ export const removeColumn = ({ columnId, boardId }) => async dispatch => {
     console.error(ex.response.data);
   }
 };
+
+export const updateColumnTitle = ({ columnId, newTitle }) => async (
+  dispatch,
+  getState
+) => {
+  const { title: oldTitle } = getPreviousValue(getState(), columnId);
+
+  try {
+    if (newTitle === oldTitle) return;
+
+    if (newTitle === "") {
+      // Restore original title
+      dispatch(columnTitleUpdated({ columnId, newTitle: oldTitle }));
+    } else {
+      dispatch(columnTitleUpdated({ columnId, newTitle }));
+      await axios.patch(`http://react-kanban.local/api/columns/${columnId}`, {
+        title: newTitle
+      });
+    }
+  } catch (ex) {
+    console.error(ex.response.data);
+  }
+};
+
+function getPreviousValue(state, entityId, entity = "columns") {
+  if (entityId) {
+    return state[entity].entities[entityId];
+  }
+
+  return state[entity];
+}

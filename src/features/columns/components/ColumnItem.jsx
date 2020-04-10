@@ -20,7 +20,7 @@ const ColumnItem = ({ columnId }) => {
           height: "14rem"
         }}
       >
-        <ColumnTitle columnTitle={columns[columnId].title} />
+        <ColumnTitle columnId={columnId} />
         {columns[columnId].tasks.map(task => (
           <p key={task}>{tasks[task]["content"]}</p>
         ))}

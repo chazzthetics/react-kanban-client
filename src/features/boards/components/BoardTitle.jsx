@@ -29,17 +29,19 @@ const BoardTitle = () => {
   }, [currentBoard]);
 
   return (
-    <Editable onSubmit={handleSubmit} value={title}>
-      <EditablePreview
-        d="flex"
-        alignItems="center"
-        h="2rem"
-        borderRadius={4}
-        cursor="pointer"
-        _hover={{ backgroundColor: `green.400` }}
-      />
-      <EditableInput onChange={handleChange} />
-    </Editable>
+    <div className="BoardTitle">
+      <Editable onSubmit={handleSubmit} value={title}>
+        <EditablePreview
+          d="flex"
+          alignItems="center"
+          h="2rem"
+          borderRadius={4}
+          cursor="pointer"
+          _hover={{ backgroundColor: `green.400` }}
+        />
+        <EditableInput onChange={handleChange} />
+      </Editable>
+    </div>
   );
 };
 
