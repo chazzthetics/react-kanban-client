@@ -1,8 +1,8 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { hydrate } from "../boards/boardsSlice";
-import axios from "axios";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
+import { tasksService } from "../../api/tasksService";
 
 const tasksAdapter = createEntityAdapter({
   selectId: state => state.uuid
@@ -108,10 +108,7 @@ export default tasksSlice.reducer;
 export const createTask = ({ task, columnId }) => async dispatch => {
   try {
     dispatch(created({ task, columnId }));
-    await axios.post(
-      `http://react-kanban.local/api/columns/${columnId}/tasks`,
-      task
-    );
+    await tasksService.create(task, columnId);
   } catch (ex) {
     dispatch(handleError(ex, removed, { taskId: task.uuid, columnId }));
   }
@@ -125,20 +122,28 @@ export const removeTask = ({ taskId, columnId }) => async (
 
   try {
     dispatch(removed({ taskId, columnId }));
-    await axios.delete(`http://react-kanban.local/api/tasks/${taskId}`);
+    await tasksService.remove(taskId);
   } catch (ex) {
     dispatch(handleError(ex, created, { task, columnId }));
   }
 };
 
-export const reorderTask = ({ columnId, newOrder }) => async dispatch => {
+export const reorderTask = ({ columnId, newOrder }) => async (
+  dispatch,
+  getState
+) => {
+  const { tasks: prevOrder } = getPreviousValue(
+    getState(),
+    "columns",
+    columnId
+  );
+
   try {
     dispatch(reordered({ columnId, newOrder }));
-    await axios.patch(
-      `http://react-kanban.local/api/columns/${columnId}/tasks/reorder`,
-      { newOrder }
-    );
-  } catch (ex) {}
+    await tasksService.reorder(columnId, { newOrder });
+  } catch (ex) {
+    dispatch(handleError(ex, reordered, { columnId, newOrder: prevOrder }));
+  }
 };
 
 export const reorderBetween = ({
@@ -146,14 +151,35 @@ export const reorderBetween = ({
   endColumnId,
   startOrder,
   endOrder
-}) => async dispatch => {
+}) => async (dispatch, getState) => {
+  const { tasks: prevStartOrder } = getPreviousValue(
+    getState(),
+    "columns",
+    startColumnId
+  );
+
+  const { tasks: prevEndOrder } = getPreviousValue(
+    getState(),
+    "columns",
+    endColumnId
+  );
+
   try {
     dispatch(
       reorderedBetween({ startColumnId, endColumnId, startOrder, endOrder })
     );
-    await axios.patch(
-      `http://react-kanban.local/api/columns/${startColumnId}/${endColumnId}/tasks/between`,
-      { startOrder, endOrder }
+    await tasksService.reorderBetween(startColumnId, endColumnId, {
+      startOrder,
+      endOrder
+    });
+  } catch (ex) {
+    dispatch(
+      handleError(ex, reorderedBetween, {
+        startColumnId,
+        endColumnId,
+        startOrder: prevStartOrder,
+        endOrder: prevEndOrder
+      })
     );
-  } catch (ex) {}
+  }
 };

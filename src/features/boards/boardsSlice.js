@@ -4,10 +4,11 @@ import {
   createAsyncThunk,
   createSelector
 } from "@reduxjs/toolkit";
-import axios from "axios";
 import { slugify } from "../../utils/slugify";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
+import { boardsService } from "../../api/boardsService";
+import { fetchInitialData } from "../../api";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
@@ -17,7 +18,7 @@ export const hydrate = createAsyncThunk(
   "hydrate",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get("http://react-kanban.local/api/boards");
+      const { data } = await fetchInitialData();
       return data;
     } catch (ex) {
       rejectWithValue(ex.response.data);
@@ -203,10 +204,7 @@ export const changeBoard = boardId => async (dispatch, getState) => {
 
   try {
     dispatch(changed({ boardId }));
-
-    await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, null, {
-      params: { current: true }
-    });
+    await boardsService.update(boardId, { current: true });
   } catch (ex) {
     dispatch(handleError(ex, changed, { boardId: previousBoard }));
   }
@@ -215,7 +213,7 @@ export const changeBoard = boardId => async (dispatch, getState) => {
 export const createBoard = board => async dispatch => {
   try {
     dispatch(created({ board }));
-    await axios.post("http://react-kanban.local/api/boards", board);
+    await boardsService.create(board);
   } catch (ex) {
     dispatch(handleError(ex, removed, { boardId: board.uuid }));
   }
@@ -231,7 +229,7 @@ export const removeBoard = boardId => async (dispatch, getState) => {
   try {
     if (hasBoard) {
       dispatch(removed({ boardId, columns: board.columns, tasks }));
-      await axios.delete(`http://react-kanban.local/api/boards/${boardId}`);
+      await boardsService.remove(boardId);
     }
   } catch (ex) {
     dispatch(handleError(ex, created, { board }));
@@ -255,9 +253,7 @@ export const clearBoard = boardId => async (dispatch, getState) => {
       dispatch(
         cleared({ boardId, columns: board.columns, tasks: columnTasks })
       );
-      await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
-        clear: true
-      });
+      await boardsService.update(boardId, { clear: true });
     }
   } catch (ex) {
     dispatch(
@@ -284,9 +280,7 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
       dispatch(titleUpdated({ boardId, newTitle: oldTitle }));
     } else {
       dispatch(titleUpdated({ boardId, newTitle }));
-      await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
-        title: newTitle
-      });
+      await boardsService.update(boardId, { title: newTitle });
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));
@@ -298,9 +292,7 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
 
   try {
     dispatch(starToggled({ boardId, is_starred }));
-    await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
-      is_starred
-    });
+    await boardsService.update(boardId, { is_starred });
   } catch (ex) {
     dispatch(
       handleError(ex, starToggled, { boardId, is_starred: !is_starred })

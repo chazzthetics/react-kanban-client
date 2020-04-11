@@ -3,10 +3,10 @@ import {
   createEntityAdapter,
   createSelector
 } from "@reduxjs/toolkit";
-import axios from "axios";
 import { hydrate } from "../boards/boardsSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
+import { columnsService } from "../../api/columnsService";
 
 const columnsAdapter = createEntityAdapter({
   selectId: column => column.uuid
@@ -158,10 +158,7 @@ export const makeSelectColumnTaskCount = () =>
 export const createColumn = ({ column, boardId }) => async dispatch => {
   try {
     dispatch(created({ column, boardId }));
-    await axios.post(
-      `http://react-kanban.local/api/boards/${boardId}/columns`,
-      column
-    );
+    await columnsService.create(column, boardId);
   } catch (ex) {
     dispatch(handleError(ex, removed, { columnId: column.uuid, boardId }));
   }
@@ -175,7 +172,7 @@ export const removeColumn = ({ columnId, boardId }) => async (
 
   try {
     dispatch(removed({ columnId, boardId, tasks: column.tasks }));
-    await axios.delete(`http://react-kanban.local/api/columns/${columnId}`);
+    await columnsService.remove(columnId);
   } catch (ex) {
     dispatch(handleError(ex, created, { column, boardId }));
   }
@@ -190,9 +187,7 @@ export const clearColumn = columnId => async (dispatch, getState) => {
   try {
     if (column.tasks.length > 0) {
       dispatch(cleared({ columnId, tasks: column.tasks }));
-      await axios.patch(`http://react-kanban.local/api/columns/${columnId}`, {
-        clear: true
-      });
+      await columnsService.update(columnId, { clear: true });
     }
   } catch (ex) {
     dispatch(
@@ -218,9 +213,7 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
       dispatch(titleUpdated({ columnId, newTitle: oldTitle }));
     } else {
       dispatch(titleUpdated({ columnId, newTitle }));
-      await axios.patch(`http://react-kanban.local/api/columns/${columnId}`, {
-        title: newTitle
-      });
+      await columnsService.update(columnId, { title: newTitle });
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { columnId, newTitle: oldTitle }));
@@ -239,10 +232,7 @@ export const reorderColumn = ({ boardId, newOrder }) => async (
 
   try {
     dispatch(reordered({ boardId, newOrder }));
-    await axios.patch(
-      `http://react-kanban.local/api/boards/${boardId}/columns/reorder`,
-      { newOrder }
-    );
+    await columnsService.reorder(boardId, { newOrder });
   } catch (ex) {
     dispatch(handleError(ex, reordered, { boardId, newOrder: prevOrder }));
   }
