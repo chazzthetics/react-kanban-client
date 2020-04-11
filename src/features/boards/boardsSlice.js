@@ -88,7 +88,6 @@ const boardsSlice = createSlice({
       const { board, status = "success", error = null } = action.payload;
       state.status = status;
       state.error = error;
-      console.log(board);
       boardsAdapter.upsertOne(state, board);
     },
     titleUpdated(state, action) {

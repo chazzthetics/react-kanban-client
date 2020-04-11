@@ -40,6 +40,7 @@ const tasksSlice = createSlice({
       );
 
       tasksAdapter.setAll(state, tasks);
+      state.status = "success";
     },
     "boards/removed": (state, action) => {
       const { tasks } = action.payload;
@@ -50,6 +51,18 @@ const tasksSlice = createSlice({
       tasksAdapter.removeMany(state, tasks);
     },
     "boards/restored": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.upsertMany(state, tasks);
+    },
+    "columns/removed": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.removeMany(state, tasks);
+    },
+    "columns/cleared": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.removeMany(state, tasks);
+    },
+    "columns/restored": (state, action) => {
       const { tasks } = action.payload;
       tasksAdapter.upsertMany(state, tasks);
     }

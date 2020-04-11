@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { Draggable } from "react-beautiful-dnd";
 import { selectCurrentBoardId } from "../../boards/boardsSlice";
-import { removeColumn } from "../columnsSlice";
+import { removeColumn, clearColumn } from "../columnsSlice";
 import ColumnTitle from "./ColumnTitle";
 import CreateTaskForm from "../../tasks/components/CreateTaskForm";
 import TaskList from "../../tasks/components/TaskList";
@@ -12,9 +12,13 @@ const ColumnItem = ({ columnId, index }) => {
   const dispatch = useDispatch();
 
   const currentBoardId = useSelector(selectCurrentBoardId);
-  const remove = () => {
+  const handleRemoveColumn = React.useCallback(() => {
     dispatch(removeColumn({ columnId, boardId: currentBoardId }));
-  };
+  }, [dispatch, columnId, currentBoardId]);
+
+  const handleClearColumn = React.useCallback(() => {
+    dispatch(clearColumn(columnId));
+  }, [dispatch, columnId]);
 
   return (
     <Draggable
@@ -29,7 +33,10 @@ const ColumnItem = ({ columnId, index }) => {
           {...provided.dragHandleProps}
           {...provided.draggableProps}
         >
-          <button onClick={remove}>delete</button>
+          <button onClick={handleRemoveColumn} style={{ marginRight: "2rem" }}>
+            delete
+          </button>
+          <button onClick={handleClearColumn}>clear</button>
           <div
             key={columnId}
             style={{
