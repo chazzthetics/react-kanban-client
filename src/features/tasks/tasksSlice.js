@@ -44,6 +44,14 @@ const tasksSlice = createSlice({
     "boards/removed": (state, action) => {
       const { tasks } = action.payload;
       tasksAdapter.removeMany(state, tasks);
+    },
+    "boards/cleared": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.removeMany(state, tasks);
+    },
+    "boards/restored": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.upsertMany(state, tasks);
     }
   }
 });

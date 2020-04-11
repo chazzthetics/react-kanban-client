@@ -75,6 +75,22 @@ const boardsSlice = createSlice({
 
       state.current = state.ids[state.ids.length - 1] || "";
     },
+    cleared(state, action) {
+      const { boardId, status = "success", error = null } = action.payload;
+      state.status = status;
+      state.error = error;
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { columns: [] }
+      });
+    },
+    restored(state, action) {
+      const { board, status = "success", error = null } = action.payload;
+      state.status = status;
+      state.error = error;
+      console.log(board);
+      boardsAdapter.upsertOne(state, board);
+    },
     titleUpdated(state, action) {
       const {
         boardId,
@@ -155,6 +171,8 @@ export const {
   changed,
   created,
   removed,
+  cleared,
+  restored,
   titleUpdated,
   starToggled
 } = boardsSlice.actions;
@@ -218,6 +236,38 @@ export const removeBoard = boardId => async (dispatch, getState) => {
     }
   } catch (ex) {
     dispatch(handleError(ex, created, { board }));
+  }
+};
+
+export const clearBoard = boardId => async (dispatch, getState) => {
+  const board = getPreviousValue(getState(), "boards", boardId);
+  const columnTasks = board.columns.flatMap(
+    column => getPreviousValue(getState(), "columns", column).tasks
+  );
+  const columns = board.columns.flatMap(column =>
+    getPreviousValue(getState(), "columns", column)
+  );
+  const tasks = columnTasks.flatMap(task =>
+    getPreviousValue(getState(), "tasks", task)
+  );
+
+  try {
+    if (board.columns.length > 0) {
+      dispatch(
+        cleared({ boardId, columns: board.columns, tasks: columnTasks })
+      );
+      await axios.patch(`http://react-kanban.local/api/boards/${boardId}`, {
+        clear: true
+      });
+    }
+  } catch (ex) {
+    dispatch(
+      handleError(ex, restored, {
+        board: { ...board, columns: board.columns },
+        columns,
+        tasks
+      })
+    );
   }
 };
 

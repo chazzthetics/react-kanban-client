@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import {
   removeBoard,
+  clearBoard,
   selectCurrentBoardId,
   boardsSelectors,
   selectCurrentBoard
@@ -21,7 +22,9 @@ const MainBoard = () => {
     dispatch(removeBoard(currentBoardId));
   }, [dispatch, currentBoardId]);
 
-  const handleClearBoard = React.useCallback(() => {}, []);
+  const handleClearBoard = React.useCallback(() => {
+    dispatch(clearBoard(currentBoardId));
+  }, [dispatch, currentBoardId]);
 
   const currentBoard = useSelector(selectCurrentBoard);
   const columns = useSelector(state => columnsSelectors.selectEntities(state));

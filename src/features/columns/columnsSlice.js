@@ -46,11 +46,13 @@ const columnsSlice = createSlice({
       state.error = error;
     },
     reordered(state, action) {
-      const { newOrder } = action.payload;
+      const { newOrder, status = "success", error = null } = action.payload;
       columnsAdapter.updateMany(
         state,
         newOrder.map((id, index) => (state.entities[id].position = index))
       );
+      state.status = status;
+      state.error = error;
     }
   },
   extraReducers: {
@@ -67,6 +69,14 @@ const columnsSlice = createSlice({
     "boards/removed": (state, action) => {
       const { columns } = action.payload;
       columnsAdapter.removeMany(state, columns);
+    },
+    "boards/cleared": (state, action) => {
+      const { columns } = action.payload;
+      columnsAdapter.removeMany(state, columns);
+    },
+    "boards/restored": (state, action) => {
+      const { columns } = action.payload;
+      columnsAdapter.upsertMany(state, columns);
     },
     "tasks/created": (state, action) => {
       const { columnId, task } = action.payload;
@@ -158,6 +168,12 @@ export const reorderColumn = ({ boardId, newOrder }) => async (
   dispatch,
   getState
 ) => {
+  const { columns: prevOrder } = getPreviousValue(
+    getState(),
+    "boards",
+    boardId
+  );
+
   try {
     dispatch(reordered({ boardId, newOrder }));
     await axios.patch(
@@ -165,6 +181,6 @@ export const reorderColumn = ({ boardId, newOrder }) => async (
       { newOrder }
     );
   } catch (ex) {
-    //TODO:
+    dispatch(handleError(ex, reordered, { boardId, newOrder: prevOrder }));
   }
 };
