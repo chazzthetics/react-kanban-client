@@ -23,10 +23,12 @@ const ColumnTitle = ({ columnId }) => {
         <EditablePreview
           d="flex"
           alignItems="center"
-          h="2rem"
+          py={2}
+          px={4}
           borderRadius={4}
           cursor="pointer"
           _hover={{ backgroundColor: `green.400` }}
+          as="button"
         />
         <EditableInput onChange={handleChange} />
       </Editable>

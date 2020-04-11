@@ -98,12 +98,36 @@ const columnsSlice = createSlice({
       state.entities[columnId].tasks.push(task.uuid);
     },
     "tasks/removed": (state, action) => {
-      const { taskId, columnId } = action.payload;
+      const { columnId, taskId } = action.payload;
       const tasks = state.entities[columnId].tasks;
       const removeIndex = tasks.indexOf(taskId);
       if (removeIndex >= 0) {
         tasks.splice(removeIndex, 1);
       }
+    },
+    "tasks/reordered": (state, action) => {
+      const { columnId, newOrder } = action.payload;
+      columnsAdapter.updateOne(state, {
+        id: columnId,
+        changes: { tasks: newOrder }
+      });
+    },
+    "tasks/reorderedBetween": (state, action) => {
+      console.log(action.payload);
+      const {
+        startColumnId,
+        endColumnId,
+        startOrder,
+        endOrder
+      } = action.payload;
+      columnsAdapter.updateOne(state, {
+        id: startColumnId,
+        changes: { tasks: startOrder }
+      });
+      columnsAdapter.updateOne(state, {
+        id: endColumnId,
+        changes: { tasks: endOrder }
+      });
     }
   }
 });

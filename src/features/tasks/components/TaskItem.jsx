@@ -14,9 +14,16 @@ const TaskItem = ({ taskId, columnId }) => {
   return (
     <div
       className="TaskItem"
-      style={{ display: "flex", justifyContent: "space-between" }}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "8px 2px",
+        marginBottom: "5px",
+        border: "1px solid green",
+        background: "#ddd"
+      }}
     >
-      <p>{tasks[taskId]["content"]}</p>
+      <p>{tasks[taskId].content}</p>
       <button onClick={handleRemoveTask}>&times;</button>
     </div>
   );

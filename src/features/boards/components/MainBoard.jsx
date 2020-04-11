@@ -6,12 +6,12 @@ import {
   removeBoard,
   clearBoard,
   selectCurrentBoardId,
-  boardsSelectors,
   selectCurrentBoard
 } from "../boardsSlice";
+import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
+import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
 import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
-import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 
 const MainBoard = () => {
   //TODO: move out later
@@ -40,17 +40,45 @@ const MainBoard = () => {
       return;
     }
 
-    const startColumn = columns[source.droppableId];
-    const endColumn = columns[destination.droppableId];
-
-    console.log(type);
-    if (type === "column-board") {
+    // Reorder column
+    if (type === "column") {
       const newOrder = [...currentBoard.columns];
       const [removed] = newOrder.splice(source.index, 1);
       newOrder.splice(destination.index, 0, removed);
-      console.log(newOrder);
+
       dispatch(reorderColumn({ boardId: currentBoardId, newOrder }));
+      return;
     }
+
+    const startColumn = columns[source.droppableId];
+    const endColumn = columns[destination.droppableId];
+
+    // Reorder task inside column
+    if (type === "task" && startColumn.uuid === endColumn.uuid) {
+      const newOrder = [...startColumn.tasks];
+      const [removed] = newOrder.splice(source.index, 1);
+      newOrder.splice(destination.index, 0, removed);
+
+      dispatch(reorderTask({ columnId: startColumn.uuid, newOrder }));
+      return;
+    }
+
+    // Reorder task between columns
+    const startOrder = [...startColumn.tasks];
+    const [removed] = startOrder.splice(source.index, 1);
+    const endOrder = [...endColumn.tasks];
+    endOrder.splice(destination.index, 0, removed);
+    console.log("start", startColumn.uuid);
+    console.log("end", endColumn.uuid);
+    dispatch(
+      reorderBetween({
+        startColumnId: startColumn.uuid,
+        endColumnId: endColumn.uuid,
+        startOrder,
+        endOrder
+      })
+    );
+    return;
   };
 
   return (

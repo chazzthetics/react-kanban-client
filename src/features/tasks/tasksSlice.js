@@ -26,6 +26,33 @@ const tasksSlice = createSlice({
       tasksAdapter.removeOne(state, taskId);
       state.status = status;
       state.error = error;
+    },
+    reordered(state, action) {
+      const { newOrder, status = "success", error = null } = action.payload;
+      tasksAdapter.updateMany(
+        state,
+        newOrder.map((id, index) => (state.entities[id].position = index))
+      );
+      state.status = status;
+      state.error = error;
+    },
+    reorderedBetween(state, action) {
+      const {
+        startOrder,
+        endOrder,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateMany(
+        state,
+        startOrder.map((id, index) => (state.entities[id].position = index))
+      );
+      tasksAdapter.updateMany(
+        state,
+        endOrder.map((id, index) => (state.entities[id].position = index))
+      );
+      state.status = status;
+      state.error = error;
     }
   },
   extraReducers: {
@@ -70,7 +97,12 @@ const tasksSlice = createSlice({
 });
 
 export const tasksSelectors = tasksAdapter.getSelectors(state => state.tasks);
-export const { created, removed } = tasksSlice.actions;
+export const {
+  created,
+  removed,
+  reordered,
+  reorderedBetween
+} = tasksSlice.actions;
 export default tasksSlice.reducer;
 
 export const createTask = ({ task, columnId }) => async dispatch => {
@@ -97,4 +129,31 @@ export const removeTask = ({ taskId, columnId }) => async (
   } catch (ex) {
     dispatch(handleError(ex, created, { task, columnId }));
   }
+};
+
+export const reorderTask = ({ columnId, newOrder }) => async dispatch => {
+  try {
+    dispatch(reordered({ columnId, newOrder }));
+    await axios.patch(
+      `http://react-kanban.local/api/columns/${columnId}/tasks/reorder`,
+      { newOrder }
+    );
+  } catch (ex) {}
+};
+
+export const reorderBetween = ({
+  startColumnId,
+  endColumnId,
+  startOrder,
+  endOrder
+}) => async dispatch => {
+  try {
+    dispatch(
+      reorderedBetween({ startColumnId, endColumnId, startOrder, endOrder })
+    );
+    await axios.patch(
+      `http://react-kanban.local/api/columns/${startColumnId}/${endColumnId}/tasks/between`,
+      { startOrder, endOrder }
+    );
+  } catch (ex) {}
 };
