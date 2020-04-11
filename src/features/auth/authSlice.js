@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { fetchInitialData } from "../../api";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -16,6 +17,18 @@ export const login = createAsyncThunk(
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${data.access_token}`;
+      return data;
+    } catch (ex) {
+      rejectWithValue(ex.response.data);
+    }
+  }
+);
+
+export const hydrate = createAsyncThunk(
+  "hydrate",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await fetchInitialData();
       return data;
     } catch (ex) {
       rejectWithValue(ex.response.data);

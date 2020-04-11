@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   createSelector
 } from "@reduxjs/toolkit";
-import { hydrate } from "../boards/boardsSlice";
+import { hydrate } from "../auth/authSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { columnsService } from "../../api/columnsService";

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { hydrate } from "../features/boards/boardsSlice";
+import { hydrate } from "../features/auth/authSlice";
 import AppBar from "../components/AppBar";
 import MainBoard from "../features/boards/components/MainBoard";
 
@@ -8,7 +8,7 @@ const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector(state => state.auth);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       dispatch(hydrate());
     }

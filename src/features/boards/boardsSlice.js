@@ -1,30 +1,17 @@
 import {
   createSlice,
   createEntityAdapter,
-  createAsyncThunk,
   createSelector
 } from "@reduxjs/toolkit";
 import { slugify } from "../../utils/slugify";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { boardsService } from "../../api/boardsService";
-import { fetchInitialData } from "../../api";
+import { hydrate } from "../auth/authSlice";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
 });
-
-export const hydrate = createAsyncThunk(
-  "hydrate",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await fetchInitialData();
-      return data;
-    } catch (ex) {
-      rejectWithValue(ex.response.data);
-    }
-  }
-);
 
 const boardsSlice = createSlice({
   name: "boards",
