@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { fetchInitialData } from "../../api";
 import { fetchActivities } from "../activities/activitiesSlice";
+import { getInitials } from "../../utils/getInitials";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -55,9 +56,13 @@ const authSlice = createSlice({
     },
     [login.fulfilled]: (state, action) => {
       if (state.status === "pending") {
+        const { access_token, user } = action.payload;
         state.isAuthenticated = true;
-        state.access_token = action.payload.access_token;
-        state.user = action.payload.user;
+        state.access_token = access_token;
+        state.user = {
+          ...user,
+          initials: getInitials(user.name)
+        };
         state.status = "success";
       }
     }

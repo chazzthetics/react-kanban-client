@@ -202,6 +202,7 @@ export const createBoard = board => async dispatch => {
   try {
     dispatch(created({ board }));
     await boardsService.create(board);
+    dispatch(fetchActivities());
   } catch (ex) {
     dispatch(handleError(ex, removed, { boardId: board.uuid }));
   }
@@ -210,14 +211,16 @@ export const createBoard = board => async dispatch => {
 export const removeBoard = boardId => async (dispatch, getState) => {
   const board = getPreviousValue(getState(), "boards", boardId);
   const hasBoard = getPreviousValue(getState(), "boards").ids.length > 0;
-  const tasks = board.columns.flatMap(
-    column => getPreviousValue(getState(), "columns", column).tasks
-  );
 
   try {
     if (hasBoard) {
+      const tasks = board.columns.flatMap(
+        column => getPreviousValue(getState(), "columns", column).tasks
+      );
+
       dispatch(removed({ boardId, columns: board.columns, tasks }));
       await boardsService.remove(boardId);
+      dispatch(fetchActivities());
     }
   } catch (ex) {
     dispatch(handleError(ex, created, { board }));

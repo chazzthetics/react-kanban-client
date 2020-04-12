@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/core";
 import BoardTitle from "./BoardTitle";
 import StarBoardButton from "./StarBoardButton";
 
-const BoardHeader = () => {
+const BoardHeader = ({ onToggle }) => {
   return (
     <Flex
       className="BoardHeader"
@@ -19,6 +19,7 @@ const BoardHeader = () => {
         <BoardTitle />
         <StarBoardButton />
       </Flex>
+      <button onClick={onToggle}>Show Activity</button>
     </Flex>
   );
 };

@@ -10,9 +10,9 @@ import {
 } from "../boardsSlice";
 import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
-import { activitiesSelectors } from "../../activities/activitiesSlice";
 import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
+import ActivityFeed from "../../activities/components/ActivityFeed";
 
 const MainBoard = () => {
   //TODO: move out later
@@ -69,8 +69,7 @@ const MainBoard = () => {
     const [removed] = startOrder.splice(source.index, 1);
     const endOrder = [...endColumn.tasks];
     endOrder.splice(destination.index, 0, removed);
-    console.log("start", startColumn.uuid);
-    console.log("end", endColumn.uuid);
+
     dispatch(
       reorderBetween({
         startColumnId: startColumn.uuid,
@@ -82,24 +81,18 @@ const MainBoard = () => {
     return;
   };
 
-  const activities = useSelector(state => activitiesSelectors.selectAll(state));
-  const { user } = useSelector(state => state.auth);
+  //TODO: Refactor/move
+  const [show, setShow] = React.useState(false);
+
+  const handleToggleActivityFeed = React.useCallback(() => {
+    setShow(show => !show);
+  }, []);
 
   return (
     <div className="MainBoard">
-      <BoardHeader />
+      <BoardHeader onToggle={handleToggleActivityFeed} />
       <CreateBoardForm />
-      <div className="Activity">
-        <h1 style={{ fontWeight: "bold" }}>Activity</h1>
-        <ul>
-          {activities.map(activity => (
-            <div key={activity.id}>
-              <li>{getActivity(user, activity)}</li>
-              <li style={{ fontSize: ".8rem" }}>{activity.created_at}</li>
-            </div>
-          ))}
-        </ul>
-      </div>
+      {show && <ActivityFeed />}
       <button
         type="button"
         style={{
@@ -129,26 +122,3 @@ const MainBoard = () => {
 };
 
 export default MainBoard;
-
-function getActivity(user, activity) {
-  let activityDescription;
-  if (activity.recordable_type === "App\\Board") {
-    if (activity.description === "board_created") {
-      activityDescription = `${getInitials(user.name)} created a new board`;
-    } else if (activity.description === "board_title_updated") {
-      activityDescription = `${getInitials(user.name)} renamed this board ${
-        activity.changes.before.title
-      } to ${activity.changes.after.title}`;
-    }
-  }
-
-  return activityDescription;
-}
-
-function getInitials(name) {
-  const split = name.split(" ");
-  const first = split[0][0];
-  const last = split[1][0];
-
-  return `${first} ${last}`;
-}
