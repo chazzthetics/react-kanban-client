@@ -8,6 +8,7 @@ import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { boardsService } from "../../api/boardsService";
 import { hydrate } from "../auth/authSlice";
+import { fetchActivities } from "../activities/activitiesSlice";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
@@ -268,6 +269,7 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
     } else {
       dispatch(titleUpdated({ boardId, newTitle }));
       await boardsService.update(boardId, { title: newTitle });
+      dispatch(fetchActivities());
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));

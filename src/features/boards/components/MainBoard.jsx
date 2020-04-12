@@ -10,6 +10,7 @@ import {
 } from "../boardsSlice";
 import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
+import { activitiesSelectors } from "../../activities/activitiesSlice";
 import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
 
@@ -81,10 +82,24 @@ const MainBoard = () => {
     return;
   };
 
+  const activities = useSelector(state => activitiesSelectors.selectAll(state));
+  const { user } = useSelector(state => state.auth);
+
   return (
     <div className="MainBoard">
       <BoardHeader />
       <CreateBoardForm />
+      <div className="Activity">
+        <h1 style={{ fontWeight: "bold" }}>Activity</h1>
+        <ul>
+          {activities.map(activity => (
+            <div key={activity.id}>
+              <li>{getActivity(user, activity)}</li>
+              <li style={{ fontSize: ".8rem" }}>{activity.created_at}</li>
+            </div>
+          ))}
+        </ul>
+      </div>
       <button
         type="button"
         style={{
@@ -114,3 +129,26 @@ const MainBoard = () => {
 };
 
 export default MainBoard;
+
+function getActivity(user, activity) {
+  let activityDescription;
+  if (activity.recordable_type === "App\\Board") {
+    if (activity.description === "board_created") {
+      activityDescription = `${getInitials(user.name)} created a new board`;
+    } else if (activity.description === "board_title_updated") {
+      activityDescription = `${getInitials(user.name)} renamed this board ${
+        activity.changes.before.title
+      } to ${activity.changes.after.title}`;
+    }
+  }
+
+  return activityDescription;
+}
+
+function getInitials(name) {
+  const split = name.split(" ");
+  const first = split[0][0];
+  const last = split[1][0];
+
+  return `${first} ${last}`;
+}
