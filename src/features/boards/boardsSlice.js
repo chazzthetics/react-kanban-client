@@ -285,6 +285,7 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
   try {
     dispatch(starToggled({ boardId, is_starred }));
     await boardsService.update(boardId, { is_starred });
+    dispatch(fetchActivities());
   } catch (ex) {
     dispatch(
       handleError(ex, starToggled, { boardId, is_starred: !is_starred })

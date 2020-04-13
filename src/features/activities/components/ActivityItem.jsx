@@ -14,11 +14,9 @@ const ActivityItem = ({ activity }) => {
   }, [dispatch, activity]);
 
   return (
-    <div key={activity.id} className="ActivityItem">
-      <li>
-        <span style={{ marginRight: "3rem" }}>{`${
-          user.initials
-        } ${getActivityMessage(activity)}`}</span>
+    <div className="ActivityItem">
+      <li style={{ display: "flex" }}>
+        <span>{`${user.initials} ${getActivityMessage(activity)}`}</span>
         <button onClick={handleRemoveActivity}>&times;</button>
       </li>
       <li style={{ fontSize: ".8rem" }}>
@@ -29,7 +27,14 @@ const ActivityItem = ({ activity }) => {
 };
 
 ActivityItem.propTypes = {
-  activity: PropTypes.object.isRequired
+  activity: PropTypes.shape({
+    id: PropTypes.number,
+    description: PropTypes.string,
+    changes: PropTypes.object,
+    recordable_type: PropTypes.string,
+    created_at: PropTypes.string,
+    updated_at: PropTypes.string
+  }).isRequired
 };
 
 export default memo(ActivityItem);

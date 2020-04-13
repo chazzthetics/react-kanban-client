@@ -114,7 +114,6 @@ const columnsSlice = createSlice({
       });
     },
     "tasks/reorderedBetween": (state, action) => {
-      console.log(action.payload);
       const {
         startColumnId,
         endColumnId,

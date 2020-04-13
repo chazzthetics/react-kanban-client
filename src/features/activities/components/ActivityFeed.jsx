@@ -16,7 +16,7 @@ const ActivityFeed = () => {
     <div className="ActivityFeed">
       <h1 style={{ fontWeight: "bold" }}>Activity</h1>
       <button onClick={handleClearActivities}>Clear All</button>
-      <ul>
+      <ul className="ActivityList" style={{ listStyleType: "none" }}>
         {activities.map(activity => (
           <ActivityItem key={activity.id} activity={activity} />
         ))}

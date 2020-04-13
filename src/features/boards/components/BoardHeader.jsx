@@ -1,9 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentBoardId } from "../boardsSlice";
 import { Flex } from "@chakra-ui/core";
 import BoardTitle from "./BoardTitle";
 import StarBoardButton from "./StarBoardButton";
+import SideBar from "../../../components/SideBar";
+import ActivityFeed from "../../activities/components/ActivityFeed";
 
-const BoardHeader = ({ onToggle }) => {
+const BoardHeader = () => {
+  const currentBoardId = useSelector(selectCurrentBoardId);
+
   return (
     <Flex
       className="BoardHeader"
@@ -17,9 +23,11 @@ const BoardHeader = ({ onToggle }) => {
     >
       <Flex justify="flex-start" align="center" mx={2}>
         <BoardTitle />
-        <StarBoardButton />
+        {currentBoardId && <StarBoardButton />}
       </Flex>
-      <button onClick={onToggle}>Show Activity</button>
+      <SideBar>
+        <ActivityFeed />
+      </SideBar>
     </Flex>
   );
 };

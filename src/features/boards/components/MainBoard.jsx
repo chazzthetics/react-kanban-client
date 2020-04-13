@@ -12,7 +12,6 @@ import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
 import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
-import ActivityFeed from "../../activities/components/ActivityFeed";
 
 const MainBoard = () => {
   //TODO: move out later
@@ -81,18 +80,10 @@ const MainBoard = () => {
     return;
   };
 
-  //TODO: Refactor/move
-  const [show, setShow] = React.useState(false);
-
-  const handleToggleActivityFeed = React.useCallback(() => {
-    setShow(show => !show);
-  }, []);
-
   return (
     <div className="MainBoard">
-      <BoardHeader onToggle={handleToggleActivityFeed} />
+      <BoardHeader />
       <CreateBoardForm />
-      {show && <ActivityFeed />}
       <button
         type="button"
         style={{
