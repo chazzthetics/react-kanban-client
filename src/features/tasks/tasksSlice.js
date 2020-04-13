@@ -3,7 +3,7 @@ import { hydrate } from "../auth/authSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { tasksService } from "../../api/tasksService";
-import { fetchActivities } from "../activities/activitiesSlice";
+import { fetchMostRecentActivity } from "../activities/activitiesSlice";
 
 const tasksAdapter = createEntityAdapter({
   selectId: state => state.uuid
@@ -110,7 +110,7 @@ export const createTask = ({ task, columnId }) => async dispatch => {
   try {
     dispatch(created({ task, columnId }));
     await tasksService.create(task, columnId);
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, removed, { taskId: task.uuid, columnId }));
   }
@@ -125,7 +125,7 @@ export const removeTask = ({ taskId, columnId }) => async (
   try {
     dispatch(removed({ taskId, columnId }));
     await tasksService.remove(taskId);
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, created, { task, columnId }));
   }
@@ -175,7 +175,7 @@ export const reorderBetween = ({
       startOrder,
       endOrder
     });
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(
       handleError(ex, reorderedBetween, {

@@ -17,7 +17,7 @@ export const getActivityMessage = activity => {
       } to ${changes.after.title} (from ${changes.before.title})`;
     case "removed":
       if (getEntityType(recordable_type) === "task") {
-        return `removed TASK from ${changes.before.title}`;
+        return `removed ${changes.before.content} from ${changes.before.title}`;
       }
 
       return `removed ${getEntityType(recordable_type)} ${

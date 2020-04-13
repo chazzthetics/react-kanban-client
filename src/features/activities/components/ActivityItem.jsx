@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { removeActivity } from "../activitiesSlice";
 import { getActivityMessage } from "../../../utils/getActivityMessage";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import UserAvatar from "../../auth/components/UserAvatar";
 
 const ActivityItem = ({ activity }) => {
   const { user } = useSelector(state => state.auth);
@@ -16,11 +17,12 @@ const ActivityItem = ({ activity }) => {
   return (
     <div className="ActivityItem">
       <li style={{ display: "flex" }}>
-        <span>{`${user.initials} ${getActivityMessage(activity)}`}</span>
+        <UserAvatar />
+        <span>{`${user.name} ${getActivityMessage(activity)}`}</span>
         <button onClick={handleRemoveActivity}>&times;</button>
       </li>
       <li style={{ fontSize: ".8rem" }}>
-        {`${formatDistance(new Date(activity.created_at), new Date())} ago`}
+        {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
       </li>
     </div>
   );

@@ -5,13 +5,27 @@ import {
 } from "@reduxjs/toolkit";
 import { activitiesService } from "../../api/activitiesService";
 
-const activitiesAdapter = createEntityAdapter();
+const activitiesAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.id - a.id
+});
 
 export const fetchActivities = createAsyncThunk(
   "activities/get",
+  async (page, { rejectWithValue }) => {
+    try {
+      const { data } = await activitiesService.get(page);
+      return data;
+    } catch (ex) {
+      rejectWithValue(ex);
+    }
+  }
+);
+
+export const fetchMostRecentActivity = createAsyncThunk(
+  "activities/recent",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await activitiesService.get();
+      const { data } = await activitiesService.getMostRecent();
       return data;
     } catch (ex) {
       rejectWithValue(ex);
@@ -21,18 +35,40 @@ export const fetchActivities = createAsyncThunk(
 
 const activitiesSlice = createSlice({
   name: "activities",
-  initialState: activitiesAdapter.getInitialState(),
+  initialState: activitiesAdapter.getInitialState({
+    status: "idle",
+    current: 0,
+    next: 0,
+    last: 0
+  }),
   reducers: {
     removed(state, action) {
       activitiesAdapter.removeOne(state, action.payload);
     },
     cleared(state) {
       activitiesAdapter.removeMany(state, state.ids);
+      state.current = 0;
+      state.next = 0;
+      state.last = 0;
     }
   },
   extraReducers: {
+    [fetchActivities.pending]: state => {},
     [fetchActivities.fulfilled]: (state, action) => {
-      activitiesAdapter.setAll(state, action.payload);
+      const { data, current_page, last_page } = action.payload;
+
+      state.last = last_page;
+      state.current = current_page;
+
+      if (last_page !== 1) {
+        state.next = state.current + 1;
+      }
+
+      activitiesAdapter.addMany(state, data);
+    },
+    [fetchMostRecentActivity.pending]: state => {},
+    [fetchMostRecentActivity.fulfilled]: (state, action) => {
+      activitiesAdapter.addOne(state, action.payload);
     }
   }
 });

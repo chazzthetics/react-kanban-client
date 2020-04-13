@@ -8,7 +8,7 @@ import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { boardsService } from "../../api/boardsService";
 import { hydrate } from "../auth/authSlice";
-import { fetchActivities } from "../activities/activitiesSlice";
+import { fetchMostRecentActivity } from "../activities/activitiesSlice";
 
 const boardsAdapter = createEntityAdapter({
   selectId: board => board.uuid
@@ -202,7 +202,7 @@ export const createBoard = board => async dispatch => {
   try {
     dispatch(created({ board }));
     await boardsService.create(board);
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, removed, { boardId: board.uuid }));
   }
@@ -220,7 +220,7 @@ export const removeBoard = boardId => async (dispatch, getState) => {
 
       dispatch(removed({ boardId, columns: board.columns, tasks }));
       await boardsService.remove(boardId);
-      dispatch(fetchActivities());
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, created, { board }));
@@ -272,7 +272,7 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
     } else {
       dispatch(titleUpdated({ boardId, newTitle }));
       await boardsService.update(boardId, { title: newTitle });
-      dispatch(fetchActivities());
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));
@@ -285,7 +285,7 @@ export const toggleBoardStar = boardId => async (dispatch, getState) => {
   try {
     dispatch(starToggled({ boardId, is_starred }));
     await boardsService.update(boardId, { is_starred });
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(
       handleError(ex, starToggled, { boardId, is_starred: !is_starred })

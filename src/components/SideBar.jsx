@@ -1,17 +1,15 @@
-import React, { useRef } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Box, IconButton, CloseButton, useDisclosure } from "@chakra-ui/core";
 import { FiAlignJustify } from "react-icons/fi";
 
 const SideBar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef(null);
 
   return (
     <>
       <IconButton
         aria-label="Open sidebar"
-        ref={btnRef}
         variantColor="teal"
         size="sm"
         icon={FiAlignJustify}
@@ -27,7 +25,7 @@ const SideBar = ({ children }) => {
         width={350}
         transform={isOpen ? "translateX(0)" : "translateX(400px)"}
         transition="transform 130ms ease-in"
-        overflowY="hidden"
+        overflowY="auto"
         boxShadow="xl"
       >
         <CloseButton onClick={onClose} aria-label="Close sidebar" />

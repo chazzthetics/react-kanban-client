@@ -1,8 +1,11 @@
 import axios from "axios";
 
 export const activitiesService = {
-  get: () => {
-    return axios.get("/activities");
+  get: (page = 1) => {
+    return axios.get(`/activities?page=${page}`);
+  },
+  getMostRecent: () => {
+    return axios.get("/activities/now");
   },
   remove: id => {
     return axios.delete(`/activities/${id}`);

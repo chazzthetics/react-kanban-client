@@ -15,7 +15,7 @@ const BoardHeader = () => {
       className="BoardHeader"
       align="center"
       justify="space-between"
-      bg="gray.300"
+      bg={`blue.600`}
       px={1}
       py={2}
       mb={2}

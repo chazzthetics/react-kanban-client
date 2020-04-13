@@ -7,7 +7,7 @@ import { hydrate } from "../auth/authSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { columnsService } from "../../api/columnsService";
-import { fetchActivities } from "../activities/activitiesSlice";
+import { fetchMostRecentActivity } from "../activities/activitiesSlice";
 
 const columnsAdapter = createEntityAdapter({
   selectId: column => column.uuid
@@ -159,7 +159,7 @@ export const createColumn = ({ column, boardId }) => async dispatch => {
   try {
     dispatch(created({ column, boardId }));
     await columnsService.create(column, boardId);
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, removed, { columnId: column.uuid, boardId }));
   }
@@ -174,7 +174,7 @@ export const removeColumn = ({ columnId, boardId }) => async (
   try {
     dispatch(removed({ columnId, boardId, tasks: column.tasks }));
     await columnsService.remove(columnId);
-    dispatch(fetchActivities());
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, created, { column, boardId }));
   }
@@ -216,7 +216,7 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
     } else {
       dispatch(titleUpdated({ columnId, newTitle }));
       await columnsService.update(columnId, { title: newTitle });
-      dispatch(fetchActivities());
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { columnId, newTitle: oldTitle }));

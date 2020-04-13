@@ -81,7 +81,7 @@ const MainBoard = () => {
   };
 
   return (
-    <div className="MainBoard">
+    <div className="MainBoard" style={{ height: "100%" }}>
       <BoardHeader />
       <CreateBoardForm />
       <button

@@ -1,6 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { activitiesSelectors, clearActivity } from "../activitiesSlice";
+import {
+  activitiesSelectors,
+  clearActivity,
+  fetchActivities
+} from "../activitiesSlice";
 import ActivityItem from "./ActivityItem";
 
 const ActivityFeed = () => {
@@ -12,6 +16,13 @@ const ActivityFeed = () => {
     dispatch(clearActivity());
   }, [dispatch]);
 
+  const { current, next, last } = useSelector(state => state.activities);
+  const handleLoadMore = React.useCallback(() => {
+    if (current < last) {
+      dispatch(fetchActivities(next));
+    }
+  }, [dispatch, current, next, last]);
+
   return (
     <div className="ActivityFeed">
       <h1 style={{ fontWeight: "bold" }}>Activity</h1>
@@ -21,6 +32,9 @@ const ActivityFeed = () => {
           <ActivityItem key={activity.id} activity={activity} />
         ))}
       </ul>
+      {current !== last && (
+        <button onClick={handleLoadMore}>Load More Activity</button>
+      )}
     </div>
   );
 };
