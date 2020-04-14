@@ -28,9 +28,10 @@ const ActivityFeed = () => {
       <h1 style={{ fontWeight: "bold" }}>Activity</h1>
       <button onClick={handleClearActivities}>Clear All</button>
       <ul className="ActivityList" style={{ listStyleType: "none" }}>
-        {activities.map(activity => (
-          <ActivityItem key={activity.id} activity={activity} />
-        ))}
+        {activities &&
+          activities.map(activity => (
+            <ActivityItem key={activity.id} activity={activity} />
+          ))}
       </ul>
       {current !== last && (
         <button onClick={handleLoadMore}>Load More Activity</button>

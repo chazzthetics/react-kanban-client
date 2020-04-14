@@ -7,6 +7,9 @@ export const tasksService = {
   remove: taskId => {
     return axios.delete(`/tasks/${taskId}`);
   },
+  update: (taskId, data) => {
+    return axios.patch(`/tasks/${taskId}`, data);
+  },
   reorder: (columnId, data) => {
     return axios.patch(`/columns/${columnId}/tasks/reorder`, data);
   },

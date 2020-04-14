@@ -64,11 +64,20 @@ const activitiesSlice = createSlice({
         state.next = state.current + 1;
       }
 
-      activitiesAdapter.addMany(state, data);
+      if (data) {
+        activitiesAdapter.setAll(state, data);
+      }
+      //TODO: check if load more activities work
     },
     [fetchMostRecentActivity.pending]: state => {},
     [fetchMostRecentActivity.fulfilled]: (state, action) => {
       activitiesAdapter.addOne(state, action.payload);
+    },
+    "boards/removed": state => {
+      activitiesAdapter.removeMany(state, state.ids);
+      state.current = 0;
+      state.next = 0;
+      state.last = 0;
     }
   }
 });

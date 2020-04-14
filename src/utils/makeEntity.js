@@ -1,11 +1,11 @@
 import { nanoid } from "./nanoid";
 import { slugify } from "./slugify";
 
-export const makeBoard = (title, color) => {
+export const makeBoard = (title, background) => {
   return {
     uuid: nanoid(),
     title,
-    color,
+    background,
     slug: slugify(title),
     is_current: true,
     is_starred: false,
@@ -19,15 +19,18 @@ export const makeColumn = (title, position) => {
     title,
     position,
     is_locked: false,
-    is_editing: false,
     tasks: []
   };
 };
 
-export const makeTask = (content, position) => {
+export const makeTask = (title, position) => {
   return {
     uuid: nanoid(),
-    content,
+    title,
+    description: null,
+    comment: null,
+    attatchment: null,
+    due_date: null,
     is_locked: false,
     is_editing: false,
     position

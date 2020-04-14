@@ -28,6 +28,7 @@ const BoardTitle = () => {
           h="2rem"
           borderRadius={4}
           cursor="pointer"
+          color="white"
           _hover={{ backgroundColor: `green.400` }}
         />
         <EditableInput onChange={handleChange} />

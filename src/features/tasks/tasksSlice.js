@@ -28,6 +28,20 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    titleUpdated(state, action) {
+      const {
+        taskId,
+        newTitle,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { title: newTitle }
+      });
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -101,6 +115,7 @@ export const tasksSelectors = tasksAdapter.getSelectors(state => state.tasks);
 export const {
   created,
   removed,
+  titleUpdated,
   reordered,
   reorderedBetween
 } = tasksSlice.actions;
@@ -128,6 +143,28 @@ export const removeTask = ({ taskId, columnId }) => async (
     dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(handleError(ex, created, { task, columnId }));
+  }
+};
+
+export const updateTaskTitle = ({ taskId, newTitle }) => async (
+  dispatch,
+  getState
+) => {
+  const { title: oldTitle } = getPreviousValue(getState(), "tasks", taskId);
+
+  try {
+    if (newTitle === oldTitle) return;
+
+    if (newTitle === "") {
+      // Restore original title
+      dispatch(titleUpdated({ taskId, newTitle: oldTitle }));
+    } else {
+      dispatch(titleUpdated({ taskId, newTitle }));
+      await tasksService.update(taskId, { title: newTitle });
+      // dispatch(fetchMostRecentActivity());
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, titleUpdated, { taskId, newTitle: oldTitle }));
   }
 };
 

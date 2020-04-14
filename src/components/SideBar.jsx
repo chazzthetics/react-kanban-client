@@ -1,20 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, IconButton, CloseButton, useDisclosure } from "@chakra-ui/core";
-import { FiAlignJustify } from "react-icons/fi";
+import { Box, Button, CloseButton, useDisclosure } from "@chakra-ui/core";
+import { FiMoreHorizontal } from "react-icons/fi";
 
 const SideBar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <IconButton
-        aria-label="Open sidebar"
-        variantColor="teal"
+      <Button
+        aria-label="Open menu"
         size="sm"
-        icon={FiAlignJustify}
+        fontSize="14px"
         onClick={onOpen}
-      />
+        leftIcon={FiMoreHorizontal}
+        color="white"
+        bg="rgba(255,255,255,0.2)"
+      >
+        Show Menu
+      </Button>
 
       <Box
         height={"calc(100vh - 2.5rem)"}

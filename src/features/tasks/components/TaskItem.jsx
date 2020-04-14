@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { tasksSelectors, removeTask } from "../tasksSlice";
+import { tasksSelectors, updateTaskTitle, removeTask } from "../tasksSlice";
+import { useEditable } from "../../../hooks/useEditable";
 
 const TaskItem = ({ taskId, columnId }) => {
   const dispatch = useDispatch();
@@ -10,6 +11,22 @@ const TaskItem = ({ taskId, columnId }) => {
   const handleRemoveTask = useCallback(() => {
     dispatch(removeTask({ taskId, columnId }));
   }, [dispatch, taskId, columnId]);
+
+  const [title, handleChange] = useEditable(tasks[taskId], "title");
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      dispatch(updateTaskTitle({ taskId, newTitle: title }));
+      setShowEdit(false);
+    },
+    [dispatch, taskId, title]
+  );
+
+  const [showEdit, setShowEdit] = React.useState(false);
+  const handleEditTask = () => {
+    setShowEdit(true);
+  };
 
   return (
     <div
@@ -20,11 +37,19 @@ const TaskItem = ({ taskId, columnId }) => {
         padding: "8px 2px",
         marginBottom: "5px",
         border: "1px solid green",
-        background: "#ddd"
+        background: "#ddd",
+        cursor: "pointer"
       }}
     >
-      <p>{tasks[taskId].content}</p>
+      {showEdit ? (
+        <form onBlur={handleSubmit}>
+          <textarea value={title} onChange={handleChange} />
+        </form>
+      ) : (
+        <p>{tasks[taskId].title}</p>
+      )}
       <button onClick={handleRemoveTask}>&times;</button>
+      <button onClick={handleEditTask}>Edit</button>
     </div>
   );
 };

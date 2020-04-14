@@ -7,7 +7,7 @@ import { getInitials } from "../../utils/getInitials";
 export const login = createAsyncThunk(
   "auth/login",
   async (
-    credentials = { email: "jane@test.com", password: "password" },
+    credentials = { email: "jdoe@test.com", password: "password" },
     { rejectWithValue }
   ) => {
     try {

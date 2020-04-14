@@ -10,7 +10,6 @@ import {
 } from "../boardsSlice";
 import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
-import CreateBoardForm from "./CreateBoardForm";
 import ColumnList from "../../columns/components/ColumnList";
 
 const MainBoard = () => {
@@ -83,7 +82,6 @@ const MainBoard = () => {
   return (
     <div className="MainBoard" style={{ height: "100%" }}>
       <BoardHeader />
-      <CreateBoardForm />
       <button
         type="button"
         style={{

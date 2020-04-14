@@ -15,7 +15,7 @@ const CreateTaskForm = ({ columnId }) => {
   const dispatch = useDispatch();
   const onSubmit = useCallback(
     data => {
-      const task = makeTask(data.taskContent, position);
+      const task = makeTask(data.title, position);
       dispatch(createTask({ task, columnId }));
       reset();
     },
@@ -30,7 +30,7 @@ const CreateTaskForm = ({ columnId }) => {
           placeholder="Add Task"
           style={{ border: "1px solid black" }}
           ref={register}
-          name="taskContent"
+          name="title"
         />
       </form>
     </div>

@@ -8,13 +8,15 @@ import {
   ButtonGroup,
   ListItem,
   Link,
-  IconButton,
+  // IconButton,
   Heading
 } from "@chakra-ui/core";
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
 import SelectBoardInput from "../features/boards/components/SelectBoardInput";
+import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
+import IconButton from "./IconButton";
 
 const AppBar = () => {
   const dispatch = useDispatch();
@@ -28,16 +30,15 @@ const AppBar = () => {
       as="header"
       bg={"blue.600"}
       h="2.5rem"
-      p={4}
       position="relative"
       w="100%"
+      px={4}
     >
       <div
         className="overlay"
         style={{
           width: "100vw",
           height: "2.5rem",
-          padding: "16px",
           position: "absolute",
           top: 0,
           right: 0,
@@ -57,14 +58,7 @@ const AppBar = () => {
           <ButtonGroup d="flex" spacing={1}>
             <ListItem mr={1}>
               <Link>
-                <IconButton
-                  icon={FiHome}
-                  aria-label="Dashboard"
-                  fontSize="1.3rem"
-                  size="sm"
-                  color="white"
-                  bg="rgba(255,255,255,0.2)"
-                />
+                <IconButton icon={FiHome} label="Dashboard" fontSize="1.3rem" />
               </Link>
             </ListItem>
             <ListItem d="flex" alignItems="center">
@@ -80,7 +74,14 @@ const AppBar = () => {
             color="white"
             zIndex={10}
           >
-            <a href="/">REACT KANBAN</a>
+            <Link
+              href="/"
+              opacity={0.8}
+              _hover={{ opacity: 1 }}
+              transition="opacity 120ms ease-in"
+            >
+              REACT KANBAN
+            </Link>
           </Heading>
         </Flex>
         <List
@@ -91,28 +92,13 @@ const AppBar = () => {
         >
           <ButtonGroup d="flex" spacing={1}>
             <ListItem>
-              <IconButton
-                icon="add"
-                aria-label="Create New Board"
-                fontSize="1rem"
-                size="sm"
-              />
+              <CreateBoardPopover />
             </ListItem>
             <ListItem>
-              <IconButton
-                icon={GoMarkGithub}
-                aria-label="Source Code"
-                fontSize="1rrem"
-                size="sm"
-              />
+              <IconButton icon={GoMarkGithub} label="Source Code" />
             </ListItem>
             <ListItem>
-              <IconButton
-                icon={FiSun}
-                aria-label="Dashboard"
-                fontSize="1rem"
-                size="sm"
-              />
+              <IconButton icon={FiSun} label="Change Theme" />
             </ListItem>
             <ListItem>
               <UserAvatar onTempLogin={handleTempLogin} />

@@ -8,15 +8,9 @@ export const columnsService = {
     return axios.delete(`/columns/${columnId}`);
   },
   update: (columnId, data) => {
-    return axios.patch(
-      `http://react-kanban.local/api/columns/${columnId}`,
-      data
-    );
+    return axios.patch(`/columns/${columnId}`, data);
   },
   reorder: (boardId, data) => {
-    return axios.patch(
-      `http://react-kanban.local/api/boards/${boardId}/columns/reorder`,
-      data
-    );
+    return axios.patch(`/boards/${boardId}/columns/reorder`, data);
   }
 };
