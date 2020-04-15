@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBoardStar, selectCurrentBoard } from "../boardsSlice";
-import { IconButton } from "@chakra-ui/core";
 import { FiStar } from "react-icons/fi";
+import IconButton from "../../../components/IconButton";
 
 const StarBoardButton = () => {
   const currentBoard = useSelector(selectCurrentBoard);
@@ -15,11 +15,9 @@ const StarBoardButton = () => {
 
   return (
     <IconButton
-      aria-label="Toggle Star Board"
       icon={FiStar}
-      size="sm"
-      fontSize="1rem"
-      color={currentBoard?.is_starred ? `yellow.400` : "black"}
+      label="Toggle Star Board"
+      color={currentBoard.is_starred ? `yellow.400` : "white"}
       onClick={handleStarBoard}
     />
   );

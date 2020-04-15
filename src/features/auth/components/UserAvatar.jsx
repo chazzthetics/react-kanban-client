@@ -2,17 +2,18 @@ import React from "react";
 import { Avatar } from "@chakra-ui/core";
 import { useSelector } from "react-redux";
 
-const UserAvatar = ({ onTempLogin }) => {
+const UserAvatar = ({ onTempLogin, ...rest }) => {
   const { user } = useSelector(state => state.auth);
 
   return (
     <Avatar
-      bg="green.400"
+      bg="gray.300"
       size="sm"
-      color="#fff"
+      color="black"
       cursor="pointer"
       name={user && user.name}
       onClick={onTempLogin}
+      {...rest}
     />
   );
 };

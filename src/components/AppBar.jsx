@@ -78,7 +78,7 @@ const AppBar = () => {
               href="/"
               opacity={0.8}
               _hover={{ opacity: 1 }}
-              transition="opacity 120ms ease-in"
+              transition="opacity 100ms ease-in"
             >
               REACT KANBAN
             </Link>

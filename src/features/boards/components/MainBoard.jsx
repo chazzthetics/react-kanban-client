@@ -2,12 +2,7 @@ import React from "react";
 import BoardHeader from "./BoardHeader";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
-import {
-  removeBoard,
-  clearBoard,
-  selectCurrentBoardId,
-  selectCurrentBoard
-} from "../boardsSlice";
+import { selectCurrentBoardId, selectCurrentBoard } from "../boardsSlice";
 import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
 import ColumnList from "../../columns/components/ColumnList";
@@ -16,14 +11,6 @@ const MainBoard = () => {
   //TODO: move out later
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
-
-  const handleRemoveBoard = React.useCallback(() => {
-    dispatch(removeBoard(currentBoardId));
-  }, [dispatch, currentBoardId]);
-
-  const handleClearBoard = React.useCallback(() => {
-    dispatch(clearBoard(currentBoardId));
-  }, [dispatch, currentBoardId]);
 
   const currentBoard = useSelector(selectCurrentBoard);
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
@@ -82,27 +69,6 @@ const MainBoard = () => {
   return (
     <div className="MainBoard" style={{ height: "100%" }}>
       <BoardHeader />
-      <button
-        type="button"
-        style={{
-          padding: ".6rem 1rem",
-          background: "red",
-          color: "white"
-        }}
-        onClick={handleRemoveBoard}
-      >
-        Delete Board
-      </button>
-      <button
-        type="button"
-        style={{
-          padding: ".6rem 1rem",
-          background: "lightblue"
-        }}
-        onClick={handleClearBoard}
-      >
-        Clear Board
-      </button>
       <DragDropContext onDragEnd={handleDragEnd}>
         <ColumnList />
       </DragDropContext>

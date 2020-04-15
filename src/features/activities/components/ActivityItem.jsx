@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { formatDistanceToNow } from "date-fns";
 import { removeActivity } from "../activitiesSlice";
 import { getActivityMessage } from "../../../utils/getActivityMessage";
-import { formatDistanceToNow } from "date-fns";
+import { Flex, Text } from "@chakra-ui/core";
 import UserAvatar from "../../auth/components/UserAvatar";
 
 const ActivityItem = ({ activity }) => {
@@ -15,16 +16,19 @@ const ActivityItem = ({ activity }) => {
   }, [dispatch, activity]);
 
   return (
-    <div className="ActivityItem">
-      <li style={{ display: "flex" }}>
-        <UserAvatar />
-        <span>{`${user.name} ${getActivityMessage(activity)}`}</span>
-        <button onClick={handleRemoveActivity}>&times;</button>
-      </li>
-      <li style={{ fontSize: ".8rem" }}>
-        {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
-      </li>
-    </div>
+    <Flex className="ActivityItem" as="li" py={2} ml={2} align="flex-start">
+      <UserAvatar ml={-1} />
+      <Flex direction="column" ml={2}>
+        <Text fontSize="0.875rem" color="gray.800">
+          <span style={{ fontWeight: "600" }}>{user.name} </span>
+          <span>{getActivityMessage(activity)}</span>
+        </Text>
+
+        <Text fontSize="xs" color="gray.400">
+          {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
+        </Text>
+      </Flex>
+    </Flex>
   );
 };
 

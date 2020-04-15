@@ -19,22 +19,39 @@ const BoardTitle = () => {
     );
   }, [dispatch, currentBoard, title]);
 
-  return currentBoard ? (
-    <div className="BoardTitle">
-      <Editable onSubmit={handleSubmit} value={title}>
-        <EditablePreview
-          d="flex"
-          alignItems="center"
-          h="2rem"
-          borderRadius={4}
-          cursor="pointer"
-          color="white"
-          _hover={{ backgroundColor: `green.400` }}
-        />
-        <EditableInput onChange={handleChange} />
-      </Editable>
-    </div>
-  ) : null;
+  return (
+    <Editable onSubmit={handleSubmit} value={title} placeholder="">
+      <EditablePreview
+        h="2rem"
+        d="inline-flex"
+        alignItems="center"
+        borderRadius={4}
+        cursor="pointer"
+        color="white"
+        as="h2"
+        px={2}
+        ml={0}
+        mr={2}
+        fontSize="1.2rem"
+        fontWeight={700}
+        _hover={{ backgroundColor: "hsla(0,0%,100%,0.3)" }}
+      />
+      <EditableInput
+        as="input"
+        onChange={handleChange}
+        backgroundColor="white"
+        fontSize="1.2rem"
+        fontWeight={700}
+        px={2}
+        ml={0}
+        mr={2}
+        borderRadius={2}
+        maxW={130}
+      />
+    </Editable>
+  );
 };
 
 export default BoardTitle;
+
+//FIXME: make edit input only as long as text

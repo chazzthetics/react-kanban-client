@@ -73,7 +73,7 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
             fontWeight="normal"
             _hover={{ backgroundColor: "green.500" }}
             _active={{ backgroundColor: "green.500", boxShadow: "none" }}
-            _focus={{ boxShadow: "none" }}
+            _focus={{ boxShadow: "outline" }}
             _disabled={{
               backgroundColor: "gray.200",
               color: "gray.500",

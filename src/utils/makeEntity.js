@@ -7,6 +7,7 @@ export const makeBoard = (title, background) => {
     title,
     background,
     slug: slugify(title),
+    description: null,
     is_current: true,
     is_starred: false,
     columns: []
