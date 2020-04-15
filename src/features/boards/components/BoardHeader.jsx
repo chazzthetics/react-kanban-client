@@ -6,7 +6,6 @@ import BoardTitle from "./BoardTitle";
 import StarBoardButton from "./StarBoardButton";
 import ClearBoardButton from "./ClearBoardButton";
 import RemoveBoardButton from "./RemoveBoardButton";
-import ActivityFeed from "../../activities/components/ActivityFeed";
 import SideBar from "../../../components/SideBar";
 import { sidebarTransition } from "../../../utils/transitions";
 
@@ -39,7 +38,7 @@ const BoardHeader = () => {
       <Flex justify="flex-start" align="center">
         <Box
           spacing={4}
-          transform={isOpen ? "translateX(-220px)" : "translateX(0)"}
+          transform={isOpen ? "translateX(-218px)" : "translateX(0)"}
           transition={sidebarTransition}
         >
           <ClearBoardButton />

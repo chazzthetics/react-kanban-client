@@ -12,7 +12,7 @@ const SaveButton = ({ label = "Save", ...rest }) => {
       fontWeight="normal"
       _hover={{ backgroundColor: "green.500" }}
       _active={{ backgroundColor: "green.500", boxShadow: "none" }}
-      _focus={{ boxShadow: "outline" }}
+      _focus={{ boxShadow: "none" }}
       {...rest}
     >
       {label}

@@ -30,8 +30,8 @@ const BoardTitle = () => {
         color="white"
         as="h2"
         px={2}
-        ml={0}
         mr={2}
+        ml={0}
         fontSize="1.2rem"
         fontWeight={700}
         _hover={{ backgroundColor: "hsla(0,0%,100%,0.3)" }}

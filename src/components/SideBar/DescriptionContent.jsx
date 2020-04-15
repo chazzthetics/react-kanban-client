@@ -4,6 +4,7 @@ import { Flex, Text, Box, Heading, Textarea } from "@chakra-ui/core";
 import { FiUser, FiAlignLeft } from "react-icons/fi";
 import UserAvatar from "../../features/auth/components/UserAvatar";
 import SaveButton from "../SaveButton";
+import { Editable, EditablePreview, EditableInput } from "@chakra-ui/core";
 
 const ContentHeading = ({ icon, heading }) => {
   return (
@@ -21,6 +22,7 @@ ContentHeading.propTypes = {
   heading: PropTypes.string.isRequired
 };
 
+//FIXME:  finish
 const DescriptionContent = () => {
   return (
     <>
@@ -41,19 +43,40 @@ const DescriptionContent = () => {
       </Flex>
 
       <ContentHeading icon={FiAlignLeft} heading="Description" />
-      <Box px={3} pt={3} pb={6}>
-        <form>
-          <Textarea
+      <Box px={4} pt={3} pb={6}>
+        <Editable placeholder="It's your board's time to shine! Let people know what this board is used for and what they can expect to see.">
+          <EditablePreview
             fontSize="0.875rem"
-            bg="gray.50"
+            bg="hsla(0,0%,0%,0.075)"
             px={2}
-            mb={2}
+            pt={2}
+            pb={6}
+            mb={1}
+            borderRadius={2}
+            minH="76px"
+            cursor="pointer"
+            _placeholder={{ color: "gray.600" }}
+          />
+          <EditableInput
+            as="textarea"
+            fontSize="0.875rem"
+            bg="white"
+            px={2}
+            py={2}
             borderRadius={2}
             resize="none"
-            placeholder="It's your board's time to shine! Let people know what this board is used for and what they can expect to see."
+            minH="108px"
+            h="108px"
+            color="gray.900"
+            _focus={{
+              boxShadow: "inset 0 0 0 2px #0079bf",
+              borderRadius: "4px",
+              border: "none"
+            }}
+            _placeholder={{ color: "gray.600" }}
           />
           <SaveButton />
-        </form>
+        </Editable>
       </Box>
     </>
   );

@@ -24,7 +24,7 @@ const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
       align="center"
       py={4}
       borderBottom="1px solid"
-      borderColor="gray.200"
+      borderColor="gray.300"
       position="relative"
     >
       {content !== "main" && (

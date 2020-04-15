@@ -9,9 +9,9 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Button,
   PopoverFooter
 } from "@chakra-ui/core";
+import SaveButton from "../../../components/SaveButton";
 
 const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
   const { register, handleSubmit, reset, formState } = useForm({
@@ -65,24 +65,7 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
           />
         </FormControl>
         <PopoverFooter px={0}>
-          <Button
-            type="submit"
-            size="sm"
-            color="white"
-            bg="green.400"
-            fontWeight="normal"
-            _hover={{ backgroundColor: "green.500" }}
-            _active={{ backgroundColor: "green.500", boxShadow: "none" }}
-            _focus={{ boxShadow: "outline" }}
-            _disabled={{
-              backgroundColor: "gray.200",
-              color: "gray.500",
-              cursor: "not-allowed"
-            }}
-            disabled={!isValid}
-          >
-            Create Board
-          </Button>
+          <SaveButton label="Create Board" disabled={!isValid} />
         </PopoverFooter>
       </Stack>
     </form>

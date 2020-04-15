@@ -6,7 +6,9 @@ import SideBarContainer from "./SideBarContainer";
 import SideBarHeading from "./SideBarHeading";
 import MainContent from "./MainContent";
 import DescriptionContent from "./DescriptionContent";
+import ActivityContent from "./ActivityContent";
 import IconButton from "../IconButton";
+import ActivityFeed from "../../features/activities/components/ActivityFeed";
 
 const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
   const [content, setContent] = React.useState("main");
@@ -30,7 +32,7 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
   const getSideBarContent = show => {
     switch (show) {
       case "activity":
-        return <h1>Activity</h1>;
+        return <ActivityContent />;
       case "background":
         return <h1>Background</h1>;
       case "description":
@@ -63,9 +65,10 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
           onClose={onClose}
           onShowPrevious={handleShowMain}
         />
-        <Box py={4} borderBottom="1px solid" borderColor="gray.200">
+        <Box py={4} borderBottom="1px solid" borderColor="gray.300">
           {getSideBarContent(content)}
         </Box>
+        {content === "activity" && <ActivityFeed />}
       </SideBarContainer>
     </>
   );
