@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { Box, Heading, Flex, Text, Textarea, Button } from "@chakra-ui/core";
+import { Box } from "@chakra-ui/core";
 import { FiMoreHorizontal } from "react-icons/fi";
 import SideBarContainer from "./SideBarContainer";
 import SideBarHeading from "./SideBarHeading";
 import MainContent from "./MainContent";
-import DescriptionContent from "./DescriptionContent";
-import ActivityContent from "./ActivityContent";
+import DescriptionContent from "../Description/DescriptionContent";
+import ActivityContent from "../Activity/ActivityContent";
 import IconButton from "../IconButton";
-import ActivityFeed from "../../features/activities/components/ActivityFeed";
 
 const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
   const [content, setContent] = React.useState("main");
@@ -29,7 +28,7 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
     setContent("activity");
   };
 
-  const getSideBarContent = show => {
+  const getSideBarContent = useCallback(show => {
     switch (show) {
       case "activity":
         return <ActivityContent />;
@@ -46,11 +45,10 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
           />
         );
     }
-  };
+  }, []);
 
   return (
     <>
-      {/* SideBar Trigger */}
       <IconButton
         label="Open Menu"
         icon={FiMoreHorizontal}
@@ -68,7 +66,6 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
         <Box py={4} borderBottom="1px solid" borderColor="gray.300">
           {getSideBarContent(content)}
         </Box>
-        {content === "activity" && <ActivityFeed />}
       </SideBarContainer>
     </>
   );

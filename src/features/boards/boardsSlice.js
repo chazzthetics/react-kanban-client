@@ -97,6 +97,21 @@ const boardsSlice = createSlice({
         changes: { title: newTitle, slug: slugify(newTitle) }
       });
     },
+    descriptionUpdated(state, action) {
+      const {
+        boardId,
+        description,
+        status = "success",
+        error = null
+      } = action.payload;
+      state.error = error;
+      state.status = status;
+
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { description }
+      });
+    },
     starToggled(state, action) {
       const {
         boardId,
@@ -165,6 +180,7 @@ export const {
   cleared,
   restored,
   titleUpdated,
+  descriptionUpdated,
   starToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
@@ -285,6 +301,31 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));
+  }
+};
+
+export const updateBoardDescription = ({ boardId, description }) => async (
+  dispatch,
+  getState
+) => {
+  const { description: oldDescription } = getPreviousValue(
+    getState(),
+    "boards",
+    boardId
+  );
+
+  try {
+    if (description === oldDescription) return;
+
+    dispatch(descriptionUpdated({ boardId, description }));
+    await boardsService.update(boardId, { description });
+  } catch (ex) {
+    dispatch(
+      handleError(ex, descriptionUpdated, {
+        boardId,
+        description: oldDescription
+      })
+    );
   }
 };
 

@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { selectCurrentBoard } from "../../features/boards/boardsSlice";
 import { Box } from "@chakra-ui/core";
 import { FiTrello, FiSquare } from "react-icons/fi";
 import SideBarButton from "./SideBarButton";
@@ -10,11 +12,15 @@ const MainContent = ({
   onShowBackground,
   onShowActivity
 }) => {
+  const currentBoard = useSelector(selectCurrentBoard);
+
   return (
     <>
       <SideBarButton
         text="About This Board"
-        subText="Add a description to your board"
+        subText={
+          !currentBoard?.description ? "Add a description to your board" : ""
+        }
         alignIcon="flex-start"
         icon={<Box as={FiTrello} size="1.3rem" mr={3} />}
         onClick={onShowDescription}

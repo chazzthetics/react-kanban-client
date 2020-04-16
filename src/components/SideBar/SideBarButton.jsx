@@ -8,6 +8,8 @@ const SideBarButton = ({
   onClick,
   subText = "",
   alignIcon = "center",
+  fontSize = "0.9rem",
+  fontWeight = 600,
   ...rest
 }) => {
   return (
@@ -26,13 +28,13 @@ const SideBarButton = ({
       onClick={onClick}
       {...rest}
     >
-      <Flex alignItem={alignIcon}>
-        {icon}
+      <Flex alignItems={alignIcon}>
+        {icon && <div>{icon}</div>}
         <div>
           <Text
             textAlign="left"
-            fontSize="0.9rem"
-            fontWeight={600}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
             color="gray.800"
           >
             {text}
@@ -53,7 +55,9 @@ SideBarButton.propTypes = {
   text: PropTypes.string.isRequired,
   subText: PropTypes.string,
   onClick: PropTypes.func.isRequired,
-  alignIcon: PropTypes.string
+  alignIcon: PropTypes.string,
+  fontSize: PropTypes.string,
+  fontWeight: PropTypes.number
 };
 
 export default SideBarButton;

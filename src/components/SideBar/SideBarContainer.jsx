@@ -14,7 +14,7 @@ const SideBarContainer = ({ isOpen, sidebarTransition, children }) => {
       px={2}
       borderRadius={2}
       overflowY="auto"
-      boxShadow="xl"
+      boxShadow="md"
       transform={isOpen ? "translateX(0)" : "translateX(400px)"}
       transition={sidebarTransition}
     >

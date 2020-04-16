@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Flex, Button } from "@chakra-ui/core";
+import PropTypes from "prop-types";
+import { Button } from "@chakra-ui/core";
 
 const ActivityButton = ({ label, isSelected, onSelect }) => {
   return (
@@ -37,27 +38,4 @@ const ActivityButton = ({ label, isSelected, onSelect }) => {
   );
 };
 
-const ActivityContent = () => {
-  const [isSelected, setIsSelected] = React.useState(true);
-
-  const handleSelect = () => {
-    setIsSelected(isSelected => !isSelected);
-  };
-
-  return (
-    <>
-      <ActivityButton
-        label="All"
-        isSelected={isSelected}
-        onSelect={handleSelect}
-      />
-      <ActivityButton
-        label="Comments"
-        isSelected={!isSelected}
-        onSelect={handleSelect}
-      />
-    </>
-  );
-};
-
-export default ActivityContent;
+export default ActivityButton;

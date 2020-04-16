@@ -2,21 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Flex, Heading, IconButton, CloseButton } from "@chakra-ui/core";
 
-const getHeading = content => {
-  switch (content) {
-    case "activity":
-      return "Activity";
-    case "description":
-      return "About This Board";
-    case "background":
-      return "Change Background";
-    case "main":
-      return "Menu";
-    default:
-      return "Menu";
-  }
-};
-
 const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
   return (
     <Flex
@@ -72,5 +57,20 @@ SideBarHeading.propTypes = {
   onShowPrevious: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired
 };
+
+function getHeading(content) {
+  switch (content) {
+    case "activity":
+      return "Activity";
+    case "description":
+      return "About This Board";
+    case "background":
+      return "Change Background";
+    case "main":
+      return "Menu";
+    default:
+      return "Menu";
+  }
+}
 
 export default SideBarHeading;
