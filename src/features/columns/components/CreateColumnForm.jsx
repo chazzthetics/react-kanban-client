@@ -7,10 +7,14 @@ import {
 import { createColumn } from "../columnsSlice";
 import { useForm } from "react-hook-form";
 import { makeColumn } from "../../../utils/makeEntity";
+import { Box, Input, useDisclosure } from "@chakra-ui/core";
+import CreateColumnButton from "./CreateColumnButton";
+import SaveButtonGroup from "../../../components/SaveButtonGroup";
 
 const CreateColumnForm = () => {
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const position = useSelector(selectBoardColumnCount);
 
@@ -26,16 +30,32 @@ const CreateColumnForm = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        type="text"
-        placeholder="Add new list"
-        style={{ border: "1px solid black" }}
-        name="columnTitle"
-        ref={register}
-      />
-      <button type="submit">Add</button>
-    </form>
+    <Box className="ColumnForm" minW="17rem" w="17rem">
+      {!isOpen ? (
+        <CreateColumnButton onShow={onOpen} />
+      ) : (
+        <Box bg="#ebecf0" py="6px" px="6px" borderRadius={3}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              type="text"
+              placeholder="Enter list title..."
+              name="columnTitle"
+              ref={register}
+              width="100%"
+              fontSize="0.875rem"
+              borderRadius={2}
+              h="2rem"
+              py={1}
+              px={2}
+              mb="6px"
+              autoComplete="off"
+              autoFocus
+            />
+            <SaveButtonGroup label="Add List" onClose={onClose} />
+          </form>
+        </Box>
+      )}
+    </Box>
   );
 };
 

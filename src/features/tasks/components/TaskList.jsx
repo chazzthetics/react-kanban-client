@@ -14,13 +14,14 @@ const TaskList = ({ columnId }) => {
     columns[columnId].tasks.map((task, index) => (
       <Draggable key={`drag-${task}`} draggableId={task} index={index}>
         {provided => (
-          <div
+          <Box
+            cursor="pointer"
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
           >
             <TaskItem taskId={task} columnId={columnId} />
-          </div>
+          </Box>
         )}
       </Draggable>
     ))

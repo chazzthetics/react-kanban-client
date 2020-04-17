@@ -41,7 +41,7 @@ const MainContent = ({
           onClick={onShowBackground}
         />
       </Box>
-      <ActivityFeed onShow={onShowActivity} />
+      <ActivityFeed onShow={onShowActivity} count={6} />
     </>
   );
 };

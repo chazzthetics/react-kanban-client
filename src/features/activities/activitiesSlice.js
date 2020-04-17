@@ -64,10 +64,11 @@ const activitiesSlice = createSlice({
         state.next = state.current + 1;
       }
 
-      if (data) {
+      if (state.ids.length > 0) {
+        activitiesAdapter.addMany(state, data);
+      } else {
         activitiesAdapter.setAll(state, data);
       }
-      //TODO: check if load more activities work
     },
     [fetchMostRecentActivity.pending]: state => {},
     [fetchMostRecentActivity.fulfilled]: (state, action) => {

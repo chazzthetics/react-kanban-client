@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchActivities } from "../../features/activities/activitiesSlice";
 import { Box } from "@chakra-ui/core";
 import ActivityButton from "./ActivityButton";
 import ActivityFeed from "../../features/activities/components/ActivityFeed";
-import {
-  clearActivity,
-  fetchActivities
-} from "../../features/activities/activitiesSlice";
+import SideBarButton from "../SideBar/SideBarButton";
 
 const ActivityContent = () => {
   const dispatch = useDispatch();
@@ -17,13 +15,9 @@ const ActivityContent = () => {
     setIsSelected(isSelected => !isSelected);
   };
 
-  const handleClearActivities = React.useCallback(() => {
-    dispatch(clearActivity());
-  }, [dispatch]);
-
   const { current, next, last } = useSelector(state => state.activities);
 
-  const handleLoadMore = React.useCallback(() => {
+  const handleLoadMore = useCallback(() => {
     if (current < last) {
       dispatch(fetchActivities(next));
     }
@@ -44,11 +38,17 @@ const ActivityContent = () => {
         />
       </Box>
       <ActivityFeed />
-      {/* {current !== last && (
-        <button onClick={handleLoadMore}>Load More Activity</button>
-      )} */}
-      <button onClick={handleLoadMore}>Load More Activity</button>
-      <button onClick={handleClearActivities}>Clear All</button>
+      {current !== last && (
+        <SideBarButton
+          py={4}
+          pl="2.7rem"
+          text="Load more activity"
+          textDecor="underline"
+          fontWeight={400}
+          fontSize="0.875rem"
+          onClick={handleLoadMore}
+        />
+      )}
     </>
   );
 };

@@ -17,8 +17,6 @@ const ColumnList = () => {
           px={4}
           ref={provided.innerRef}
           {...provided.droppableProps}
-          // overflowX="auto"
-          // h="80vh"
         >
           {currentBoard &&
             currentBoard.columns.map((column, index) => (
@@ -30,6 +28,7 @@ const ColumnList = () => {
                 {provided => (
                   <Box
                     h="100%"
+                    cursor="pointer"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}

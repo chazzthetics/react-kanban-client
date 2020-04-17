@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { makeSelectColumnTaskCount } from "../../columns/columnsSlice";
 import { createTask } from "../tasksSlice";
 import { makeTask } from "../../../utils/makeEntity";
-import { Box, useDisclosure } from "@chakra-ui/core";
+import { Box, Textarea, useDisclosure } from "@chakra-ui/core";
 import CreateTaskButton from "./CreateTaskButton";
 import SaveButtonGroup from "../../../components/SaveButtonGroup";
 
@@ -34,23 +34,21 @@ const CreateTaskForm = ({ columnId }) => {
         <CreateTaskButton columnId={columnId} onShow={onOpen} />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <textarea
+          <Textarea
             type="text"
             placeholder="Enter a title for this card..."
             ref={register}
             name="title"
             autoFocus
-            style={{
-              width: "100%",
-              fontSize: "0.875rem",
-              borderRadius: "3px",
-              padding: "6px 8px",
-              resize: "none",
-              minHeight: "66px",
-              marginBottom: "6px",
-              boxShadow:
-                "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)"
-            }}
+            width="100%"
+            fontSize="0.875rem"
+            borderRadius={2}
+            py={1}
+            px={2}
+            resize="none"
+            minHeight="66px"
+            marginBottom="6px"
+            boxShadow="md"
           />
           <SaveButtonGroup label="Add Card" onClose={onClose} />
         </form>
