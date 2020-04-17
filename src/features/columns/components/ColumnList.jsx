@@ -28,13 +28,14 @@ const ColumnList = () => {
                 draggableId={`drag-${column}`}
               >
                 {provided => (
-                  <div
+                  <Box
+                    h="100%"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
                     <ColumnItem columnId={column} />
-                  </div>
+                  </Box>
                 )}
               </Draggable>
             ))}

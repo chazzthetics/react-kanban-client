@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { CloseButton } from "@chakra-ui/core";
+import { Flex, CloseButton } from "@chakra-ui/core";
 import SaveButton from "./SaveButton";
 
-const SaveButtonGroup = ({ onClose }) => {
+const SaveButtonGroup = ({ label, onClose, ...rest }) => {
   return (
-    <div>
-      <SaveButton />
+    <Flex align="center">
+      <SaveButton label={label} {...rest} />
       <CloseButton
-        aria-label="Close description form"
+        aria-label="Close form"
         opacity={0.5}
         mx={1}
         _active={{ boxShadow: "none" }}
@@ -16,11 +16,12 @@ const SaveButtonGroup = ({ onClose }) => {
         _hover={{ opacity: 0.8 }}
         onClick={onClose}
       />
-    </div>
+    </Flex>
   );
 };
 
 SaveButtonGroup.propTypes = {
+  label: PropTypes.string,
   onClose: PropTypes.func.isRequired
 };
 

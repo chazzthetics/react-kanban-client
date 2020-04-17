@@ -28,7 +28,6 @@ const ColumnItem = ({ columnId }) => {
   return (
     <PseudoBox
       className="ColumnItem"
-      dir="column"
       w="17rem"
       bg="#ebecf0"
       mx={2}
@@ -36,14 +35,19 @@ const ColumnItem = ({ columnId }) => {
       cursor="pointer"
       _first={{ marginLeft: 0 }}
     >
-      <Box w="100%" px={2}>
+      <Box w="100%" px={2} height="100%">
         <ColumnHeader columnId={columnId} />
         <Droppable droppableId={columnId} type="task">
           {provided => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
+            <Flex
+              direction="column"
+              minH="1px"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
               <TaskList columnId={columnId} />
-              <div style={{ minHeight: "2px" }}>{provided.placeholder}</div>
-            </div>
+              {provided.placeholder}
+            </Flex>
           )}
         </Droppable>
         <CreateTaskForm columnId={columnId} />
