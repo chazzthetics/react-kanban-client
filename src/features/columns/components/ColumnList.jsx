@@ -2,6 +2,7 @@ import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { selectCurrentBoard } from "../../boards/boardsSlice";
+import { Flex, Box } from "@chakra-ui/core";
 import ColumnItem from "./ColumnItem";
 import CreateColumnForm from "./CreateColumnForm";
 
@@ -11,11 +12,13 @@ const ColumnList = () => {
   return (
     <Droppable droppableId="all-columns" direction="horizontal" type="column">
       {provided => (
-        <div
+        <Flex
           className="ColumnList"
-          style={{ display: "flex", background: "#eee" }}
+          px={4}
           ref={provided.innerRef}
           {...provided.droppableProps}
+          // overflowX="auto"
+          // h="80vh"
         >
           {currentBoard &&
             currentBoard.columns.map((column, index) => (
@@ -37,7 +40,7 @@ const ColumnList = () => {
             ))}
           {provided.placeholder}
           <CreateColumnForm />
-        </div>
+        </Flex>
       )}
     </Droppable>
   );

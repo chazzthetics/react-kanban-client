@@ -5,6 +5,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { selectCurrentBoardId, selectCurrentBoard } from "../boardsSlice";
 import { columnsSelectors, reorderColumn } from "../../columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../../tasks/tasksSlice";
+import { Box } from "@chakra-ui/core";
 import ColumnList from "../../columns/components/ColumnList";
 
 const MainBoard = () => {
@@ -67,12 +68,17 @@ const MainBoard = () => {
   };
 
   return (
-    <div className="MainBoard" style={{ height: "100%" }}>
+    <Box
+      className="MainBoard"
+      h="calc(100vh - 2.5rem)"
+      bg="blue.600"
+      overflowY="hidden"
+    >
       <BoardHeader />
       <DragDropContext onDragEnd={handleDragEnd}>
         <ColumnList />
       </DragDropContext>
-    </div>
+    </Box>
   );
 };
 

@@ -16,29 +16,31 @@ const MainContent = ({
 
   return (
     <>
-      <SideBarButton
-        text="About This Board"
-        subText={
-          !currentBoard?.description ? "Add a description to your board" : ""
-        }
-        alignIcon="flex-start"
-        icon={<Box as={FiTrello} size="1.3rem" mr={3} />}
-        onClick={onShowDescription}
-      />
-      <SideBarButton
-        text="Change Background"
-        icon={
-          <Box
-            as={FiSquare}
-            size="1.2rem"
-            mr={3}
-            borderRadius={3}
-            color="blue.600"
-            backgroundColor="blue.600"
-          />
-        }
-        onClick={onShowBackground}
-      />
+      <Box borderBottom="1px solid" borderColor="gray.300" pb={4}>
+        <SideBarButton
+          text="About This Board"
+          subText={
+            !currentBoard?.description ? "Add a description to your board" : ""
+          }
+          alignIcon="flex-start"
+          icon={<Box as={FiTrello} size="1.3rem" mr={3} />}
+          onClick={onShowDescription}
+        />
+        <SideBarButton
+          text="Change Background"
+          icon={
+            <Box
+              as={FiSquare}
+              size="1.2rem"
+              mr={3}
+              borderRadius={3}
+              color="blue.600"
+              backgroundColor="blue.600"
+            />
+          }
+          onClick={onShowBackground}
+        />
+      </Box>
       <ActivityFeed onShow={onShowActivity} />
     </>
   );

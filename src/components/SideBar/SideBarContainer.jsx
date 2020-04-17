@@ -17,6 +17,7 @@ const SideBarContainer = ({ isOpen, sidebarTransition, children }) => {
       boxShadow="md"
       transform={isOpen ? "translateX(0)" : "translateX(400px)"}
       transition={sidebarTransition}
+      zIndex={3}
     >
       {children}
     </Box>

@@ -1,25 +1,32 @@
 import React, { useCallback } from "react";
+import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useEditable } from "../../hooks/useEditable";
-import { Box, Textarea, useDisclosure } from "@chakra-ui/core";
+import { Box, Textarea } from "@chakra-ui/core";
 import {
   selectCurrentBoard,
   updateBoardDescription
 } from "../../features/boards/boardsSlice";
 import SaveButtonGroup from "../SaveButtonGroup";
 
-// FIXME: on blur...
-const DescriptionForm = () => {
+const quote =
+  "Yesterday is not ours to recover, but tomorrow is ours to win or lose.";
+// FIXME: on blur...  mn b
+const DescriptionForm = ({ isOpen, onClose }) => {
   const currentBoard = useSelector(selectCurrentBoard);
+
   const [description, handleChange] = useEditable(currentBoard, "description");
-  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const dispatch = useDispatch();
 
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
       dispatch(
-        updateBoardDescription({ boardId: currentBoard.uuid, description })
+        updateBoardDescription({
+          boardId: currentBoard.uuid,
+          description: description.trim()
+        })
       );
       onClose();
     },
@@ -28,7 +35,7 @@ const DescriptionForm = () => {
 
   return (
     <Box px={3} pt={3} pb={6}>
-      <form onSubmit={handleSubmit} onFocus={onOpen}>
+      <form onSubmit={handleSubmit}>
         <Textarea
           size="sm"
           resize="none"
@@ -37,15 +44,17 @@ const DescriptionForm = () => {
           borderRadius={2}
           fontSize="0.875rem"
           color="gray.800"
-          bg={description ? "#f4f5f7" : "gray.100"}
-          borderColor={description ? "#f4f5f7" : "gray.100"}
-          minH="6rem"
+          bg={!currentBoard.description ? "rgba(9,30,66,.04)" : "#f4f5f7"}
+          borderColor={
+            !currentBoard.description ? "rgba(9,30,66,.04)" : "#f4f5f7"
+          }
+          minH={currentBoard.description ? "6rem" : "5.5rem"}
           cursor="pointer"
           autoCorrect="no"
-          placeholder="“Darkness cannot drive out darkness: only light can do that.
-                      Hate cannot drive out hate: only love can do that.”
-                      ― Martin Luther King Jr."
-          _hover={{ backgroundColor: "gray.200" }}
+          placeholder={currentBoard.description ? "" : quote}
+          _hover={{
+            backgroundColor: "hsla(0,0%,0%,0.075)"
+          }}
           _focus={{
             backgroundColor: "white",
             boxShadow: "0 0 0 1px #3182ce",
@@ -61,7 +70,7 @@ const DescriptionForm = () => {
           value={description || ""}
           onChange={handleChange}
         />
-        {isOpen && <SaveButtonGroup onClose={onClose} />}
+        <SaveButtonGroup onClose={onClose} />
       </form>
     </Box>
   );

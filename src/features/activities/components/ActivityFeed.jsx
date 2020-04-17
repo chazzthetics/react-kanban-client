@@ -11,12 +11,12 @@ const ActivityFeed = ({ onShow }) => {
   const activities = useSelector(state => activitiesSelectors.selectAll(state));
 
   return (
-    <Box className="ActivityFeed" pb={2}>
+    <Box className="ActivityFeed" pt={4} pb={2}>
       {onShow && (
         <SideBarButton
           icon={<Box as={FiList} size="1.3rem" mr={3} />}
           text="Activity"
-          mb={2}
+          fontWeight={700}
           onClick={onShow}
         />
       )}

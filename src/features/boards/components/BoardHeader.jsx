@@ -18,11 +18,8 @@ const BoardHeader = () => {
       className="BoardHeader"
       align="center"
       justify="space-between"
-      bg={`blue.600`}
-      px={4}
       py={2}
-      mb={2}
-      h="2.5rem"
+      px={4}
     >
       {/* Left Side */}
       <Flex justify="flex-start" align="center">

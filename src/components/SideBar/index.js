@@ -63,7 +63,7 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
           onClose={onClose}
           onShowPrevious={handleShowMain}
         />
-        <Box py={4} borderBottom="1px solid" borderColor="gray.300">
+        <Box pt={4} pb={2} borderBottom="1px solid" borderColor="gray.300">
           {getSideBarContent(content)}
         </Box>
       </SideBarContainer>

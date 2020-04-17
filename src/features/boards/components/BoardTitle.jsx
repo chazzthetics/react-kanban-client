@@ -25,7 +25,7 @@ const BoardTitle = () => {
         h="2rem"
         d="inline-flex"
         alignItems="center"
-        borderRadius={4}
+        borderRadius={2}
         cursor="pointer"
         color="white"
         as="h2"
