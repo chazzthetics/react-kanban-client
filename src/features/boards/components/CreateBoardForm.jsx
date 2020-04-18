@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { createBoard } from "../boardsSlice";
 import { makeBoard } from "../../../utils/makeEntity";
 import {
@@ -9,12 +9,27 @@ import {
   FormControl,
   FormLabel,
   Input,
-  PopoverFooter
+  PopoverFooter,
+  RadioButtonGroup
 } from "@chakra-ui/core";
+import ColorRadioButton from "./ColorRadioButton";
 import SaveButton from "../../../components/SaveButton";
 
+const backgroundColors = [
+  "gray",
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "teal",
+  "blue",
+  "cyan",
+  "purple",
+  "pink"
+];
+
 const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
-  const { register, handleSubmit, reset, formState } = useForm({
+  const { register, handleSubmit, reset, formState, control } = useForm({
     mode: "onChange"
   });
 
@@ -23,8 +38,8 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(
-    ({ title }) => {
-      const board = makeBoard(title, "green");
+    ({ title, background }) => {
+      const board = makeBoard(title, background);
       dispatch(createBoard(board));
       reset();
       closeOnSubmit();
@@ -56,12 +71,17 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
           <FormLabel htmlFor="background" fontSize="0.9rem" opacity={0.8}>
             Choose a Background
           </FormLabel>
-          <Input
-            id="background"
+          <Controller
+            as={
+              <RadioButtonGroup id="background" isInline>
+                {backgroundColors.map(color => (
+                  <ColorRadioButton key={color} value={color} />
+                ))}
+              </RadioButtonGroup>
+            }
+            control={control}
+            rules={{ required: true }}
             name="background"
-            size="sm"
-            ref={register}
-            disabled
           />
         </FormControl>
         <PopoverFooter px={0}>

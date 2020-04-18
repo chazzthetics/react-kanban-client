@@ -37,7 +37,7 @@ const DescriptionContent = () => {
           ) : null
         }
       >
-        <DescriptionForm isOpen={isOpen} onClose={onClose} />
+        <DescriptionForm isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       </ContentHeading>
     </>
   );
