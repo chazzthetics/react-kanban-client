@@ -4,13 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { tasksSelectors, updateTaskTitle, removeTask } from "../tasksSlice";
 import { useEditable } from "../../../hooks/useEditable";
 import { FiEdit2 } from "react-icons/fi";
-import {
-  Flex,
-  PseudoBox,
-  Text,
-  useDisclosure,
-  IconButton
-} from "@chakra-ui/core";
+import { PseudoBox, Text, useDisclosure, IconButton } from "@chakra-ui/core";
 
 const TaskItem = ({ taskId, columnId }) => {
   const dispatch = useDispatch();

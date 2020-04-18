@@ -30,9 +30,9 @@ const CreateBoardPopover = () => {
         borderRadius={4}
         left={0}
         px={3}
-        zIndex={4}
         boxShadow="md"
         _focus={{ boxShadow: "none", outline: "none" }}
+        zIndex={4}
       >
         <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
           Create

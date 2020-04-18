@@ -14,6 +14,7 @@ export const fetchActivities = createAsyncThunk(
   async (page, { rejectWithValue }) => {
     try {
       const { data } = await activitiesService.get(page);
+
       return data;
     } catch (ex) {
       rejectWithValue(ex);
@@ -64,10 +65,10 @@ const activitiesSlice = createSlice({
         state.next = state.current + 1;
       }
 
-      if (state.ids.length > 0) {
-        activitiesAdapter.addMany(state, data);
+      if (data.length === 1) {
+        activitiesAdapter.setAll(state, data || {});
       } else {
-        activitiesAdapter.setAll(state, data);
+        activitiesAdapter.addMany(state, data);
       }
     },
     [fetchMostRecentActivity.pending]: state => {},

@@ -1,3 +1,4 @@
+//TODO:
 export const getActivityMessage = activity => {
   const { description, recordable_type, changes } = activity;
 

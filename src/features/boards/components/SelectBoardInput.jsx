@@ -26,14 +26,14 @@ const SelectBoardInput = () => {
       borderRadius={4}
       bg="rgba(0,0,0,0.3)"
       border="none"
-      color="#fff"
-      fontWeight="700"
+      color="white"
+      fontWeight={700}
       cursor="pointer"
       value={current}
       onChange={handleSelectChange}
     >
       {boards.map(board => (
-        <option key={board.uuid} value={board.uuid}>
+        <option key={board.uuid} value={board.uuid} style={{ fontWeight: 700 }}>
           {board.title}
         </option>
       ))}

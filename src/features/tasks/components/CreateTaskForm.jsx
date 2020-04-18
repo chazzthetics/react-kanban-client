@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { useFocus } from "../../../hooks/useFocus";
 import { makeSelectColumnTaskCount } from "../../columns/columnsSlice";
 import { createTask } from "../tasksSlice";
 import { makeTask } from "../../../utils/makeEntity";
@@ -19,14 +20,14 @@ const CreateTaskForm = ({ columnId }) => {
   const dispatch = useDispatch();
   const onSubmit = useCallback(
     ({ title }) => {
-      if (title !== "") {
-        const task = makeTask(title, position);
-        dispatch(createTask({ task, columnId }));
-        reset();
-      }
+      const task = makeTask(title, position);
+      dispatch(createTask({ task, columnId }));
+      reset();
     },
     [dispatch, reset, position, columnId]
   );
+
+  const focusRef = useFocus();
 
   return (
     <Box className="TaskForm" pb={2}>
@@ -37,7 +38,10 @@ const CreateTaskForm = ({ columnId }) => {
           <Textarea
             type="text"
             placeholder="Enter a title for this card..."
-            ref={register}
+            ref={e => {
+              register(e, { required: true });
+              focusRef.current = e;
+            }}
             name="title"
             autoFocus
             width="100%"

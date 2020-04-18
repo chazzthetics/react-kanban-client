@@ -6,6 +6,7 @@ import {
 } from "../../boards/boardsSlice";
 import { createColumn } from "../columnsSlice";
 import { useForm } from "react-hook-form";
+import { useFocus } from "../../../hooks/useFocus";
 import { makeColumn } from "../../../utils/makeEntity";
 import { Box, Input, useDisclosure } from "@chakra-ui/core";
 import CreateColumnButton from "./CreateColumnButton";
@@ -21,13 +22,15 @@ const CreateColumnForm = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = useCallback(
-    data => {
-      const column = makeColumn(data.columnTitle, position);
+    ({ columnTitle }) => {
+      const column = makeColumn(columnTitle, position);
       dispatch(createColumn({ column, boardId: currentBoardId }));
       reset();
     },
     [dispatch, reset, position, currentBoardId]
   );
+
+  const focusRef = useFocus();
 
   return (
     <Box className="ColumnForm" minW="17rem" w="17rem">
@@ -40,10 +43,13 @@ const CreateColumnForm = () => {
               type="text"
               placeholder="Enter list title..."
               name="columnTitle"
-              ref={register}
+              ref={e => {
+                register(e, { required: true });
+                focusRef.current = e;
+              }}
               width="100%"
               fontSize="0.875rem"
-              borderRadius={2}
+              borderRadius={3}
               h="2rem"
               py={1}
               px={2}

@@ -38,4 +38,10 @@ const ActivityButton = ({ label, isSelected, onSelect }) => {
   );
 };
 
+ActivityButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired
+};
+
 export default ActivityButton;

@@ -1,32 +1,43 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
 import { removeActivity } from "../activitiesSlice";
 import { getActivityMessage } from "../../../utils/getActivityMessage";
-import { Flex, Text } from "@chakra-ui/core";
+import { Flex, Text, IconButton } from "@chakra-ui/core";
 import UserAvatar from "../../auth/components/UserAvatar";
 
+//TODO: only show trash icon on hover
 const ActivityItem = ({ activity }) => {
   const { user } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
-  const handleRemoveActivity = React.useCallback(() => {
+  const handleRemoveActivity = useCallback(() => {
     dispatch(removeActivity(activity.id));
   }, [dispatch, activity]);
 
   return (
     <Flex className="ActivityItem" as="li" py={2} ml={2} align="flex-start">
       <UserAvatar ml={-1} />
-      <Flex direction="column" ml={2}>
-        <Text fontSize="0.875rem" color="gray.800" width="95%">
+      <Flex direction="column" ml={2} w="100%">
+        <Text fontSize="0.875rem" color="gray.800" w="90%">
           <span style={{ fontWeight: "600" }}>{user.name} </span>
           <span>{getActivityMessage(activity)}</span>
         </Text>
 
-        <Text fontSize="xs" color="gray.400">
-          {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
-        </Text>
+        <Flex align="baseline" justify="space-between" w="90%">
+          <Text fontSize="xs" color="gray.400">
+            {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
+          </Text>
+          <IconButton
+            icon="delete"
+            aria-label="Delete activity"
+            size="xs"
+            color="gray.600"
+            onClick={handleRemoveActivity}
+            _focus={{ boxShadow: "none" }}
+          />
+        </Flex>
       </Flex>
     </Flex>
   );

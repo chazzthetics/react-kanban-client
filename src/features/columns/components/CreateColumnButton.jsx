@@ -11,7 +11,7 @@ const CreateColumnButton = ({ onShow }) => {
     <PseudoBox
       as="button"
       bg="hsla(0,0%,100%,0.3)"
-      borderRadius={2}
+      borderRadius={3}
       color="white"
       fontSize="0.9rem"
       px={2}

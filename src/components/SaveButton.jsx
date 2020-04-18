@@ -10,7 +10,7 @@ const SaveButton = ({ label = "Save", ...rest }) => {
       color="white"
       bg="green.400"
       fontWeight="normal"
-      _hover={{ backgroundColor: "green.500" }}
+      _hover={{ backgroundColor: "green.300" }}
       _active={{ backgroundColor: "green.500", boxShadow: "none" }}
       _focus={{ boxShadow: "none" }}
       {...rest}
