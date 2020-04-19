@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { selectCurrentBoard } from "../features/boards/boardsSlice";
 import { login } from "../features/auth/authSlice";
 import {
   Box,
@@ -8,7 +9,6 @@ import {
   ButtonGroup,
   ListItem,
   Link,
-  // IconButton,
   Heading
 } from "@chakra-ui/core";
 import { FiHome, FiSun } from "react-icons/fi";
@@ -17,8 +17,10 @@ import SelectBoardInput from "../features/boards/components/SelectBoardInput";
 import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
 import IconButton from "./IconButton";
+import AppBarOverlay from "./AppBarOverlay";
 
 const AppBar = () => {
+  const currentBoard = useSelector(selectCurrentBoard);
   const dispatch = useDispatch();
 
   const handleTempLogin = useCallback(() => {
@@ -28,26 +30,13 @@ const AppBar = () => {
   return (
     <Box
       as="header"
-      bg={"blue.600"}
+      bg={currentBoard ? `${currentBoard.background}.600` : "blue.600"}
       h="2.5rem"
       position="relative"
       w="100%"
       px={4}
     >
-      <div
-        className="overlay"
-        style={{
-          width: "100vw",
-          height: "2.5rem",
-          position: "absolute",
-          top: 0,
-          right: 0,
-          left: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.2)"
-        }}
-      ></div>
-
+      <AppBarOverlay />
       <Flex as="nav" align="center" justify="space-between" h="100%">
         <List
           d="flex"

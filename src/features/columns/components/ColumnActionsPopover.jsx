@@ -103,11 +103,8 @@ const ColumnActionsPopover = ({ columnId }) => {
               label={is_locked ? "Unlock List" : "Lock List"}
               onClick={handleToggleLock}
             />
-            <ColumnActionsButton
-              label="Clear list"
-              onClick={handleClear}
-              mb={0}
-            />
+            <ColumnActionsButton label="Clear List" onClick={handleClear} />
+            <ColumnActionsButton label="Move List" onClick={() => {}} mb={0} />
             <Divider />
             <ColumnActionsButton label="Sort By..." onClick={() => {}} />
           </PopoverBody>
