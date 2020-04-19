@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import { selectCurrentBoardId } from "../../boards/boardsSlice";
-import { removeColumn, clearColumn } from "../columnsSlice";
+import {
+  removeColumn,
+  clearColumn,
+  actionsToggled,
+  columnsSelectors
+} from "../columnsSlice";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
   Popover,
@@ -13,17 +18,30 @@ import {
   PopoverBody,
   PopoverCloseButton,
   PopoverFooter,
-  Divider,
-  useDisclosure
+  Divider
 } from "@chakra-ui/core";
 import IconButton from "../../../components/IconButton";
 import ColumnActionsButton from "./ColumnActionButton";
 
 const ColumnActionsPopover = ({ columnId }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const container = useClickOutside(onClose);
+  const { is_open } = useSelector(state =>
+    columnsSelectors.selectById(state, columnId)
+  );
 
   const dispatch = useDispatch();
+
+  const handleOpenPopover = useCallback(() => {
+    dispatch(actionsToggled({ columnId, isOpen: true }));
+  }, [dispatch, columnId]);
+
+  const handleClosePopover = useCallback(() => {
+    if (is_open) {
+      dispatch(actionsToggled({ columnId, isOpen: false }));
+    }
+  }, [dispatch, columnId, is_open]);
+
+  const container = useClickOutside(handleClosePopover);
+
   const boardId = useSelector(selectCurrentBoardId);
 
   const handleRemoveColumn = useCallback(() => {
@@ -38,9 +56,9 @@ const ColumnActionsPopover = ({ columnId }) => {
     <div ref={container}>
       <Popover
         placement="bottom-start"
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
+        isOpen={is_open}
+        onOpen={handleOpenPopover}
+        onClose={handleClosePopover}
       >
         <PopoverTrigger>
           <IconButton

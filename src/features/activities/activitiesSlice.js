@@ -57,7 +57,6 @@ const activitiesSlice = createSlice({
     [fetchActivities.pending]: state => {},
     [fetchActivities.fulfilled]: (state, action) => {
       const { data, current_page, last_page } = action.payload;
-
       state.last = last_page;
       state.current = current_page;
 
@@ -65,11 +64,7 @@ const activitiesSlice = createSlice({
         state.next = state.current + 1;
       }
 
-      if (data.length === 1) {
-        activitiesAdapter.setAll(state, data || {});
-      } else {
-        activitiesAdapter.addMany(state, data);
-      }
+      activitiesAdapter.setAll(state, data || {});
     },
     [fetchMostRecentActivity.pending]: state => {},
     [fetchMostRecentActivity.fulfilled]: (state, action) => {

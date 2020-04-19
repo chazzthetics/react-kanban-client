@@ -61,6 +61,13 @@ const columnsSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    actionsToggled(state, action) {
+      const { columnId, isOpen } = action.payload;
+      columnsAdapter.updateOne(state, {
+        id: columnId,
+        changes: { is_open: isOpen }
+      });
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       columnsAdapter.updateMany(
@@ -76,6 +83,7 @@ const columnsSlice = createSlice({
       const columns = action.payload.flatMap(board =>
         board.columns.map(column => ({
           ...column,
+          is_open: false,
           tasks: column.tasks.map(task => task.uuid)
         }))
       );
@@ -138,6 +146,7 @@ export const {
   restored,
   cleared,
   titleUpdated,
+  actionsToggled,
   reordered
 } = columnsSlice.actions;
 export default columnsSlice.reducer;

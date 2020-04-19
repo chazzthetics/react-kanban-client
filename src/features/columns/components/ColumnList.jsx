@@ -2,12 +2,14 @@ import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { selectCurrentBoard } from "../../boards/boardsSlice";
+import { columnsSelectors } from "../columnsSlice";
 import { Flex, Box } from "@chakra-ui/core";
 import ColumnItem from "./ColumnItem";
 import CreateColumnForm from "./CreateColumnForm";
 
 const ColumnList = () => {
   const currentBoard = useSelector(selectCurrentBoard);
+  const columns = useSelector(state => columnsSelectors.selectEntities(state));
 
   return (
     <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -24,6 +26,7 @@ const ColumnList = () => {
                 key={`drag-${column}`}
                 index={index}
                 draggableId={`drag-${column}`}
+                isDragDisabled={columns[column].is_open}
               >
                 {provided => (
                   <Box
