@@ -68,6 +68,20 @@ const columnsSlice = createSlice({
         changes: { is_open: isOpen }
       });
     },
+    lockToggled(state, action) {
+      const {
+        columnId,
+        is_locked,
+        status = "success",
+        error = null
+      } = action.payload;
+      columnsAdapter.updateOne(state, {
+        id: columnId,
+        changes: { is_locked: !is_locked }
+      });
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       columnsAdapter.updateMany(
@@ -146,6 +160,7 @@ export const {
   restored,
   cleared,
   titleUpdated,
+  lockToggled,
   actionsToggled,
   reordered
 } = columnsSlice.actions;
@@ -229,6 +244,17 @@ export const updateColumnTitle = ({ columnId, newTitle }) => async (
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { columnId, newTitle: oldTitle }));
+  }
+};
+
+export const toggleLockColumn = columnId => async (dispatch, getState) => {
+  const { is_locked } = getPreviousValue(getState(), "columns", columnId);
+  try {
+    dispatch(lockToggled({ columnId, is_locked }));
+    await columnsService.update(columnId, { is_locked });
+    dispatch(fetchMostRecentActivity());
+  } catch (ex) {
+    dispatch(handleError(ex, lockToggled, { columnId, is_locked: !is_locked }));
   }
 };
 

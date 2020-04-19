@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { selectCurrentBoard } from "../../boards/boardsSlice";
@@ -10,6 +10,13 @@ import CreateColumnForm from "./CreateColumnForm";
 const ColumnList = () => {
   const currentBoard = useSelector(selectCurrentBoard);
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
+
+  const isDragDisabled = useCallback(
+    id => {
+      return columns[id].is_locked || columns[id].is_open;
+    },
+    [columns]
+  );
 
   return (
     <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -26,7 +33,7 @@ const ColumnList = () => {
                 key={`drag-${column}`}
                 index={index}
                 draggableId={`drag-${column}`}
-                isDragDisabled={columns[column].is_open}
+                isDragDisabled={isDragDisabled(column)}
               >
                 {provided => (
                   <Box

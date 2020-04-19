@@ -30,6 +30,10 @@ export const getActivityMessage = activity => {
       return `starred board ${changes.after.title}`;
     case "unstarred":
       return `unstarred board ${changes.after.title}`;
+    case "locked":
+      return `locked list ${changes.after.title}`;
+    case "unlocked":
+      return `unlocked list ${changes.after.title}`;
     case "moved":
       return `moved ${changes.after.task_title} from ${changes.before.column_title} to ${changes.after.column_title}`;
     default:

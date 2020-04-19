@@ -7,6 +7,7 @@ import {
   removeColumn,
   clearColumn,
   actionsToggled,
+  toggleLockColumn,
   columnsSelectors
 } from "../columnsSlice";
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -24,7 +25,7 @@ import IconButton from "../../../components/IconButton";
 import ColumnActionsButton from "./ColumnActionButton";
 
 const ColumnActionsPopover = ({ columnId }) => {
-  const { is_open } = useSelector(state =>
+  const { is_open, is_locked } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
 
@@ -44,12 +45,16 @@ const ColumnActionsPopover = ({ columnId }) => {
 
   const boardId = useSelector(selectCurrentBoardId);
 
-  const handleRemoveColumn = useCallback(() => {
+  const handleRemove = useCallback(() => {
     dispatch(removeColumn({ columnId, boardId }));
   }, [dispatch, columnId, boardId]);
 
-  const handleClearColumn = useCallback(() => {
+  const handleClear = useCallback(() => {
     dispatch(clearColumn(columnId));
+  }, [dispatch, columnId]);
+
+  const handleToggleLock = useCallback(() => {
+    dispatch(toggleLockColumn(columnId));
   }, [dispatch, columnId]);
 
   return (
@@ -94,20 +99,20 @@ const ColumnActionsPopover = ({ columnId }) => {
             _active={{ boxShadow: "none" }}
           />
           <PopoverBody px={0} pb={0}>
-            <ColumnActionsButton label="Lock List" onClick={() => {}} />
+            <ColumnActionsButton
+              label={is_locked ? "Unlock List" : "Lock List"}
+              onClick={handleToggleLock}
+            />
             <ColumnActionsButton
               label="Clear list"
-              onClick={handleClearColumn}
+              onClick={handleClear}
               mb={0}
             />
             <Divider />
             <ColumnActionsButton label="Sort By..." onClick={() => {}} />
           </PopoverBody>
           <PopoverFooter px={0} pt={2} pb={1}>
-            <ColumnActionsButton
-              label="Remove List"
-              onClick={handleRemoveColumn}
-            />
+            <ColumnActionsButton label="Remove List" onClick={handleRemove} />
           </PopoverFooter>
         </PopoverContent>
       </Popover>

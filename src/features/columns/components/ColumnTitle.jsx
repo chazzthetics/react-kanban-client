@@ -36,7 +36,7 @@ const ColumnTitle = ({ columnId }) => {
           onChange={handleChange}
           fontWeight={600}
           px={2}
-          w="13.5rem"
+          w="11.5rem"
           py="1.90px"
           fontSize="0.9rem"
           _focus={{

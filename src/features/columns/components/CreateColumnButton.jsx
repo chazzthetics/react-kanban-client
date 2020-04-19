@@ -16,7 +16,7 @@ const CreateColumnButton = ({ onShow }) => {
       fontSize="0.9rem"
       px={2}
       py={2}
-      aria-label="Add a card"
+      aria-label="Add a list"
       display="flex"
       alignItems="center"
       w="100%"

@@ -49,16 +49,16 @@ const CreateTaskForm = ({ columnId }) => {
                 focusRef.current = e;
               }}
               name="title"
-              autoFocus
               width="100%"
               fontSize="0.875rem"
               borderRadius={2}
               py={1}
               px={2}
+              mb={2}
               resize="none"
               minHeight="66px"
               marginBottom="6px"
-              boxShadow="md"
+              autoFocus
             />
             <SaveButtonGroup label="Add Card" onClose={onClose} />
           </form>

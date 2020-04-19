@@ -1,13 +1,13 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useFocus } from "../../../hooks/useFocus";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import {
   selectBoardColumnCount,
   selectCurrentBoardId
 } from "../../boards/boardsSlice";
 import { createColumn } from "../columnsSlice";
-import { useForm } from "react-hook-form";
-import { useFocus } from "../../../hooks/useFocus";
-import { useClickOutside } from "../../../hooks/useClickOutside";
 import { makeColumn } from "../../../utils/makeEntity";
 import { Box, Input, useDisclosure } from "@chakra-ui/core";
 import CreateColumnButton from "./CreateColumnButton";
@@ -17,8 +17,6 @@ const CreateColumnForm = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const focusRef = useFocus();
-
-  const container = useClickOutside(onClose);
 
   const dispatch = useDispatch();
 
@@ -37,12 +35,14 @@ const CreateColumnForm = () => {
     [dispatch, reset, position, currentBoardId]
   );
 
+  const container = useClickOutside(onClose);
+
   return (
     <Box className="ColumnForm" minW="17rem" w="17rem">
       {!isOpen ? (
         <CreateColumnButton onShow={onOpen} />
       ) : (
-        <Box bg="#ebecf0" py="6px" px="6px" borderRadius={3} ref={container}>
+        <Box bg="#ebecf0" p="6px" borderRadius={3} ref={container}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               type="text"
