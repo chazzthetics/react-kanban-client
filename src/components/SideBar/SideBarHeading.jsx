@@ -1,6 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, Heading, IconButton, CloseButton } from "@chakra-ui/core";
+import {
+  Flex,
+  Image,
+  Link,
+  Heading,
+  IconButton,
+  CloseButton
+} from "@chakra-ui/core";
 
 const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
   return (
@@ -36,7 +43,25 @@ const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
         flex={1}
         color="gray.900"
       >
-        {getHeading(content)}
+        <Flex justify="center" align="center">
+          {getHeading(content)}
+          {content === "photos" && (
+            <Link
+              href="https://www.pexels.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              _focus={{ outline: "none" }}
+            >
+              <Image
+                src="images/pexels.png"
+                alt="Photos provided by Pexels"
+                h="1.75rem"
+                objectFit="cover"
+                ml={2}
+              />
+            </Link>
+          )}
+        </Flex>
       </Heading>
       <CloseButton
         onClick={onClose}
@@ -71,7 +96,7 @@ function getHeading(content) {
     case "colors":
       return "Colors";
     case "photos":
-      return "Photos";
+      return "Photos by";
     default:
       return "Menu";
   }

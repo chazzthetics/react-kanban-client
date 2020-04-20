@@ -28,7 +28,7 @@ const SideBarButton = ({
       onClick={onClick}
       {...rest}
     >
-      <Flex alignItems={alignIcon}>
+      <Flex align={alignIcon}>
         {icon && <div>{icon}</div>}
         <div>
           <Text

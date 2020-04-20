@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/core";
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
-import { isImage } from "../utils/isImage";
+import { getBackground } from "../utils/getBackground";
 import SelectBoardInput from "../features/boards/components/SelectBoardInput";
 import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
@@ -31,7 +31,7 @@ const AppBar = () => {
   return (
     <Box
       as="header"
-      bg={isImage(background)}
+      bg={getBackground(background)}
       h="2.5rem"
       position="relative"
       w="100%"

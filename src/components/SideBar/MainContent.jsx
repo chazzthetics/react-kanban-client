@@ -5,6 +5,7 @@ import {
   selectBoardBackground,
   selectBoardDescription
 } from "../../features/boards/boardsSlice";
+import { isImage, getBackground } from "../../utils/getBackground";
 import { FiTrello, FiSquare } from "react-icons/fi";
 import { Box } from "@chakra-ui/core";
 import SideBarButton from "./SideBarButton";
@@ -31,18 +32,31 @@ const MainContent = ({
         <SideBarButton
           text="Change Background"
           icon={
-            <Box
-              as={FiSquare}
-              size="1.2rem"
-              mr={3}
-              borderRadius={3}
-              color={`${background}.600`}
-              bg={`${background}.600`}
-            />
+            isImage(background) ? (
+              <Box
+                mr={3}
+                h={21}
+                w={21}
+                borderRadius={3}
+                bgImage={getBackground(background)}
+                bgPos="center"
+                bgSize="cover"
+              />
+            ) : (
+              <Box
+                as={FiSquare}
+                size="1.3rem"
+                mr={3}
+                borderRadius={3}
+                color={`${background}.600`}
+                bg={`${background}.600`}
+              />
+            )
           }
           onClick={onShowBackground}
         />
       </Box>
+
       <ActivityFeed onShow={onShowActivity} count={6} />
     </>
   );

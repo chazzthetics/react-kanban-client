@@ -1,17 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
-import BackgroundBox from "./BackgroundBox";
+import { useSelector } from "react-redux";
+import { selectCurrentBoard } from "../../features/boards/boardsSlice";
 import { backgroundColors } from "../../utils/backgroundColors";
+import { isImage } from "../../utils/getBackground";
 import { PseudoBox, Flex } from "@chakra-ui/core";
+import BackgroundBox from "./BackgroundBox";
+
+const defaultBackground =
+  "https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&h=130";
 
 const BackgroundContent = ({ onShowColors, onShowPhotos }) => {
+  const { background } = useSelector(selectCurrentBoard);
+
   return (
     <Flex>
+      {/* Photos */}
       <BackgroundBox
-        image="url('https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=160&w=96')"
+        image={
+          isImage(background)
+            ? `url(${background})`
+            : `url(${defaultBackground})`
+        }
         text="Photos"
+        backgroundPosition="center"
+        backgroundSize="cover"
+        backgroundRepeat="no-repeat"
         onClick={onShowPhotos}
       />
+
+      {/* Colors */}
       <BackgroundBox background="gray.300" text="Colors" onClick={onShowColors}>
         <Flex h="100%">
           {backgroundColors.map(color => (
