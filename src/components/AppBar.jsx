@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectBoardColor } from "../features/boards/boardsSlice";
+import { selectBoardBackground } from "../features/boards/boardsSlice";
 import { login } from "../features/auth/authSlice";
 import {
   Box,
@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/core";
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
+import { isImage } from "../utils/isImage";
 import SelectBoardInput from "../features/boards/components/SelectBoardInput";
 import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
@@ -20,7 +21,7 @@ import IconButton from "./IconButton";
 import AppBarOverlay from "./AppBarOverlay";
 
 const AppBar = () => {
-  const boardColor = useSelector(selectBoardColor);
+  const background = useSelector(selectBoardBackground);
   const dispatch = useDispatch();
 
   const handleTempLogin = useCallback(() => {
@@ -30,7 +31,7 @@ const AppBar = () => {
   return (
     <Box
       as="header"
-      bg={boardColor}
+      bg={isImage(background)}
       h="2.5rem"
       position="relative"
       w="100%"

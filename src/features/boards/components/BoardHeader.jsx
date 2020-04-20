@@ -1,17 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import { selectCurrentBoardId } from "../boardsSlice";
+import { sidebarTransition } from "../../../utils/transitions";
 import { Box, Flex, useDisclosure } from "@chakra-ui/core";
 import BoardTitle from "./BoardTitle";
 import StarBoardButton from "./StarBoardButton";
 import ClearBoardButton from "./ClearBoardButton";
 import RemoveBoardButton from "./RemoveBoardButton";
 import SideBar from "../../../components/SideBar/SideBar";
-import { sidebarTransition } from "../../../utils/transitions";
 
 const BoardHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentBoardId = useSelector(selectCurrentBoardId);
+
+  const container = useClickOutside(onClose, true);
 
   return (
     <Flex
@@ -37,6 +40,7 @@ const BoardHeader = () => {
           spacing={4}
           transform={isOpen ? "translateX(-218px)" : "translateX(0)"}
           transition={sidebarTransition}
+          ref={container}
         >
           <ClearBoardButton />
           <RemoveBoardButton />

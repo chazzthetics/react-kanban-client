@@ -29,7 +29,6 @@ const LockColumnButton = ({ columnId }) => {
       }}
       _focus={{
         boxShadow: "none",
-        backgroundColor: "hsla(0,0%,100%,0.2)",
         color: "gray.800"
       }}
       _active={{

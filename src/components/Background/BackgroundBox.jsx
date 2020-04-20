@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { PseudoBox, Box, Text } from "@chakra-ui/core";
 
-const BackgroundBox = ({ background, onClick, text = "" }) => {
+const BackgroundBox = ({
+  onClick,
+  children,
+  background = "gray.600",
+  image = "",
+  text = "",
+  ...rest
+}) => {
   return (
     <PseudoBox
       w="48%"
@@ -14,7 +21,16 @@ const BackgroundBox = ({ background, onClick, text = "" }) => {
       _hover={{ opacity: 0.8 }}
       _active={{ opacity: 1 }}
     >
-      <Box bg={background} h="6rem" borderRadius={4} mb={2}></Box>
+      <Box
+        bg={background}
+        backgroundImage={image}
+        h="6rem"
+        borderRadius={4}
+        mb={2}
+        {...rest}
+      >
+        {children}
+      </Box>
       {text && (
         <Text fontSize="0.9rem" textAlign="center">
           {text}
@@ -25,8 +41,10 @@ const BackgroundBox = ({ background, onClick, text = "" }) => {
 };
 
 BackgroundBox.propTypes = {
-  background: PropTypes.string.isRequired,
+  background: PropTypes.string,
+  image: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  children: PropTypes.element,
   text: PropTypes.string
 };
 

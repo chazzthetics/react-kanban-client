@@ -5,10 +5,11 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import SideBarContainer from "./SideBarContainer";
 import SideBarHeading from "./SideBarHeading";
 import MainContent from "./MainContent";
+import ActivityContent from "../Activity/ActivityContent";
 import DescriptionContent from "../Description/DescriptionContent";
 import BackgroundContent from "../Background/BackgroundContent";
 import ColorContent from "../Background/ColorContent";
-import ActivityContent from "../Activity/ActivityContent";
+import PhotoContent from "../Background/PhotoContent";
 import IconButton from "../IconButton";
 
 const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
@@ -57,6 +58,8 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
         return <DescriptionContent />;
       case "colors":
         return <ColorContent />;
+      case "photos":
+        return <PhotoContent />;
       default:
         return (
           <MainContent

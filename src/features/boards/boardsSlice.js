@@ -221,10 +221,9 @@ export const selectBoardColumnCount = createSelector(
   (boards, current) => (boards[current] ? boards[current].columns.length : [])
 );
 
-export const selectBoardColor = createSelector(
+export const selectBoardBackground = createSelector(
   [boardsSelectors.selectEntities, state => state.boards.current],
-  (boards, current) =>
-    boards[current] ? `${boards[current].background}.600` : `blue.600`
+  (boards, current) => (boards[current] ? boards[current].background : `blue`)
 );
 
 export const selectBoardDescription = createSelector(

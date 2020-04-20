@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 
-export const useClickOutside = callback => {
+export const useClickOutside = (callback, onlyKey = false) => {
   const container = useRef(null);
 
   const handleClickEvent = useCallback(
@@ -24,14 +24,17 @@ export const useClickOutside = callback => {
   );
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickEvent, true);
+    if (!onlyKey) {
+      document.addEventListener("mousedown", handleClickEvent, true);
+    }
+
     document.addEventListener("keydown", handleEscEvent, true);
 
     return () => {
       document.removeEventListener("mousedown", handleClickEvent, true);
       document.removeEventListener("keydown", handleEscEvent, true);
     };
-  }, [handleClickEvent, handleEscEvent]);
+  }, [onlyKey, handleClickEvent, handleEscEvent]);
 
   return container;
 };
