@@ -64,7 +64,11 @@ const activitiesSlice = createSlice({
         state.next = state.current + 1;
       }
 
-      activitiesAdapter.setAll(state, data || {});
+      if (state.current > 1) {
+        activitiesAdapter.addMany(state, data);
+      } else {
+        activitiesAdapter.setAll(state, data || {});
+      }
     },
     [fetchMostRecentActivity.pending]: state => {},
     [fetchMostRecentActivity.fulfilled]: (state, action) => {

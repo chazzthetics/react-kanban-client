@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { createBoard } from "../boardsSlice";
 import { makeBoard } from "../../../utils/makeEntity";
+import { backgroundColors } from "../../../utils/backgroundColors";
 import {
   Stack,
   FormControl,
@@ -14,19 +15,6 @@ import {
 } from "@chakra-ui/core";
 import ColorRadioButton from "./ColorRadioButton";
 import SaveButton from "../../../components/SaveButton";
-
-const backgroundColors = [
-  "gray",
-  "red",
-  "orange",
-  "yellow",
-  "green",
-  "teal",
-  "blue",
-  "cyan",
-  "purple",
-  "pink"
-];
 
 const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
   const { register, handleSubmit, reset, formState, control } = useForm({

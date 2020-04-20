@@ -1,4 +1,4 @@
-//TODO:
+//TODO: FIXME: looks disgusting
 export const getActivityMessage = activity => {
   const { description, recordable_type, changes } = activity;
 
@@ -18,6 +18,8 @@ export const getActivityMessage = activity => {
       return `renamed ${
         recordable_type === "App\\Board" ? "this board" : "list"
       } to ${changes.after.title} (from ${changes.before.title})`;
+    case "background_updated":
+      return `changed the background of this board`;
     case "removed":
       if (getEntityType(recordable_type) === "task") {
         return `removed ${changes.before.title} from ${changes.before.title}`;

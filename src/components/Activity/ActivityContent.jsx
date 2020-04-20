@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchActivities } from "../../features/activities/activitiesSlice";
 import { Box } from "@chakra-ui/core";
@@ -9,7 +9,7 @@ import SideBarButton from "../SideBar/SideBarButton";
 const ActivityContent = () => {
   const dispatch = useDispatch();
 
-  const [isSelected, setIsSelected] = React.useState(true);
+  const [isSelected, setIsSelected] = useState(true);
 
   const handleSelect = () => {
     setIsSelected(isSelected => !isSelected);

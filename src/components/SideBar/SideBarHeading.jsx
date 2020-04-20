@@ -68,6 +68,10 @@ function getHeading(content) {
       return "Change Background";
     case "main":
       return "Menu";
+    case "colors":
+      return "Colors";
+    case "photos":
+      return "Photos";
     default:
       return "Menu";
   }

@@ -112,6 +112,21 @@ const boardsSlice = createSlice({
         changes: { description }
       });
     },
+    backgroundUpdated(state, action) {
+      const {
+        boardId,
+        background,
+        status = "success",
+        error = null
+      } = action.payload;
+      state.error = error;
+      state.status = status;
+
+      boardsAdapter.updateOne(state, {
+        id: boardId,
+        changes: { background }
+      });
+    },
     starToggled(state, action) {
       const {
         boardId,
@@ -181,6 +196,7 @@ export const {
   restored,
   titleUpdated,
   descriptionUpdated,
+  backgroundUpdated,
   starToggled
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
@@ -203,6 +219,17 @@ export const selectCurrentBoard = createSelector(
 export const selectBoardColumnCount = createSelector(
   [boardsSelectors.selectEntities, state => state.boards.current],
   (boards, current) => (boards[current] ? boards[current].columns.length : [])
+);
+
+export const selectBoardColor = createSelector(
+  [boardsSelectors.selectEntities, state => state.boards.current],
+  (boards, current) =>
+    boards[current] ? `${boards[current].background}.600` : `blue.600`
+);
+
+export const selectBoardDescription = createSelector(
+  [boardsSelectors.selectEntities, state => state.boards.current],
+  (boards, current) => (boards[current] ? boards[current].description : "")
 );
 
 // Thunks
@@ -301,6 +328,29 @@ export const updateBoardTitle = ({ boardId, newTitle }) => async (
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { boardId, newTitle: oldTitle }));
+  }
+};
+
+export const updateBoardBackground = ({ boardId, background }) => async (
+  dispatch,
+  getState
+) => {
+  const { background: oldBackground } = getPreviousValue(
+    getState(),
+    "boards",
+    boardId
+  );
+
+  try {
+    if (background === oldBackground) return;
+
+    dispatch(backgroundUpdated({ boardId, background }));
+    await boardsService.update(boardId, { background });
+    dispatch(fetchMostRecentActivity());
+  } catch (ex) {
+    dispatch(
+      handleError(ex, backgroundUpdated, { boardId, background: oldBackground })
+    );
   }
 };
 

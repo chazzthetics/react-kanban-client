@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { selectCurrentBoard } from "../features/boards/boardsSlice";
 import {
   columnsSelectors,
   reorderColumn
@@ -13,9 +14,10 @@ const reorder = (originalOrder, source, destination) => {
   return newOrder;
 };
 
-export const useDrag = currentBoard => {
+export const useDrag = () => {
   const dispatch = useDispatch();
 
+  const currentBoard = useSelector(selectCurrentBoard);
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
 
   return result => {

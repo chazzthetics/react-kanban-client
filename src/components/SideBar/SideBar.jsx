@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Box } from "@chakra-ui/core";
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -6,14 +6,20 @@ import SideBarContainer from "./SideBarContainer";
 import SideBarHeading from "./SideBarHeading";
 import MainContent from "./MainContent";
 import DescriptionContent from "../Description/DescriptionContent";
+import BackgroundContent from "../Background/BackgroundContent";
+import ColorContent from "../Background/ColorContent";
 import ActivityContent from "../Activity/ActivityContent";
 import IconButton from "../IconButton";
 
 const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
-  const [content, setContent] = React.useState("main");
+  const [content, setContent] = useState("main");
 
-  const handleShowMain = () => {
-    setContent("main");
+  const handleShowPrevious = () => {
+    if (content === "colors" || content === "photos") {
+      setContent("background");
+    } else {
+      setContent("main");
+    }
   };
 
   const handleShowDescription = () => {
@@ -28,14 +34,29 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
     setContent("activity");
   };
 
+  const handleShowColors = () => {
+    setContent("colors");
+  };
+
+  const handleShowPhotos = () => {
+    setContent("photos");
+  };
+
   const getSideBarContent = useCallback(show => {
     switch (show) {
       case "activity":
         return <ActivityContent />;
       case "background":
-        return <h1>Background</h1>;
+        return (
+          <BackgroundContent
+            onShowColors={handleShowColors}
+            onShowPhotos={handleShowPhotos}
+          />
+        );
       case "description":
         return <DescriptionContent />;
+      case "colors":
+        return <ColorContent />;
       default:
         return (
           <MainContent
@@ -61,7 +82,7 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
         <SideBarHeading
           content={content}
           onClose={onClose}
-          onShowPrevious={handleShowMain}
+          onShowPrevious={handleShowPrevious}
         />
         <Box pt={4} pb={2} borderBottom="1px solid" borderColor="gray.300">
           {getSideBarContent(content)}

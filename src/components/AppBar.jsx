@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCurrentBoard } from "../features/boards/boardsSlice";
+import { selectBoardColor } from "../features/boards/boardsSlice";
 import { login } from "../features/auth/authSlice";
 import {
   Box,
@@ -20,7 +20,7 @@ import IconButton from "./IconButton";
 import AppBarOverlay from "./AppBarOverlay";
 
 const AppBar = () => {
-  const currentBoard = useSelector(selectCurrentBoard);
+  const boardColor = useSelector(selectBoardColor);
   const dispatch = useDispatch();
 
   const handleTempLogin = useCallback(() => {
@@ -30,7 +30,7 @@ const AppBar = () => {
   return (
     <Box
       as="header"
-      bg={currentBoard ? `${currentBoard.background}.600` : "blue.600"}
+      bg={boardColor}
       h="2.5rem"
       position="relative"
       w="100%"

@@ -6,7 +6,7 @@ import BoardTitle from "./BoardTitle";
 import StarBoardButton from "./StarBoardButton";
 import ClearBoardButton from "./ClearBoardButton";
 import RemoveBoardButton from "./RemoveBoardButton";
-import SideBar from "../../../components/SideBar";
+import SideBar from "../../../components/SideBar/SideBar";
 import { sidebarTransition } from "../../../utils/transitions";
 
 const BoardHeader = () => {
