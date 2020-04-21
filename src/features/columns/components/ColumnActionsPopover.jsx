@@ -1,15 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useClickOutside } from "../../../hooks/useClickOutside";
-import { selectCurrentBoardId } from "../../boards/boardsSlice";
-import {
-  removeColumn,
-  clearColumn,
-  actionsToggled,
-  toggleLockColumn,
-  columnsSelectors
-} from "../columnsSlice";
+import { actionsToggled, columnsSelectors } from "../columnsSlice";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
   Popover,
@@ -17,15 +10,15 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverCloseButton,
-  PopoverFooter,
-  Divider
+  PopoverCloseButton
 } from "@chakra-ui/core";
 import IconButton from "../../../components/IconButton";
-import ColumnActionsButton from "./ColumnActionButton";
+import BackButton from "../../../components/BackButton";
+import ActionsList from "./ActionsList";
+import SortByList from "./SortByList";
 
 const ColumnActionsPopover = ({ columnId }) => {
-  const { is_open, is_locked } = useSelector(state =>
+  const { is_open } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
 
@@ -43,19 +36,14 @@ const ColumnActionsPopover = ({ columnId }) => {
 
   const container = useClickOutside(handleClosePopover);
 
-  const boardId = useSelector(selectCurrentBoardId);
+  const [showSortOptions, setShowSortOptions] = useState(false);
+  const handleShowSort = () => {
+    setShowSortOptions(true);
+  };
 
-  const handleRemove = useCallback(() => {
-    dispatch(removeColumn({ columnId, boardId }));
-  }, [dispatch, columnId, boardId]);
-
-  const handleClear = useCallback(() => {
-    dispatch(clearColumn(columnId));
-  }, [dispatch, columnId]);
-
-  const handleToggleLock = useCallback(() => {
-    dispatch(toggleLockColumn(columnId));
-  }, [dispatch, columnId]);
+  const handleShowPrevious = () => {
+    setShowSortOptions(false);
+  };
 
   return (
     <div ref={container}>
@@ -90,8 +78,16 @@ const ColumnActionsPopover = ({ columnId }) => {
           cursor="default"
           _focus={{ boxShadow: "none", outline: "none" }}
         >
+          {showSortOptions && (
+            <BackButton
+              fontSize="1.4rem"
+              onClick={handleShowPrevious}
+              top={1}
+              zIndex={6}
+            />
+          )}
           <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
-            List Actions
+            {!showSortOptions ? "List Actions" : "Sort List"}
           </PopoverHeader>
           <PopoverCloseButton
             opacity={0.6}
@@ -99,18 +95,12 @@ const ColumnActionsPopover = ({ columnId }) => {
             _active={{ boxShadow: "none" }}
           />
           <PopoverBody px={0} pb={0}>
-            <ColumnActionsButton
-              label={is_locked ? "Unlock List" : "Lock List"}
-              onClick={handleToggleLock}
-            />
-            <ColumnActionsButton label="Clear List" onClick={handleClear} />
-            <ColumnActionsButton label="Move List" onClick={() => {}} mb={0} />
-            <Divider />
-            <ColumnActionsButton label="Sort By..." onClick={() => {}} />
+            {!showSortOptions ? (
+              <ActionsList columnId={columnId} onShow={handleShowSort} />
+            ) : (
+              <SortByList />
+            )}
           </PopoverBody>
-          <PopoverFooter px={0} pt={2} pb={1}>
-            <ColumnActionsButton label="Remove List" onClick={handleRemove} />
-          </PopoverFooter>
         </PopoverContent>
       </Popover>
     </div>

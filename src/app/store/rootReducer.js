@@ -12,5 +12,5 @@ export default combineReducers({
   photos: photosReducer,
   boards: boardsReducer,
   columns: columnsReducer,
-  tasksReducer: tasksReducer
+  tasks: tasksReducer
 });

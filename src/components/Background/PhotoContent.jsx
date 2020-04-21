@@ -54,6 +54,8 @@ const PhotoContent = () => {
           key={photo.id}
           image={`url(${photo.src.small})`}
           backroundPosition="center"
+          backgroundSize="cover"
+          backgroundRepeat="no-repeat"
           onClick={() => handleUpdateBackground(photo.src.large2x)}
         />
       ))}

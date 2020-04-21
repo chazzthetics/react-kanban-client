@@ -1,13 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Flex,
-  Image,
-  Link,
-  Heading,
-  IconButton,
-  CloseButton
-} from "@chakra-ui/core";
+import { Flex, Image, Link, Heading, CloseButton } from "@chakra-ui/core";
+import BackButton from "../BackButton";
 
 const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
   return (
@@ -19,22 +13,7 @@ const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
       borderColor="gray.300"
       position="relative"
     >
-      {content !== "main" && (
-        <IconButton
-          icon="chevron-left"
-          fontSize="1.6rem"
-          size="sm"
-          bg="transparent"
-          aria-label="Show main sidebar content"
-          opacity={0.5}
-          position="absolute"
-          left={0}
-          _active={{ boxShadow: "none" }}
-          _focus={{ boxShadow: "none" }}
-          _hover={{ opacity: 0.8 }}
-          onClick={onShowPrevious}
-        />
-      )}
+      {content !== "main" && <BackButton onClick={onShowPrevious} />}
       <Heading
         as="h3"
         fontSize="1rem"

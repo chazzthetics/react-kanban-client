@@ -10,7 +10,7 @@ const CreateColumnButton = ({ onShow }) => {
   return (
     <PseudoBox
       as="button"
-      bg="hsla(0,0%,100%,0.3)"
+      bg="hsla(0,0%,0%,0.3)"
       borderRadius={3}
       color="white"
       fontSize="0.9rem"
@@ -21,7 +21,7 @@ const CreateColumnButton = ({ onShow }) => {
       alignItems="center"
       w="100%"
       _hover={{ backgroundColor: "hsla(0,0%,100%,0.2)" }}
-      _active={{ backgroundColor: "hsla(0,0%,100%,0.1)" }}
+      _active={{ backgroundColor: "hsla(0,0%,0%,0.3)" }}
       _focus={{
         boxShadow: "none",
         outline: "none",

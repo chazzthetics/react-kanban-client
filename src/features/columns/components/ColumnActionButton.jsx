@@ -17,6 +17,7 @@ const ColumnActionButton = ({ label, onClick, ...rest }) => {
       w="100%"
       _hover={{ backgroundColor: "gray.100" }}
       _focus={{ outline: "none" }}
+      _active={{ backgroundColor: "gray.200" }}
       {...rest}
     >
       <Text ml={3}>{label}</Text>

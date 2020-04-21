@@ -22,7 +22,6 @@ const ColumnTitle = ({ columnId }) => {
       <Editable onSubmit={handleSubmit} value={title}>
         <EditablePreview
           d="inline-flex"
-          alignItems="center"
           px={2}
           fontWeight={600}
           fontSize="0.9rem"

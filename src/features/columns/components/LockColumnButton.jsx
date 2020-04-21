@@ -20,7 +20,7 @@ const LockColumnButton = ({ columnId }) => {
       label="Lock list"
       icon={is_locked ? "lock" : "unlock"}
       color="gray.600"
-      fontSize="0.875rem"
+      fontSize="0.75rem"
       bg="transparent"
       _hover={{
         backgroundColor: "rgba(9,30,66,.08)",
