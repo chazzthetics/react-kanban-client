@@ -13,11 +13,7 @@ import SaveButtonGroup from "../../../components/SaveButtonGroup";
 
 const CreateTaskForm = ({ columnId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const container = useClickOutside(onClose);
-
   const focusRef = useFocus();
-
   const { register, handleSubmit, reset } = useForm();
 
   const selectColumnTaskCount = useMemo(makeSelectColumnTaskCount, []);
@@ -30,8 +26,27 @@ const CreateTaskForm = ({ columnId }) => {
       const task = makeTask(title, position);
       dispatch(createTask({ task, columnId }));
       reset();
+      onOpen();
     },
-    [dispatch, reset, position, columnId]
+    [dispatch, reset, position, columnId, onOpen]
+  );
+
+  //FIXME: fix enter?
+  const container = useClickOutside(
+    onClose,
+    {
+      submit: {
+        click: true,
+        esc: false,
+        enter: false
+      },
+      close: {
+        click: true,
+        esc: true,
+        enter: false
+      }
+    },
+    handleSubmit(onSubmit)
   );
 
   return (
@@ -39,30 +54,28 @@ const CreateTaskForm = ({ columnId }) => {
       {!isOpen ? (
         <CreateTaskButton columnId={columnId} onShow={onOpen} />
       ) : (
-        <div ref={container}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Textarea
-              type="text"
-              placeholder="Enter a title for this card..."
-              ref={e => {
-                register(e, { required: true });
-                focusRef.current = e;
-              }}
-              name="title"
-              width="100%"
-              fontSize="0.875rem"
-              borderRadius={2}
-              py={1}
-              px={2}
-              mb={2}
-              resize="none"
-              minHeight="66px"
-              marginBottom="6px"
-              autoFocus
-            />
-            <SaveButtonGroup label="Add Card" onClose={onClose} />
-          </form>
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} ref={container}>
+          <Textarea
+            type="text"
+            placeholder="Enter a title for this card..."
+            ref={e => {
+              register(e, { required: true });
+              focusRef.current = e;
+            }}
+            name="title"
+            width="100%"
+            fontSize="0.875rem"
+            borderRadius={2}
+            py={1}
+            px={2}
+            mb={2}
+            resize="none"
+            minHeight="66px"
+            marginBottom="6px"
+            autoFocus
+          />
+          <SaveButtonGroup label="Add Card" onClose={onClose} />
+        </form>
       )}
     </Box>
   );

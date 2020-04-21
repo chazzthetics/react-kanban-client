@@ -14,7 +14,7 @@ const BoardHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentBoardId = useSelector(selectCurrentBoardId);
 
-  const container = useClickOutside(onClose, true);
+  const container = useClickOutside(onClose, { close: { esc: true } });
 
   return (
     <Flex

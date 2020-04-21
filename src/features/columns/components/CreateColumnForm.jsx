@@ -15,16 +15,11 @@ import SaveButtonGroup from "../../../components/SaveButtonGroup";
 
 const CreateColumnForm = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const focusRef = useFocus();
-
-  const dispatch = useDispatch();
-
-  const currentBoardId = useSelector(selectCurrentBoardId);
-
-  const position = useSelector(selectBoardColumnCount);
-
   const { register, handleSubmit, reset } = useForm();
+  const focusRef = useFocus();
+  const dispatch = useDispatch();
+  const position = useSelector(selectBoardColumnCount);
+  const currentBoardId = useSelector(selectCurrentBoardId);
 
   const onSubmit = useCallback(
     ({ columnTitle }) => {
@@ -35,7 +30,17 @@ const CreateColumnForm = () => {
     [dispatch, reset, position, currentBoardId]
   );
 
-  const container = useClickOutside(onClose);
+  const container = useClickOutside(
+    onClose,
+    {
+      close: {
+        click: true,
+        esc: true,
+        enter: false
+      }
+    },
+    handleSubmit(onSubmit)
+  );
 
   return (
     <Box className="ColumnForm" minW="17rem" w="17rem">

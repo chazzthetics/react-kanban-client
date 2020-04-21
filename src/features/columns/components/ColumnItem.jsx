@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Droppable } from "react-beautiful-dnd";
 import { PseudoBox, Flex, Box } from "@chakra-ui/core";
@@ -42,4 +42,4 @@ ColumnItem.propTypes = {
   columnId: PropTypes.string.isRequired
 };
 
-export default ColumnItem;
+export default memo(ColumnItem);

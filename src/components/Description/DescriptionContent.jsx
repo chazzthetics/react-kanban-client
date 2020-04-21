@@ -14,9 +14,8 @@ const DescriptionContent = () => {
 
   return (
     <>
-      <ContentHeading icon={FiUser} heading="Made by">
-        <UserDescription />
-      </ContentHeading>
+      <ContentHeading icon={FiUser} heading="Made by" />
+      <UserDescription />
       <ContentHeading
         icon={FiAlignLeft}
         heading="Description"
@@ -36,9 +35,8 @@ const DescriptionContent = () => {
             </Button>
           ) : null
         }
-      >
-        <DescriptionForm isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-      </ContentHeading>
+      />
+      <DescriptionForm isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
     </>
   );
 };

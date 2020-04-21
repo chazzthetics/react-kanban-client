@@ -1,40 +1,98 @@
 import { useEffect, useRef, useCallback } from "react";
 
-export const useClickOutside = (callback, onlyKey = false) => {
+export const useClickOutside = (
+  close,
+  options = {
+    submit: {
+      click: false,
+      esc: false,
+      enter: false
+    },
+    close: {
+      click: false,
+      esc: false,
+      enter: false
+    }
+  },
+  submit = null
+) => {
   const container = useRef(null);
 
   const handleClickEvent = useCallback(
     e => {
       if (container.current && e.target !== null) {
         if (!container.current.contains(e.target)) {
-          callback();
+          if (options.submit && options.submit.click) {
+            submit();
+          }
+
+          if (options.close && options.close.click) {
+            close();
+          }
         }
       }
     },
-    [callback]
+    [close, submit, options]
   );
 
   const handleEscEvent = useCallback(
     e => {
       if (e.keyCode === 27) {
-        callback();
+        if (options.submit && options.submit.esc) {
+          submit();
+        }
+
+        if (options.close && options.close.esc) {
+          close();
+        }
       }
     },
-    [callback]
+    [close, submit, options]
+  );
+
+  const handleEnterEvent = useCallback(
+    e => {
+      if (e.keyCode === 13) {
+        if (options.submit && options.submit.enter) {
+          submit();
+        }
+
+        if (options.close && options.close.enter) {
+          close();
+        }
+      }
+    },
+    [close, submit, options]
   );
 
   useEffect(() => {
-    if (!onlyKey) {
+    if (
+      (options.close && options.close.enter) ||
+      (options.submit && options.submit.enter)
+    ) {
+      document.addEventListener("keydown", handleEnterEvent, true);
+    }
+
+    if (
+      (options.close && options.close.esc) ||
+      (options.submit && options.submit.esc)
+    ) {
+      document.addEventListener("keydown", handleEscEvent, true);
+    }
+
+    if (
+      (options.close && options.close.click) ||
+      (options.submit && options.submit.click)
+    ) {
       document.addEventListener("mousedown", handleClickEvent, true);
     }
 
-    document.addEventListener("keydown", handleEscEvent, true);
-
     return () => {
-      document.removeEventListener("mousedown", handleClickEvent, true);
       document.removeEventListener("keydown", handleEscEvent, true);
+      document.removeEventListener("keydown", handleEnterEvent, true);
+      document.removeEventListener("mousedown", handleClickEvent, true);
     };
-  }, [onlyKey, handleClickEvent, handleEscEvent]);
+  }, [options, handleClickEvent, handleEscEvent, handleEnterEvent]);
 
   return container;
 };

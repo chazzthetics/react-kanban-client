@@ -103,7 +103,7 @@ const DescriptionForm = ({ isOpen, onOpen, onClose }) => {
             }}
             value={description || ""}
             onChange={handleChange}
-            ref={focusRef}
+            // ref={focusRef}
           />
           <SaveButtonGroup onClose={onClose} />
         </form>

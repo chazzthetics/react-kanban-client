@@ -17,20 +17,19 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Link,
-  Textarea
+  Link
 } from "@chakra-ui/core";
-import { columnsSelectors } from "../../columns/columnsSlice";
-import { FiCreditCard, FiAlignLeft } from "react-icons/fi";
+import EditTaskTitle from "./EditTaskTitle";
+import EditTaskDescription from "./EditTaskDescription";
+import { useFocus } from "../../../hooks/useFocus";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
   const task = useSelector(state => tasksSelectors.selectById(state, taskId));
-  const { title: columnTitle } = useSelector(state =>
-    columnsSelectors.selectById(state, columnId)
-  );
 
-  const [taskTitle, handleChange] = useEditable(task, "title");
+  const [description, handleChange] = useEditable(task, "description");
 
+  const handleSubmit = () => {};
+  const focusRef = useFocus();
   //FIXME: fix styling...
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -44,40 +43,11 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
           _focus={{ outline: "none" }}
           borderRadius={50}
         />
-        <ModalHeader fontSize="1.2rem" cursor="pointer" onClick={() => {}}>
-          <Flex align="center">
-            <Box as={FiCreditCard} mr={4} fontSize={22} />
-            <Text>{taskTitle}</Text>
-          </Flex>
-          <Flex align="center">
-            <Box mr={4} h="20px" w="22px" />
-            <Text
-              display="inline"
-              fontSize="0.875rem"
-              fontWeight={400}
-              color="gray.600"
-            >
-              in list {columnTitle}
-            </Text>
-          </Flex>
+        <ModalHeader>
+          <EditTaskTitle taskId={taskId} columnId={columnId} />
         </ModalHeader>
         <ModalBody>
-          <Grid templateColumns="3fr 1fr" gap={4}>
-            <Flex align="center">
-              <Box as={FiAlignLeft} mr={4} fontSize={22} />
-              <Text fontSize="1rem" fontWeight={500}>
-                Description
-              </Text>
-            </Flex>
-            <Textarea
-              p={2}
-              fontSize="0.875rem"
-              ml="37px"
-              gridColumn="1 / 2"
-              w="93%"
-              borderRadius={2}
-            />
-          </Grid>
+          <EditTaskDescription taskId={taskId} />
         </ModalBody>
       </ModalContent>
     </Modal>

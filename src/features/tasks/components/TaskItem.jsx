@@ -1,8 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
-import { tasksSelectors, updateTaskTitle } from "../tasksSlice";
-import { useEditable } from "../../../hooks/useEditable";
+import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import { Flex, Text, useDisclosure } from "@chakra-ui/core";
 import TaskContainer from "./TaskContainer";
 import TaskLabelList from "./TaskLabelList";
@@ -19,36 +18,19 @@ const TaskItem = ({ taskId, columnId }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // const [showQuickEdit, setShowQuickEdit] = useState(false);
-  // const handleShowQuickEdit = e => {
-  //   e.stopPropagation();
-  //   setShowQuickEdit(true);
-  // };
-
-  const dispatch = useDispatch();
   const tasks = useSelector(state => tasksSelectors.selectEntities(state));
-
-  const [title, handleChange] = useEditable(tasks[taskId], "title");
-
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      dispatch(updateTaskTitle({ taskId, newTitle: title }));
-    },
-    [dispatch, taskId, title]
-  );
 
   return (
     <>
-      <TaskContainer onHover={onHover} onLeave={onLeave}>
-        {/* <TaskLabelList /> */}
-        <Flex align="center" justify="space-between" onClick={onOpen}>
+      <TaskContainer onHover={onHover} onLeave={onLeave} onOpen={onOpen}>
+        <TaskLabelList />
+        <Flex align="center" justify="space-between">
           <Text fontSize="0.875rem" w="100%">
             {tasks[taskId].title}
           </Text>
           {isHover && <QuickEditButton />}
         </Flex>
-        {/* <TaskFooter /> */}
+        <TaskFooter />
       </TaskContainer>
       <EditTaskModal
         taskId={taskId}
@@ -65,4 +47,4 @@ TaskItem.propTypes = {
   columnId: PropTypes.string.isRequired
 };
 
-export default TaskItem;
+export default memo(TaskItem);
