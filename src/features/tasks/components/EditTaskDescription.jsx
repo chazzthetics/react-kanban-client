@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEditable } from "../../../hooks/useEditable";
-import { tasksSelectors } from "../tasksSlice";
+import { tasksSelectors, updateTaskDescription } from "../tasksSlice";
 import { FiAlignLeft } from "react-icons/fi";
 import { Textarea } from "@chakra-ui/core";
 import SaveButtonGroup from "../../../components/SaveButtonGroup";
@@ -12,7 +12,16 @@ const EditTaskDescription = ({ taskId }) => {
   const task = useSelector(state => tasksSelectors.selectById(state, taskId));
 
   const [description, handleChange] = useEditable(task, "description");
-  const handleSubmit = () => {};
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      dispatch(updateTaskDescription({ taskId, description }));
+    },
+    [dispatch, taskId, description]
+  );
 
   return (
     <>
