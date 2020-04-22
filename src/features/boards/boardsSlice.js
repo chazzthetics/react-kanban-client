@@ -184,6 +184,17 @@ const boardsSlice = createSlice({
         id: boardId,
         changes: { columns: newOrder }
       });
+    },
+    "columns/moved": (state, action) => {
+      const { startBoardId, endBoardId, startOrder, endOrder } = action.payload;
+      boardsAdapter.updateOne(state, {
+        id: startBoardId,
+        changes: { columns: startOrder }
+      });
+      boardsAdapter.updateOne(state, {
+        id: endBoardId,
+        changes: { columns: endOrder }
+      });
     }
   }
 });

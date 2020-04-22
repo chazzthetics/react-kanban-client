@@ -7,6 +7,7 @@ import { Box, Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
 const ColumnTitle = ({ columnId }) => {
   const dispatch = useDispatch();
+
   const column = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );

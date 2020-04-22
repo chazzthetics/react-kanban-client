@@ -34,6 +34,14 @@ const ActionsList = ({ columnId, onShow }) => {
     dispatch(removeColumn({ columnId, boardId }));
   }, [dispatch, columnId, boardId]);
 
+  const handleShowSort = () => {
+    onShow("sort");
+  };
+
+  const handleShowMove = () => {
+    onShow("move");
+  };
+
   return (
     <>
       <ColumnActionsButton
@@ -43,13 +51,17 @@ const ActionsList = ({ columnId, onShow }) => {
       <ColumnActionsButton label="Clear List" onClick={handleClear} />
       <ColumnActionsButton
         label="Move List"
-        onClick={() => {}}
+        onClick={handleShowMove}
         mb={hasTasks ? 0 : 2}
       />
       {hasTasks && (
         <>
           <Divider />
-          <ColumnActionsButton label="Sort By..." onClick={onShow} mb={2} />
+          <ColumnActionsButton
+            label="Sort By..."
+            onClick={handleShowSort}
+            mb={2}
+          />
         </>
       )}
       <PopoverFooter px={0} pt={2} pb={1}>

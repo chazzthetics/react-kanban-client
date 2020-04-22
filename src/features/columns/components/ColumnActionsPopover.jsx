@@ -16,6 +16,7 @@ import IconButton from "../../../components/IconButton";
 import BackButton from "../../../components/BackButton";
 import ActionsList from "./ActionsList";
 import SortByList from "./SortByList";
+import MoveList from "./MoveList";
 
 const ColumnActionsPopover = ({ columnId }) => {
   const { is_open } = useSelector(state =>
@@ -36,13 +37,14 @@ const ColumnActionsPopover = ({ columnId }) => {
 
   const container = useClickOutside(handleClosePopover);
 
-  const [showSortOptions, setShowSortOptions] = useState(false);
-  const handleShowSort = useCallback(() => {
-    setShowSortOptions(true);
+  const [action, setAction] = useState("main");
+
+  const handleShowAction = useCallback(action => {
+    setAction(action);
   }, []);
 
   const handleShowPrevious = useCallback(() => {
-    setShowSortOptions(false);
+    setAction("main");
   }, []);
 
   return (
@@ -78,7 +80,7 @@ const ColumnActionsPopover = ({ columnId }) => {
           cursor="default"
           _focus={{ boxShadow: "none", outline: "none" }}
         >
-          {showSortOptions && (
+          {action !== "main" && (
             <BackButton
               fontSize="1.4rem"
               onClick={handleShowPrevious}
@@ -87,7 +89,11 @@ const ColumnActionsPopover = ({ columnId }) => {
             />
           )}
           <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
-            {!showSortOptions ? "List Actions" : "Sort List"}
+            {action === "sort"
+              ? "Sort List"
+              : action === "move"
+              ? "Move List"
+              : "List Actions"}
           </PopoverHeader>
           <PopoverCloseButton
             opacity={0.6}
@@ -95,10 +101,12 @@ const ColumnActionsPopover = ({ columnId }) => {
             _active={{ boxShadow: "none" }}
           />
           <PopoverBody px={0} pb={0}>
-            {!showSortOptions ? (
-              <ActionsList columnId={columnId} onShow={handleShowSort} />
-            ) : (
+            {action === "sort" ? (
               <SortByList />
+            ) : action === "move" ? (
+              <MoveList columnId={columnId} />
+            ) : (
+              <ActionsList columnId={columnId} onShow={handleShowAction} />
             )}
           </PopoverBody>
         </PopoverContent>

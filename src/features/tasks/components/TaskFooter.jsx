@@ -2,17 +2,30 @@ import React, { memo, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { tasksSelectors } from "../tasksSlice";
-import { Flex, Box, Stack, Icon, Text, Tag, TagLabel } from "@chakra-ui/core";
+import {
+  Flex,
+  Box,
+  Stack,
+  Icon,
+  Text,
+  Tag,
+  TagLabel,
+  Badge
+} from "@chakra-ui/core";
 import { FiAlignLeft, FiCheckSquare } from "react-icons/fi";
 
 const TaskFooter = ({ taskId }) => {
-  const { due_date, description, attachment, checklist } = useSelector(state =>
-    tasksSelectors.selectById(state, taskId)
-  );
+  const {
+    due_date,
+    description,
+    attachment,
+    checklist,
+    priority
+  } = useSelector(state => tasksSelectors.selectById(state, taskId));
 
   const hasExtra = useMemo(
-    () => due_date || description || attachment || checklist,
-    [due_date, description, attachment, checklist]
+    () => due_date || description || attachment || checklist || priority,
+    [due_date, description, attachment, checklist, priority]
   );
 
   return (
@@ -34,6 +47,11 @@ const TaskFooter = ({ taskId }) => {
         )}
         {description && (
           <Box className="Description" as={FiAlignLeft} fontSize="1rem" />
+        )}
+        {priority && (
+          <Badge fontSize="0.675rem" variantColor="red">
+            Highest
+          </Badge>
         )}
         {attachment && (
           <Flex className="Attachment" align="center">

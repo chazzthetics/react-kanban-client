@@ -4,6 +4,7 @@ import {
   createSelector
 } from "@reduxjs/toolkit";
 import { hydrate } from "../auth/authSlice";
+import { changeBoard } from "../boards/boardsSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { columnsService } from "../../api/columnsService";
@@ -90,6 +91,24 @@ const columnsSlice = createSlice({
       );
       state.status = status;
       state.error = error;
+    },
+    moved(state, action) {
+      const {
+        startOrder,
+        endOrder,
+        status = "success",
+        error = null
+      } = action.payload;
+      columnsAdapter.updateMany(
+        state,
+        startOrder.map((id, index) => (state.entities[id].position = index))
+      );
+      columnsAdapter.updateMany(
+        state,
+        endOrder.map((id, index) => (state.entities[id].position = index))
+      );
+      state.status = status;
+      state.error = error;
     }
   },
   extraReducers: {
@@ -162,7 +181,8 @@ export const {
   titleUpdated,
   lockToggled,
   actionsToggled,
-  reordered
+  reordered,
+  moved
 } = columnsSlice.actions;
 export default columnsSlice.reducer;
 
@@ -274,4 +294,16 @@ export const reorderColumn = ({ boardId, newOrder }) => async (
   } catch (ex) {
     dispatch(handleError(ex, reordered, { boardId, newOrder: prevOrder }));
   }
+};
+
+export const moveColumn = ({
+  startBoardId,
+  endBoardId,
+  startOrder,
+  endOrder
+}) => async (dispatch, getState) => {
+  try {
+    dispatch(moved({ startBoardId, endBoardId, startOrder, endOrder }));
+    dispatch(changeBoard(endBoardId));
+  } catch (ex) {}
 };

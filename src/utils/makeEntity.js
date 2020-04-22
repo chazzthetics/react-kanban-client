@@ -29,6 +29,7 @@ export const makeTask = (title, position) => {
     uuid: nanoid(),
     title,
     description: null,
+    priority: null,
     comment: null,
     attatchment: null,
     due_date: null,

@@ -5,14 +5,7 @@ import {
   reorderColumn
 } from "../features/columns/columnsSlice";
 import { reorderTask, reorderBetween } from "../features/tasks/tasksSlice";
-
-const reorder = (originalOrder, source, destination) => {
-  const newOrder = [...originalOrder];
-  const [removed] = newOrder.splice(source, 1);
-  newOrder.splice(destination, 0, removed);
-
-  return newOrder;
-};
+import { reorder } from "../utils/reorder";
 
 export const useDrag = () => {
   const dispatch = useDispatch();
