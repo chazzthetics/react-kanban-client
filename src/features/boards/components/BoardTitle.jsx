@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEditable } from "../../../hooks/useEditable";
 import { selectCurrentBoard, updateBoardTitle } from "../boardsSlice";
+import { isImage } from "../../../utils/getBackground";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
 const BoardTitle = () => {
@@ -34,6 +35,9 @@ const BoardTitle = () => {
         ml={0}
         fontSize="1.2rem"
         fontWeight={700}
+        backgroundColor={
+          isImage(currentBoard.background) ? "hsla(0,0%,0%,0.3)" : "transparent"
+        }
         _hover={{ backgroundColor: "hsla(0,0%,100%,0.3)" }}
       />
       <EditableInput

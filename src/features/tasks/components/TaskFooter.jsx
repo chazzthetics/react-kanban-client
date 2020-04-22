@@ -1,37 +1,63 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import { Flex, Box, Stack, Icon, Text, Tag, TagLabel } from "@chakra-ui/core";
 import { FiAlignLeft, FiCheckSquare } from "react-icons/fi";
 
-const TaskFooter = () => {
+const TaskFooter = ({ taskId }) => {
+  const { due_date, description, attachment, checklist } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
+  );
+
+  const hasExtra = useMemo(
+    () => due_date || description || attachment || checklist,
+    [due_date, description, attachment, checklist]
+  );
+
   return (
-    <Stack isInline pt={1} spacing={3} alignItems="center">
-      <Tag
-        bg="yellow.300"
-        size="sm"
-        display="flex"
-        alignItems="center"
-        onClick={e => e.stopPropagation()}
-      >
-        <Icon name="time" size="0.875rem" mr={1} />
-        <TagLabel fontWeight={400} fontSize="0.8rem">
-          Apr 20
-        </TagLabel>
-      </Tag>
-      <Box as={FiAlignLeft} fontSize="1rem" />
-      <Flex className="Attachment" align="center">
-        <Icon name="attachment" size="0.875rem" mr={1} />
-        <Text fontSize="0.8rem" color="gray.800">
-          1
-        </Text>
-      </Flex>
-      <Flex className="CheckList" align="center">
-        <Box as={FiCheckSquare} size="0.9rem" mr={1} />
-        <Text fontSize="0.8rem" color="gray.800">
-          0/2
-        </Text>
-      </Flex>
-    </Stack>
+    hasExtra && (
+      <Stack isInline pt={1} spacing={3} alignItems="center">
+        {due_date && (
+          <Tag
+            bg="yellow.300"
+            size="sm"
+            display="flex"
+            alignItems="center"
+            onClick={e => e.stopPropagation()}
+          >
+            <Icon name="time" size="0.875rem" mr={1} />
+            <TagLabel fontWeight={400} fontSize="0.8rem">
+              Apr 20
+            </TagLabel>
+          </Tag>
+        )}
+        {description && (
+          <Box className="Description" as={FiAlignLeft} fontSize="1rem" />
+        )}
+        {attachment && (
+          <Flex className="Attachment" align="center">
+            <Icon name="attachment" size="0.875rem" mr={1} />
+            <Text fontSize="0.8rem" color="gray.800">
+              1
+            </Text>
+          </Flex>
+        )}
+        {checklist && (
+          <Flex className="CheckList" align="center">
+            <Box as={FiCheckSquare} size="0.9rem" mr={1} />
+            <Text fontSize="0.8rem" color="gray.800">
+              0/2
+            </Text>
+          </Flex>
+        )}
+      </Stack>
+    )
   );
 };
 
-export default TaskFooter;
+TaskFooter.propTypes = {
+  taskId: PropTypes.string.isRequired
+};
+
+export default memo(TaskFooter);

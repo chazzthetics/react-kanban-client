@@ -56,6 +56,36 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    labelToggled(state, action) {
+      const {
+        taskId,
+        labelId,
+        status = "success",
+        error = null
+      } = action.payload;
+      const taskLabels = state.entities[taskId].labels;
+      if (taskLabels.includes(labelId)) {
+        taskLabels.splice(taskLabels.indexOf(labelId), 1);
+      } else {
+        taskLabels.push(labelId);
+      }
+      state.status = status;
+      state.error = error;
+    },
+    labelRemoved(state, action) {
+      const {
+        taskId,
+        labelId,
+        status = "success",
+        error = null
+      } = action.payload;
+      const taskLabels = state.entities[taskId].labels;
+      if (taskLabels.includes(labelId)) {
+        taskLabels.splice(taskLabels.indexOf(labelId), 1);
+      }
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -91,7 +121,7 @@ const tasksSlice = createSlice({
           .flatMap(column => column.tasks)
           .map(task => ({
             ...task,
-            is_editing: false
+            labels: task.labels.map(label => label.id)
           }))
       );
 
@@ -131,6 +161,7 @@ export const {
   removed,
   titleUpdated,
   descriptionUpdated,
+  labelToggled,
   reordered,
   reorderedBetween
 } = tasksSlice.actions;
@@ -196,14 +227,9 @@ export const updateTaskDescription = ({ taskId, description }) => async (
   try {
     if (description === oldDescription) return;
 
-    if (description === "") {
-      // Restore original description
-      dispatch(descriptionUpdated({ taskId, description: oldDescription }));
-    } else {
-      dispatch(descriptionUpdated({ taskId, description }));
-      await tasksService.update(taskId, { description });
-      // dispatch(fetchMostRecentActivity()); //FIXME:
-    }
+    dispatch(descriptionUpdated({ taskId, description }));
+    await tasksService.update(taskId, { description });
+    // dispatch(fetchMostRecentActivity()); //FIXME:
   } catch (ex) {
     dispatch(
       handleError(ex, descriptionUpdated, {
@@ -211,6 +237,23 @@ export const updateTaskDescription = ({ taskId, description }) => async (
         description: oldDescription
       })
     );
+  }
+};
+
+export const toggleLabel = ({ taskId, labelId }) => async (
+  dispatch,
+  getState
+) => {
+  const { labels } = getPreviousValue(getState(), "tasks", taskId);
+  try {
+    dispatch(labelToggled({ taskId, labelId }));
+    if (labels.includes(labelId)) {
+      await tasksService.removeLabel(taskId, labelId);
+    } else {
+      await tasksService.addLabel(taskId, labelId);
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, labelToggled, { taskId, labelId }));
   }
 };
 

@@ -37,13 +37,13 @@ const ColumnActionsPopover = ({ columnId }) => {
   const container = useClickOutside(handleClosePopover);
 
   const [showSortOptions, setShowSortOptions] = useState(false);
-  const handleShowSort = () => {
+  const handleShowSort = useCallback(() => {
     setShowSortOptions(true);
-  };
+  }, []);
 
-  const handleShowPrevious = () => {
+  const handleShowPrevious = useCallback(() => {
     setShowSortOptions(false);
-  };
+  }, []);
 
   return (
     <div ref={container}>

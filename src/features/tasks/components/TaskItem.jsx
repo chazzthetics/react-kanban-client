@@ -23,14 +23,14 @@ const TaskItem = ({ taskId, columnId }) => {
   return (
     <>
       <TaskContainer onHover={onHover} onLeave={onLeave} onOpen={onOpen}>
-        <TaskLabelList />
+        <TaskLabelList taskId={taskId} taskLabels={tasks[taskId].labels} />
         <Flex align="center" justify="space-between">
           <Text fontSize="0.875rem" w="100%">
             {tasks[taskId].title}
           </Text>
           {isHover && <QuickEditButton />}
         </Flex>
-        <TaskFooter />
+        <TaskFooter taskId={taskId} />
       </TaskContainer>
       <EditTaskModal
         taskId={taskId}

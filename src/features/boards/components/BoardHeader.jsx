@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import { selectCurrentBoardId } from "../boardsSlice";
@@ -58,4 +58,4 @@ const BoardHeader = () => {
   );
 };
 
-export default BoardHeader;
+export default memo(BoardHeader);

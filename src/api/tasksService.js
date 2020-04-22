@@ -18,5 +18,11 @@ export const tasksService = {
       `/columns/${startColumnId}/${endColumnId}/tasks/between`,
       data
     );
+  },
+  addLabel: (taskId, label) => {
+    return axios.post(`/tasks/${taskId}/labels`, { label });
+  },
+  removeLabel: (taskId, label) => {
+    return axios.put(`/tasks/${taskId}/labels`, { label });
   }
 };

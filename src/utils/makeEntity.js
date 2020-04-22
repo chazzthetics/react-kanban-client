@@ -32,8 +32,8 @@ export const makeTask = (title, position) => {
     comment: null,
     attatchment: null,
     due_date: null,
-    is_locked: false,
-    is_editing: false,
+    checklist: null,
+    labels: [],
     position
     // FIXME:
     // created_at: new Date().toDateString,

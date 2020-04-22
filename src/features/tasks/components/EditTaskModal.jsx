@@ -1,12 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { useEditable } from "../../../hooks/useEditable";
-import { tasksSelectors } from "../tasksSlice";
 import {
-  Box,
-  Text,
-  Flex,
   Modal,
   ModalOverlay,
   ModalCloseButton,
@@ -21,15 +15,9 @@ import {
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
-import { useFocus } from "../../../hooks/useFocus";
+import LabelsPopover from "../../labels/components/LabelsPopover";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  const task = useSelector(state => tasksSelectors.selectById(state, taskId));
-
-  const [description, handleChange] = useEditable(task, "description");
-
-  const handleSubmit = () => {};
-  const focusRef = useFocus();
   //FIXME: fix styling...
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -48,6 +36,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         </ModalHeader>
         <ModalBody>
           <EditTaskDescription taskId={taskId} />
+          <LabelsPopover taskId={taskId} />
         </ModalBody>
       </ModalContent>
     </Modal>

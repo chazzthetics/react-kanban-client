@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentBoardId } from "../../boards/boardsSlice";
@@ -20,7 +20,7 @@ const ActionsList = ({ columnId, onShow }) => {
     columnsSelectors.selectById(state, columnId)
   );
 
-  const hasTasks = tasks.length > 1;
+  const hasTasks = useMemo(() => tasks.length > 1, [tasks]);
 
   const handleToggleLock = useCallback(() => {
     dispatch(toggleLockColumn(columnId));

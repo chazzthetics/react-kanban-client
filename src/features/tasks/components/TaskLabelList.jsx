@@ -1,27 +1,29 @@
-import React from "react";
-import { Stack, PseudoBox } from "@chakra-ui/core";
+import React, { memo } from "react";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { labelsSelectors } from "../../labels/labelsSlice";
+import { Stack } from "@chakra-ui/core";
+import TaskLabelItem from "./TaskLabelItem";
 
-const TaskLabelList = () => {
-  return (
-    <Stack isInline spacing={1} mb={1}>
-      <PseudoBox
-        bg="green.400"
-        h="8px"
-        w="2.5rem"
-        borderRadius={4}
-        _hover={{ backgroundColor: "green.500" }}
-        onClick={e => e.stopPropagation()}
-      />
-      <PseudoBox
-        bg="yellow.400"
-        h="8px"
-        w="2.5rem"
-        borderRadius={4}
-        _hover={{ backgroundColor: "yellow.500" }}
-        onClick={e => e.stopPropagation()}
-      />
+const TaskLabelList = ({ taskId, taskLabels }) => {
+  const labels = useSelector(state => labelsSelectors.selectEntities(state));
+
+  return taskLabels.length > 0 ? (
+    <Stack isInline mb={1}>
+      {taskLabels.map(taskLabel => (
+        <TaskLabelItem
+          key={taskLabel}
+          taskId={taskId}
+          label={labels[taskLabel]}
+        />
+      ))}
     </Stack>
-  );
+  ) : null;
 };
 
-export default TaskLabelList;
+TaskLabelList.propTypes = {
+  taskId: PropTypes.string.isRequired,
+  taskLabels: PropTypes.arrayOf(PropTypes.number).isRequired
+};
+
+export default memo(TaskLabelList);

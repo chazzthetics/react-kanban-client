@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { selectBoardColumnCount } from "../../boards/boardsSlice";
@@ -39,4 +39,4 @@ CreateColumnButton.propTypes = {
   onShow: PropTypes.func.isRequired
 };
 
-export default CreateColumnButton;
+export default memo(CreateColumnButton);

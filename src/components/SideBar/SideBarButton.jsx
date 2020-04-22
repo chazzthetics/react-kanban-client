@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { PseudoBox, Flex, Text } from "@chakra-ui/core";
 
@@ -60,4 +60,4 @@ SideBarButton.propTypes = {
   fontWeight: PropTypes.number
 };
 
-export default SideBarButton;
+export default memo(SideBarButton);
