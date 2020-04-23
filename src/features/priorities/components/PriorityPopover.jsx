@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { togglePriority } from "../../tasks/tasksSlice";
+import { togglePriority, removePriority } from "../../tasks/tasksSlice";
 import { prioritiesSelectors } from "../prioritiesSlice";
 import { FiAlertCircle } from "react-icons/fi";
 import {
@@ -13,8 +13,7 @@ import {
   PopoverFooter,
   PopoverCloseButton,
   PseudoBox,
-  Button,
-  Text
+  Button
 } from "@chakra-ui/core";
 
 const PriorityPopover = ({ taskId }) => {
@@ -28,6 +27,10 @@ const PriorityPopover = ({ taskId }) => {
     },
     [dispatch, taskId]
   );
+
+  const handleRemovePriority = useCallback(() => {
+    dispatch(removePriority({ taskId }));
+  }, [dispatch, taskId]);
 
   return (
     <Popover>
@@ -84,6 +87,9 @@ const PriorityPopover = ({ taskId }) => {
               {priority.name}
             </PseudoBox>
           ))}
+          <Button size="sm" onClick={handleRemovePriority}>
+            Remove Priority
+          </Button>
         </PopoverBody>
       </PopoverContent>
     </Popover>

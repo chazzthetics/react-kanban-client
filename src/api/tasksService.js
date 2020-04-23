@@ -28,7 +28,7 @@ export const tasksService = {
   addPriority: (taskId, priority) => {
     return axios.post(`/tasks/${taskId}/priority`, { priority });
   },
-  removePriority: (taskId, priority) => {
-    return axios.put(`/tasks/${taskId}/priority`, { priority });
+  removePriority: taskId => {
+    return axios.put(`/tasks/${taskId}/priority`);
   }
 };

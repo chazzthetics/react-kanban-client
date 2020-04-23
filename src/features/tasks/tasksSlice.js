@@ -102,6 +102,17 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    priorityRemoved(state, action) {
+      const { taskId, status = "success", error = null } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          priority: null
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -137,7 +148,8 @@ const tasksSlice = createSlice({
           .flatMap(column => column.tasks)
           .map(task => ({
             ...task,
-            labels: task.labels.map(label => label.id)
+            labels: task.labels.map(label => label.id),
+            priority: task.priority[0] ? task.priority[0].id : null
           }))
       );
 
@@ -179,6 +191,7 @@ export const {
   descriptionUpdated,
   labelToggled,
   priorityToggled,
+  priorityRemoved,
   reordered,
   reorderedBetween
 } = tasksSlice.actions;
@@ -289,7 +302,20 @@ export const togglePriority = ({ taskId, priorityId }) => async (
       await tasksService.addPriority(taskId, priorityId);
     }
   } catch (ex) {
-    dispatch(handleError(ex, priorityToggled, { taskId, priorityId }));
+    dispatch(handleError(ex, priorityRemoved, { taskId }));
+  }
+};
+
+export const removePriority = ({ taskId }) => async (dispatch, getState) => {
+  const { priority } = getPreviousValue(getState(), "tasks", taskId);
+
+  try {
+    if (priority) {
+      dispatch(priorityRemoved({ taskId }));
+      await tasksService.removePriority(taskId);
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, priorityToggled, { taskId, priority }));
   }
 };
 
