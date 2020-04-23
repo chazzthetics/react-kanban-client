@@ -48,11 +48,16 @@ const ActionsList = ({ columnId, onShow }) => {
         label={is_locked ? "Unlock List" : "Lock List"}
         onClick={handleToggleLock}
       />
-      <ColumnActionsButton label="Clear List" onClick={handleClear} />
+      <ColumnActionsButton
+        label="Clear List"
+        onClick={handleClear}
+        disabled={is_locked}
+      />
       <ColumnActionsButton
         label="Move List"
         onClick={handleShowMove}
         mb={hasTasks ? 0 : 2}
+        disabled={is_locked}
       />
       {hasTasks && (
         <>
@@ -65,7 +70,11 @@ const ActionsList = ({ columnId, onShow }) => {
         </>
       )}
       <PopoverFooter px={0} pt={2} pb={1}>
-        <ColumnActionsButton label="Remove List" onClick={handleRemove} />
+        <ColumnActionsButton
+          label="Remove List"
+          onClick={handleRemove}
+          disabled={is_locked}
+        />
       </PopoverFooter>
     </>
   );

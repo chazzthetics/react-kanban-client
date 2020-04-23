@@ -19,25 +19,13 @@ import SortByList from "./SortByList";
 import MoveList from "./MoveList";
 
 const ColumnActionsPopover = ({ columnId }) => {
+  const [action, setAction] = useState("main");
+
   const { is_open } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
 
   const dispatch = useDispatch();
-
-  const handleOpenPopover = useCallback(() => {
-    dispatch(actionsToggled({ columnId, isOpen: true }));
-  }, [dispatch, columnId]);
-
-  const handleClosePopover = useCallback(() => {
-    if (is_open) {
-      dispatch(actionsToggled({ columnId, isOpen: false }));
-    }
-  }, [dispatch, columnId, is_open]);
-
-  const container = useClickOutside(handleClosePopover);
-
-  const [action, setAction] = useState("main");
 
   const handleShowAction = useCallback(action => {
     setAction(action);
@@ -46,6 +34,21 @@ const ColumnActionsPopover = ({ columnId }) => {
   const handleShowPrevious = useCallback(() => {
     setAction("main");
   }, []);
+
+  const handleOpenPopover = useCallback(() => {
+    dispatch(actionsToggled({ columnId, isOpen: true }));
+  }, [dispatch, columnId]);
+
+  const handleClosePopover = useCallback(() => {
+    if (is_open) {
+      dispatch(actionsToggled({ columnId, isOpen: false }));
+      setAction("main");
+    }
+  }, [dispatch, columnId, is_open]);
+
+  const container = useClickOutside(handleClosePopover, {
+    close: { click: true, esc: true, enter: false }
+  });
 
   return (
     <div ref={container}>
@@ -104,7 +107,10 @@ const ColumnActionsPopover = ({ columnId }) => {
             {action === "sort" ? (
               <SortByList />
             ) : action === "move" ? (
-              <MoveList columnId={columnId} />
+              <MoveList
+                columnId={columnId}
+                onShowPrevious={handleShowPrevious}
+              />
             ) : (
               <ActionsList columnId={columnId} onShow={handleShowAction} />
             )}

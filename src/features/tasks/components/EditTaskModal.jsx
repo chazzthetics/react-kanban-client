@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
+import DueDatePopover from "./DueDatePopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
 
@@ -38,8 +39,12 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         <ModalBody>
           <EditTaskDescription taskId={taskId} />
 
-          <LabelsPopover taskId={taskId} />
-          <PriorityPopover taskId={taskId} />
+          <div>
+            Add to Card
+            <LabelsPopover taskId={taskId} />
+            <PriorityPopover taskId={taskId} />
+            <DueDatePopover taskId={taskId} />
+          </div>
         </ModalBody>
       </ModalContent>
     </Modal>

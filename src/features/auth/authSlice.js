@@ -32,11 +32,13 @@ export const hydrate = createAsyncThunk(
   "hydrate",
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      dispatch(fetchPriorities());
-      dispatch(fetchLabels());
-      const { data } = await fetchInitialData();
-      dispatch(fetchActivities());
-      return data;
+      const { payload: priorities } = await dispatch(fetchPriorities());
+      const { payload: labels } = await dispatch(fetchLabels());
+      if (priorities && labels) {
+        const { data } = await fetchInitialData();
+        dispatch(fetchActivities());
+        return data;
+      }
     } catch (ex) {
       rejectWithValue(ex.response.data);
     }

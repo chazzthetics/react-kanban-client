@@ -13,11 +13,16 @@ const PriorityBadge = ({ taskId }) => {
     tasksSelectors.selectById(state, taskId)
   );
 
-  return (
-    <Badge fontSize="0.675rem" bg={priorities[priority].color} color="white">
+  return priority ? (
+    <Badge
+      fontSize="0.675rem"
+      bg={priorities[priority].color}
+      color="white"
+      alignSelf="flex-end"
+    >
       {priorities[priority].name}
     </Badge>
-  );
+  ) : null;
 };
 
 PriorityBadge.propTypes = {

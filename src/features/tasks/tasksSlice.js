@@ -113,6 +113,33 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    dueDateAdded(state, action) {
+      const {
+        taskId,
+        due_date,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          due_date
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
+    dueDateRemoved(state, action) {
+      const { taskId, status = "success", error = null } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          due_date: null
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -192,6 +219,8 @@ export const {
   labelToggled,
   priorityToggled,
   priorityRemoved,
+  dueDateAdded,
+  dueDateRemoved,
   reordered,
   reorderedBetween
 } = tasksSlice.actions;
@@ -317,6 +346,18 @@ export const removePriority = ({ taskId }) => async (dispatch, getState) => {
   } catch (ex) {
     dispatch(handleError(ex, priorityToggled, { taskId, priority }));
   }
+};
+
+export const addDueDate = ({ taskId, due_date }) => async dispatch => {
+  try {
+    dispatch(dueDateAdded({ taskId, due_date }));
+  } catch (ex) {}
+};
+
+export const removeDueDate = ({ taskId, due_date }) => async dispatch => {
+  try {
+    dispatch(dueDateRemoved({ taskId }));
+  } catch (ex) {}
 };
 
 export const reorderTask = ({ columnId, newOrder }) => async (

@@ -20,6 +20,7 @@ export const makeColumn = (title, position) => {
     title,
     position,
     is_locked: false,
+    is_open: false,
     tasks: []
   };
 };

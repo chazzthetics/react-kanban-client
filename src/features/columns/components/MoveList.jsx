@@ -18,7 +18,7 @@ import SelectBox from "../../../components/SelectBox";
 import SaveButton from "../../../components/SaveButton";
 
 //FIXME: refactor
-const MoveList = ({ columnId }) => {
+const MoveList = ({ columnId, onShowPrevious }) => {
   const dispatch = useDispatch();
 
   const { position } = useSelector(state =>
@@ -48,10 +48,10 @@ const MoveList = ({ columnId }) => {
     data => {
       const endIndex = parseInt(data.position);
       if (endIndex === startIndex && currentBoardId === selectedId) {
-        dispatch(actionsToggled({ columnId, isOpen: false }));
         return;
       }
 
+      // Move column to another board
       if (selectedId !== currentBoardId) {
         const startOrder = startColumns.filter((_id, i) => i !== startIndex);
         const [removed] = [...startColumns].splice(startIndex, 1);
@@ -67,9 +67,12 @@ const MoveList = ({ columnId }) => {
           })
         );
       } else {
+        // Reorder column
         const newOrder = reorder(endColumns, startIndex, endIndex);
         dispatch(reorderColumn({ boardId: selectedId, newOrder }));
+        onShowPrevious("main");
       }
+      // Close popover and set content to main after submit
       dispatch(actionsToggled({ columnId, isOpen: false }));
     },
     [
@@ -79,7 +82,8 @@ const MoveList = ({ columnId }) => {
       selectedId,
       startColumns,
       endColumns,
-      startIndex
+      startIndex,
+      onShowPrevious
     ]
   );
 
@@ -114,7 +118,8 @@ const MoveList = ({ columnId }) => {
 };
 
 MoveList.propTypes = {
-  columnId: PropTypes.string.isRequired
+  columnId: PropTypes.string.isRequired,
+  onShowPrevious: PropTypes.func.isRequired
 };
 
 export default MoveList;

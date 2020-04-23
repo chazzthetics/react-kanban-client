@@ -17,11 +17,11 @@ const TaskLabelItem = ({ taskId, label }) => {
 
   return (
     <PseudoBox
-      bg={`${label.color}.400`}
+      bg={`${label.color}.400` || "blue.400"}
       h="8px"
       w="2.5rem"
       borderRadius={4}
-      _hover={{ backgroundColor: `${label.color}.500` }}
+      _hover={{ backgroundColor: `${label.color}.500` || "blue.500" }}
       onClick={handleToggleLabel}
       mx="2px"
       _first={{ marginLeft: 0 }}
