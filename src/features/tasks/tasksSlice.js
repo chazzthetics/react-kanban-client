@@ -350,13 +350,15 @@ export const removePriority = ({ taskId }) => async (dispatch, getState) => {
 
 export const addDueDate = ({ taskId, due_date }) => async dispatch => {
   try {
-    dispatch(dueDateAdded({ taskId, due_date }));
+    dispatch(dueDateAdded({ taskId, due_date: due_date.toLocaleString() }));
+    await tasksService.update(taskId, { due_date });
   } catch (ex) {}
 };
 
-export const removeDueDate = ({ taskId, due_date }) => async dispatch => {
+export const removeDueDate = ({ taskId }) => async dispatch => {
   try {
     dispatch(dueDateRemoved({ taskId }));
+    await tasksService.removeDueDate(taskId);
   } catch (ex) {}
 };
 

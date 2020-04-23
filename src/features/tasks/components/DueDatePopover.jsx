@@ -33,9 +33,7 @@ const DueDatePopover = ({ taskId }) => {
     e => {
       e.preventDefault();
       if (selectedDay) {
-        dispatch(
-          addDueDate({ taskId, due_date: selectedDay.toLocaleDateString() })
-        );
+        dispatch(addDueDate({ taskId, due_date: selectedDay }));
       }
     },
     [dispatch, selectedDay, taskId]

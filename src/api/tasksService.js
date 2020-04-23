@@ -30,5 +30,8 @@ export const tasksService = {
   },
   removePriority: taskId => {
     return axios.put(`/tasks/${taskId}/priority`);
+  },
+  removeDueDate: taskId => {
+    return axios.put(`/tasks/${taskId}/due_date`);
   }
 };
