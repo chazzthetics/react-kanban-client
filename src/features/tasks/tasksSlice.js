@@ -86,6 +86,22 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    priorityToggled(state, action) {
+      const {
+        taskId,
+        priorityId,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          priority: priorityId
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -162,6 +178,7 @@ export const {
   titleUpdated,
   descriptionUpdated,
   labelToggled,
+  priorityToggled,
   reordered,
   reorderedBetween
 } = tasksSlice.actions;
@@ -254,6 +271,25 @@ export const toggleLabel = ({ taskId, labelId }) => async (
     }
   } catch (ex) {
     dispatch(handleError(ex, labelToggled, { taskId, labelId }));
+  }
+};
+
+export const togglePriority = ({ taskId, priorityId }) => async (
+  dispatch,
+  getState
+) => {
+  const { priority: oldPriority } = getPreviousValue(
+    getState(),
+    "tasks",
+    taskId
+  );
+  try {
+    if (priorityId !== oldPriority) {
+      dispatch(priorityToggled({ taskId, priorityId }));
+      await tasksService.addPriority(taskId, priorityId);
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, priorityToggled, { taskId, priorityId }));
   }
 };
 

@@ -6,6 +6,7 @@ import {
 import { slugify } from "../../utils/slugify";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
+import { isImage } from "../../utils/getBackground";
 import { boardsService } from "../../api/boardsService";
 import { hydrate } from "../auth/authSlice";
 import {
@@ -212,7 +213,7 @@ export const {
 } = boardsSlice.actions;
 export default boardsSlice.reducer;
 
-// Selectors
+// Selectors FIXME:
 export const boardsSelectors = boardsAdapter.getSelectors(
   state => state.boards
 );
@@ -235,6 +236,11 @@ export const selectBoardColumnCount = createSelector(
 export const selectBoardBackground = createSelector(
   [boardsSelectors.selectEntities, state => state.boards.current],
   (boards, current) => (boards[current] ? boards[current].background : "blue")
+);
+
+export const selectBackgroundIsImage = createSelector(
+  [selectBoardBackground],
+  background => isImage(background)
 );
 
 export const selectBoardDescription = createSelector(

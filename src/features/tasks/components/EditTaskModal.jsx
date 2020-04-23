@@ -16,6 +16,7 @@ import {
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
 import LabelsPopover from "../../labels/components/LabelsPopover";
+import PriorityPopover from "../../priorities/components/PriorityPopover";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
   //FIXME: fix styling...
@@ -36,7 +37,9 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         </ModalHeader>
         <ModalBody>
           <EditTaskDescription taskId={taskId} />
+
           <LabelsPopover taskId={taskId} />
+          <PriorityPopover taskId={taskId} />
         </ModalBody>
       </ModalContent>
     </Modal>

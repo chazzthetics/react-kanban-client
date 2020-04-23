@@ -35,4 +35,4 @@ TaskLabelItem.propTypes = {
   label: PropTypes.object.isRequired
 };
 
-export default TaskLabelItem;
+export default React.memo(TaskLabelItem);

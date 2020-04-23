@@ -3,6 +3,7 @@ import axios from "axios";
 import { fetchInitialData } from "../../api";
 import { fetchActivities } from "../activities/activitiesSlice";
 import { fetchLabels } from "../labels/labelsSlice";
+import { fetchPriorities } from "../priorities/prioritiesSlice";
 import { getInitials } from "../../utils/getInitials";
 
 export const login = createAsyncThunk(
@@ -31,6 +32,7 @@ export const hydrate = createAsyncThunk(
   "hydrate",
   async (_, { dispatch, rejectWithValue }) => {
     try {
+      dispatch(fetchPriorities());
       dispatch(fetchLabels());
       const { data } = await fetchInitialData();
       dispatch(fetchActivities());

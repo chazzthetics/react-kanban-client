@@ -1,13 +1,17 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEditable } from "../../../hooks/useEditable";
-import { selectCurrentBoard, updateBoardTitle } from "../boardsSlice";
-import { isImage } from "../../../utils/getBackground";
+import {
+  selectCurrentBoard,
+  selectBackgroundIsImage,
+  updateBoardTitle
+} from "../boardsSlice";
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 
 const BoardTitle = () => {
   const dispatch = useDispatch();
   const currentBoard = useSelector(selectCurrentBoard);
+  const isImage = useSelector(selectBackgroundIsImage);
 
   const [title, handleChange] = useEditable(currentBoard, "title");
 
@@ -26,18 +30,16 @@ const BoardTitle = () => {
         h="2rem"
         d="inline-flex"
         alignItems="center"
-        borderRadius={2}
+        borderRadius={3}
         cursor="pointer"
         color="white"
         as="h2"
         px={2}
-        mr={2}
+        mr={1}
         ml={0}
         fontSize="1.2rem"
         fontWeight={700}
-        backgroundColor={
-          isImage(currentBoard.background) ? "hsla(0,0%,0%,0.3)" : "transparent"
-        }
+        backgroundColor={isImage ? "hsla(0,0%,0%,0.3)" : "transparent"}
         _hover={{ backgroundColor: "hsla(0,0%,100%,0.3)" }}
       />
       <EditableInput

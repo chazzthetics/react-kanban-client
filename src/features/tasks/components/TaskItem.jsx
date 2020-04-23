@@ -1,10 +1,9 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { tasksSelectors } from "../tasksSlice";
-import { Flex, Text, useDisclosure } from "@chakra-ui/core";
+import { Flex, useDisclosure } from "@chakra-ui/core";
 import TaskContainer from "./TaskContainer";
 import TaskLabelList from "./TaskLabelList";
+import TaskTitle from "./TaskTitle";
 import TaskFooter from "./TaskFooter";
 import EditTaskModal from "./EditTaskModal";
 import QuickEditButton from "./QuickEditButton";
@@ -18,16 +17,12 @@ const TaskItem = ({ taskId, columnId }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const tasks = useSelector(state => tasksSelectors.selectEntities(state));
-
   return (
     <>
       <TaskContainer onHover={onHover} onLeave={onLeave} onOpen={onOpen}>
-        <TaskLabelList taskId={taskId} taskLabels={tasks[taskId].labels} />
+        <TaskLabelList taskId={taskId} />
         <Flex align="center" justify="space-between">
-          <Text fontSize="0.875rem" w="100%">
-            {tasks[taskId].title}
-          </Text>
+          <TaskTitle taskId={taskId} />
           {isHover && <QuickEditButton />}
         </Flex>
         <TaskFooter taskId={taskId} />

@@ -4,7 +4,6 @@ import {
   createSelector
 } from "@reduxjs/toolkit";
 import { hydrate } from "../auth/authSlice";
-import { changeBoard } from "../boards/boardsSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { columnsService } from "../../api/columnsService";
@@ -302,8 +301,32 @@ export const moveColumn = ({
   startOrder,
   endOrder
 }) => async (dispatch, getState) => {
+  const { columns: prevStartColumns } = getPreviousValue(
+    getState(),
+    "boards",
+    startBoardId
+  );
+  const { columns: prevEndColumns } = getPreviousValue(
+    getState(),
+    "boards",
+    endBoardId
+  );
+
   try {
     dispatch(moved({ startBoardId, endBoardId, startOrder, endOrder }));
-    dispatch(changeBoard(endBoardId));
-  } catch (ex) {}
+    await columnsService.move(startBoardId, {
+      endBoardId,
+      startOrder,
+      endOrder
+    });
+  } catch (ex) {
+    dispatch(
+      handleError(ex, moved, {
+        startBoardId,
+        endBoardId,
+        startOrder: prevStartColumns,
+        endOrder: prevEndColumns
+      })
+    );
+  }
 };

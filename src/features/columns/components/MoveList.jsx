@@ -27,7 +27,7 @@ const MoveList = ({ columnId }) => {
 
   const currentBoardId = useSelector(selectCurrentBoardId);
 
-  const { register, handleSubmit, watch, setValue } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: { board: currentBoardId, position }
   });
 
@@ -46,11 +46,17 @@ const MoveList = ({ columnId }) => {
 
   const onSubmit = useCallback(
     data => {
+      const endIndex = parseInt(data.position);
+      if (endIndex === startIndex && currentBoardId === selectedId) {
+        dispatch(actionsToggled({ columnId, isOpen: false }));
+        return;
+      }
+
       if (selectedId !== currentBoardId) {
         const startOrder = startColumns.filter((_id, i) => i !== startIndex);
         const [removed] = [...startColumns].splice(startIndex, 1);
         const endOrder = [...endColumns];
-        endOrder.splice(parseInt(data.position), 0, removed);
+        endOrder.splice(endIndex, 0, removed);
 
         dispatch(
           moveColumn({
@@ -60,28 +66,19 @@ const MoveList = ({ columnId }) => {
             endOrder
           })
         );
-
-        dispatch(actionsToggled({ columnId, isOpen: false }));
       } else {
-        const newOrder = reorder(
-          endColumns,
-          startIndex,
-          parseInt(data.position)
-        );
-
+        const newOrder = reorder(endColumns, startIndex, endIndex);
         dispatch(reorderColumn({ boardId: selectedId, newOrder }));
-        setValue("position", position);
       }
+      dispatch(actionsToggled({ columnId, isOpen: false }));
     },
     [
       dispatch,
       columnId,
-      endColumns,
-      selectedId,
       currentBoardId,
-      setValue,
-      position,
+      selectedId,
       startColumns,
+      endColumns,
       startIndex
     ]
   );

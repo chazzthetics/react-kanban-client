@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleLabel } from "../../tasks/tasksSlice";
+import { toggleLabel, tasksSelectors } from "../../tasks/tasksSlice";
 import { labelsSelectors } from "../labelsSlice";
+import { FiTag } from "react-icons/fi";
 import {
   Popover,
   PopoverTrigger,
@@ -12,11 +13,22 @@ import {
   PopoverFooter,
   PopoverCloseButton,
   Button,
-  PseudoBox
+  Flex,
+  PseudoBox,
+  Icon
 } from "@chakra-ui/core";
 
 const LabelsPopover = ({ taskId }) => {
   const labels = useSelector(state => labelsSelectors.selectAll(state));
+  const { labels: taskLabels } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
+  );
+
+  const hasLabel = useCallback(
+    label => taskLabels.some(taskLabel => taskLabel === label.id),
+    [taskLabels]
+  );
+
   const dispatch = useDispatch();
 
   const handleToggleLabel = useCallback(
@@ -29,22 +41,62 @@ const LabelsPopover = ({ taskId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button>Labels</Button>
+        <Button
+          size="sm"
+          leftIcon={FiTag}
+          fontWeight={400}
+          w="12rem"
+          justifyContent="flex-start"
+          backgroundColor="#ebecf0"
+          _focus={{ boxShadow: "none" }}
+        >
+          Labels
+        </Button>
       </PopoverTrigger>
-      <PopoverContent zIndex={4}>
-        <PopoverCloseButton />
-        <PopoverHeader>Labels</PopoverHeader>
+      <PopoverContent
+        w="18rem"
+        zIndex={4}
+        _focus={{ boxShadow: "none", outline: "none" }}
+      >
+        <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
+          Labels
+        </PopoverHeader>
+        <PopoverCloseButton
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+          _active={{ boxShadow: "none" }}
+        />
         <PopoverBody>
           {labels.map(label => (
-            <PseudoBox
-              key={label.id}
-              bg={`${label.color}.400`}
-              h="2rem"
-              w="100%"
-              mb={1}
-              as="button"
-              onClick={() => handleToggleLabel(label.id)}
-            />
+            <Flex key={label.id} position="relative">
+              <PseudoBox
+                bg={`${label.color}.400`}
+                borderRadius={3}
+                h="2rem"
+                w="100%"
+                mb={1}
+                as="button"
+                _focus={{ outline: "none" }}
+                _hover={{
+                  borderLeftWidth: "0.5rem",
+                  borderLeftStyle: "solid",
+                  borderLeftColor: `${label.color}.600`,
+                  transform: "rotate(-1deg)"
+                }}
+                transition="border 120ms ease-in, transform 120ms ease-in"
+                onClick={() => handleToggleLabel(label.id)}
+              />
+              {hasLabel(label) && (
+                <Icon
+                  name="check"
+                  color="white"
+                  position="absolute"
+                  fontSize="0.8rem"
+                  top="8.5px"
+                  right={2}
+                />
+              )}
+            </Flex>
           ))}
         </PopoverBody>
         <PopoverFooter>Create new label</PopoverFooter>
@@ -57,4 +109,4 @@ LabelsPopover.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default LabelsPopover;
+export default React.memo(LabelsPopover);

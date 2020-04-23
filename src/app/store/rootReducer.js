@@ -6,6 +6,7 @@ import boardsReducer from "../../features/boards/boardsSlice";
 import columnsReducer from "../../features/columns/columnsSlice";
 import tasksReducer from "../../features/tasks/tasksSlice";
 import labelsReducer from "../../features/labels/labelsSlice";
+import prioritiesReducer from "../../features/priorities/prioritiesSlice";
 
 export default combineReducers({
   auth: authReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   boards: boardsReducer,
   columns: columnsReducer,
   tasks: tasksReducer,
-  labels: labelsReducer
+  labels: labelsReducer,
+  priorities: prioritiesReducer
 });

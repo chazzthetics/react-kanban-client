@@ -1,29 +1,28 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import { labelsSelectors } from "../../labels/labelsSlice";
 import { Stack } from "@chakra-ui/core";
 import TaskLabelItem from "./TaskLabelItem";
 
-const TaskLabelList = ({ taskId, taskLabels }) => {
+const TaskLabelList = ({ taskId }) => {
   const labels = useSelector(state => labelsSelectors.selectEntities(state));
+  const { labels: taskLabels } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
+  );
 
-  return taskLabels.length > 0 ? (
+  return taskLabels && taskLabels.length > 0 ? (
     <Stack isInline mb={1}>
-      {taskLabels.map(taskLabel => (
-        <TaskLabelItem
-          key={taskLabel}
-          taskId={taskId}
-          label={labels[taskLabel]}
-        />
+      {taskLabels.map(label => (
+        <TaskLabelItem key={label} taskId={taskId} label={labels[label]} />
       ))}
     </Stack>
   ) : null;
 };
 
 TaskLabelList.propTypes = {
-  taskId: PropTypes.string.isRequired,
-  taskLabels: PropTypes.arrayOf(PropTypes.number).isRequired
+  taskId: PropTypes.string.isRequired
 };
 
 export default memo(TaskLabelList);

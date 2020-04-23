@@ -12,5 +12,8 @@ export const columnsService = {
   },
   reorder: (boardId, data) => {
     return axios.patch(`/boards/${boardId}/columns/reorder`, data);
+  },
+  move: (boardId, data) => {
+    return axios.put(`/boards/${boardId}/columns/move`, data);
   }
 };

@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { selectBackgroundIsImage } from "../../features/boards/boardsSlice";
 import { Box } from "@chakra-ui/core";
 import { FiMoreHorizontal } from "react-icons/fi";
 import SideBarContainer from "./SideBarContainer";
@@ -14,6 +16,7 @@ import IconButton from "../IconButton";
 
 const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
   const [content, setContent] = useState("main");
+  const isImage = useSelector(selectBackgroundIsImage);
 
   const handleShowPrevious = () => {
     if (content === "colors" || content === "photos") {
@@ -78,6 +81,7 @@ const SideBar = ({ isOpen, onOpen, onClose, sidebarTransition }) => {
         icon={FiMoreHorizontal}
         text="Show Menu"
         fontSize="0.875rem"
+        isImage={isImage}
         onClick={onOpen}
       />
 
