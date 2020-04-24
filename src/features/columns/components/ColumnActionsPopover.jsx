@@ -105,7 +105,7 @@ const ColumnActionsPopover = ({ columnId }) => {
           />
           <PopoverBody px={0} pb={0}>
             {action === "sort" ? (
-              <SortByList />
+              <SortByList columnId={columnId} />
             ) : action === "move" ? (
               <MoveList
                 columnId={columnId}

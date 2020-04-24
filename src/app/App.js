@@ -30,7 +30,7 @@ const App = () => {
     >
       <AppBar />
       {status === "pending" && (
-        <Flex justify="center" align="center" h="85%">
+        <Flex justify="center" align="center" h="85vh">
           <Spinner
             thickness="4px"
             speed="0.65s"

@@ -36,9 +36,7 @@ export const makeTask = (title, position) => {
     due_date: null,
     checklist: null,
     labels: [],
-    position
-    // FIXME:
-    // created_at: new Date().toDateString,
-    // updated_at: new Date().toDateString
+    position,
+    created_at: Date.now()
   };
 };

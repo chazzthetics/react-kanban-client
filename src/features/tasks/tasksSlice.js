@@ -223,7 +223,8 @@ export const {
   dueDateAdded,
   dueDateRemoved,
   reordered,
-  reorderedBetween
+  reorderedBetween,
+  sortedBy
 } = tasksSlice.actions;
 export default tasksSlice.reducer;
 
@@ -388,6 +389,8 @@ export const reorderTask = ({ columnId, newOrder }) => async (
   );
 
   try {
+    if (JSON.stringify(prevOrder) === JSON.stringify(newOrder)) return;
+
     dispatch(reordered({ columnId, newOrder }));
     await tasksService.reorder(columnId, { newOrder });
   } catch (ex) {
