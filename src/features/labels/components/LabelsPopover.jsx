@@ -12,11 +12,11 @@ import {
   PopoverBody,
   PopoverFooter,
   PopoverCloseButton,
-  Button,
   Flex,
   PseudoBox,
   Icon
 } from "@chakra-ui/core";
+import SideModalTrigger from "../../../components/SideModalTrigger";
 
 const LabelsPopover = ({ taskId }) => {
   const labels = useSelector(state => labelsSelectors.selectAll(state));
@@ -41,17 +41,7 @@ const LabelsPopover = ({ taskId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button
-          size="sm"
-          leftIcon={FiTag}
-          fontWeight={400}
-          w="12rem"
-          justifyContent="flex-start"
-          backgroundColor="#ebecf0"
-          _focus={{ boxShadow: "none" }}
-        >
-          Labels
-        </Button>
+        <SideModalTrigger icon={FiTag} label="Labels" />
       </PopoverTrigger>
       <PopoverContent
         w="18rem"

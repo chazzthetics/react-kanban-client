@@ -10,6 +10,7 @@ const IconButton = forwardRef(
     return !text ? (
       <ChakraIconButton
         size="sm"
+        type="button"
         icon={icon}
         aria-label={label}
         color="white"
@@ -32,6 +33,7 @@ const IconButton = forwardRef(
     ) : (
       <Button
         size="sm"
+        type="button"
         fontSize={fontSize}
         color="white"
         leftIcon={icon}
@@ -57,8 +59,7 @@ const IconButton = forwardRef(
 );
 
 IconButton.propTypes = {
-  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.elementType])
-    .isRequired,
+  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
   label: PropTypes.string.isRequired,
   text: PropTypes.string,
   isImage: PropTypes.bool,

@@ -17,10 +17,10 @@ import {
   PopoverFooter,
   PopoverCloseButton,
   PseudoBox,
-  Button,
   Icon,
   Flex
 } from "@chakra-ui/core";
+import SideModalTrigger from "../../../components/SideModalTrigger";
 
 const PriorityPopover = ({ taskId }) => {
   const priorities = useSelector(state => prioritiesSelectors.selectAll(state));
@@ -43,17 +43,7 @@ const PriorityPopover = ({ taskId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button
-          size="sm"
-          leftIcon={FiAlertCircle}
-          fontWeight={400}
-          w="12rem"
-          justifyContent="flex-start"
-          backgroundColor="#ebecf0"
-          _focus={{ boxShadow: "none" }}
-        >
-          Priority
-        </Button>
+        <SideModalTrigger icon={FiAlertCircle} label="Priority" />
       </PopoverTrigger>
       <PopoverContent
         w="18rem"
@@ -77,7 +67,7 @@ const PriorityPopover = ({ taskId }) => {
                 mb={1}
                 borderRadius={3}
                 fontSize="0.8rem"
-                fontWeight={500}
+                fontWeight={600}
                 h="2rem"
                 w="100%"
                 textTransform="uppercase"

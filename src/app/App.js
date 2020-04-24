@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { hydrate } from "../features/auth/authSlice";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
 import { getBackground } from "../utils/getBackground";
-import { Box } from "@chakra-ui/core";
+import { Box, Flex, Spinner } from "@chakra-ui/core";
 import AppBar from "../components/AppBar";
 import MainBoard from "../features/boards/components/MainBoard";
 
@@ -11,6 +11,7 @@ const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector(state => state.auth);
   const background = useSelector(selectBoardBackground);
+  const { status } = useSelector(state => state.boards);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,7 +29,18 @@ const App = () => {
       bgSize="cover"
     >
       <AppBar />
-      <MainBoard />
+      {status === "pending" && (
+        <Flex justify="center" align="center" h="85%">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="gray.500"
+            size="xl"
+          />
+        </Flex>
+      )}
+      {status === "success" && <MainBoard />}
     </Box>
   );
 };

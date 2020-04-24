@@ -2,10 +2,10 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { tasksSelectors } from "../tasksSlice";
+import { getDueDateColor } from "../../../utils/getDueDateColor";
 import { format, addHours } from "date-fns";
 import { Icon, Tag, TagLabel } from "@chakra-ui/core";
 
-//TODO: color code dates
 const DueDateTag = ({ taskId }) => {
   const { due_date } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
@@ -18,7 +18,7 @@ const DueDateTag = ({ taskId }) => {
 
   return due_date ? (
     <Tag
-      bg="yellow.300"
+      bg={`${getDueDateColor(due_date)}.200`}
       size="sm"
       display="flex"
       alignItems="center"
@@ -37,4 +37,4 @@ DueDateTag.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default DueDateTag;
+export default React.memo(DueDateTag);

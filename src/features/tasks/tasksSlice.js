@@ -4,6 +4,7 @@ import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { tasksService } from "../../api/tasksService";
 import { fetchMostRecentActivity } from "../activities/activitiesSlice";
+import { isDueDateEqual } from "../../utils/isDueDateEqual";
 
 const tasksAdapter = createEntityAdapter({
   selectId: state => state.uuid
@@ -348,18 +349,32 @@ export const removePriority = ({ taskId }) => async (dispatch, getState) => {
   }
 };
 
-export const addDueDate = ({ taskId, due_date }) => async dispatch => {
+export const addDueDate = ({ taskId, due_date }) => async (
+  dispatch,
+  getState
+) => {
+  const { due_date: old } = getPreviousValue(getState(), "tasks", taskId);
+
   try {
-    dispatch(dueDateAdded({ taskId, due_date: due_date.toLocaleString() }));
-    await tasksService.update(taskId, { due_date });
-  } catch (ex) {}
+    if (!isDueDateEqual(old, due_date)) {
+      dispatch(dueDateAdded({ taskId, due_date: due_date.toLocaleString() }));
+      await tasksService.addDueDate(taskId, due_date);
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, dueDateRemoved, { taskId }));
+  }
 };
 
-export const removeDueDate = ({ taskId }) => async dispatch => {
+export const removeDueDate = ({ taskId }) => async (dispatch, getState) => {
+  const { due_date } = getPreviousValue(getState(), "tasks", taskId);
   try {
-    dispatch(dueDateRemoved({ taskId }));
-    await tasksService.removeDueDate(taskId);
-  } catch (ex) {}
+    if (due_date) {
+      dispatch(dueDateRemoved({ taskId }));
+      await tasksService.removeDueDate(taskId);
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, addDueDate, { taskId, due_date }));
+  }
 };
 
 export const reorderTask = ({ columnId, newOrder }) => async (

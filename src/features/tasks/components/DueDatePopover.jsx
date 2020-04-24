@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { addDueDate, removeDueDate, tasksSelectors } from "../tasksSlice";
+import { toDate, addHours } from "date-fns";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import {
@@ -12,12 +13,15 @@ import {
   PopoverBody,
   PopoverFooter,
   PopoverCloseButton,
-  Button
+  useDisclosure
 } from "@chakra-ui/core";
 import SaveButton from "../../../components/SaveButton";
-import { toDate } from "date-fns";
+import RemoveButton from "../../../components/RemoveButton";
+import SideModalTrigger from "../../../components/SideModalTrigger";
 
 const DueDatePopover = ({ taskId }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const dispatch = useDispatch();
   const { due_date } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
@@ -34,38 +38,28 @@ const DueDatePopover = ({ taskId }) => {
       e.preventDefault();
       if (selectedDay) {
         dispatch(addDueDate({ taskId, due_date: selectedDay }));
+        onClose();
       }
     },
-    [dispatch, selectedDay, taskId]
+    [dispatch, selectedDay, taskId, onClose]
   );
 
   const handleRemoveDueDate = useCallback(() => {
-    if (due_date) {
-      dispatch(removeDueDate({ taskId }));
-    }
-  }, [dispatch, due_date, taskId]);
+    dispatch(removeDueDate({ taskId }));
+    onClose();
+  }, [dispatch, taskId, onClose]);
 
   useEffect(() => {
     if (due_date) {
-      const date = toDate(new Date(due_date));
+      const date = toDate(addHours(new Date(due_date), 4));
       setSelectedDay(date);
     }
   }, [due_date]);
 
   return (
-    <Popover>
+    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
       <PopoverTrigger>
-        <Button
-          size="sm"
-          leftIcon="time"
-          fontWeight={400}
-          w="12rem"
-          justifyContent="flex-start"
-          backgroundColor="#ebecf0"
-          _focus={{ boxShadow: "none" }}
-        >
-          Due Date
-        </Button>
+        <SideModalTrigger icon="time" label="Due Date" />
       </PopoverTrigger>
       <PopoverContent
         w="18rem"
@@ -90,19 +84,7 @@ const DueDatePopover = ({ taskId }) => {
             alignItems="center"
           >
             <SaveButton />
-            <Button
-              type="button"
-              size="sm"
-              color="white"
-              bg="red.300"
-              fontWeight="normal"
-              _hover={{ backgroundColor: "red.400" }}
-              _active={{ backgroundColor: "red.500", boxShadow: "none" }}
-              _focus={{ boxShadow: "none" }}
-              onClick={handleRemoveDueDate}
-            >
-              Remove
-            </Button>
+            <RemoveButton onClick={handleRemoveDueDate} />
           </PopoverFooter>
         </form>
       </PopoverContent>

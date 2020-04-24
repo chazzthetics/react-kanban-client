@@ -5,22 +5,19 @@ import {
   ModalOverlay,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  Grid,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Link
+  Box,
+  Heading,
+  Grid
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
 import DueDatePopover from "./DueDatePopover";
+import RemoveTaskPopover from "./RemoveTaskPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
+import SideModalTrigger from "../../../components/SideModalTrigger";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  //FIXME: fix styling...
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -33,19 +30,50 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
           _focus={{ outline: "none" }}
           borderRadius={50}
         />
-        <ModalHeader>
+        <Grid
+          templateColumns="25px 3fr 1fr"
+          templateRows="75px 125px 300px"
+          gridGap={3}
+          p={6}
+        >
+          {/* Edit Title */}
           <EditTaskTitle taskId={taskId} columnId={columnId} />
-        </ModalHeader>
-        <ModalBody>
+
+          {/* Edit Description */}
           <EditTaskDescription taskId={taskId} />
 
-          <div>
-            Add to Card
-            <LabelsPopover taskId={taskId} />
-            <PriorityPopover taskId={taskId} />
-            <DueDatePopover taskId={taskId} />
-          </div>
-        </ModalBody>
+          {/* Sidebar */}
+          <Box as="aside" gridColumn="3" gridRow="2 / span" alignSelf="start">
+            <Heading
+              as="h3"
+              fontSize="0.8rem"
+              fontWeight={600}
+              textTransform="uppercase"
+            >
+              Add to Card
+            </Heading>
+            <Box my={2}>
+              <LabelsPopover taskId={taskId} />
+              <PriorityPopover taskId={taskId} />
+              <DueDatePopover taskId={taskId} />
+            </Box>
+
+            <Heading
+              as="h3"
+              py={1}
+              fontSize="0.8rem"
+              fontWeight={600}
+              textTransform="uppercase"
+            >
+              Actions
+            </Heading>
+            <Box my={2}>
+              {/* FIXME: TODO */}
+              <SideModalTrigger icon="arrow-forward" label="Move Card" />
+              <RemoveTaskPopover taskId={taskId} columnId={columnId} />
+            </Box>
+          </Box>
+        </Grid>
       </ModalContent>
     </Modal>
   );
@@ -58,19 +86,4 @@ EditTaskModal.propTypes = {
   onClose: PropTypes.func.isRequired
 };
 
-{
-  /* <Popover>
-<PopoverTrigger>
-  <Link
-    fontSize="0.875rem"
-    fontWeight={400}
-    color="gray.600"
-    textDecor="underline"
-  >
-    {columnTitle}
-  </Link>
-</PopoverTrigger>
-<PopoverContent zIndex={4}>Move list//TODO</PopoverContent>
-</Popover> */
-}
 export default memo(EditTaskModal);
