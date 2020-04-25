@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { memo, forwardRef } from "react";
 import PropTypes from "prop-types";
 import { IconButton as ChakraIconButton, Button } from "@chakra-ui/core";
 
@@ -66,4 +66,4 @@ IconButton.propTypes = {
   onClick: PropTypes.func
 };
 
-export default IconButton;
+export default memo(IconButton);

@@ -7,15 +7,17 @@ import {
   selectCurrentBoardId
 } from "../../boards/boardsSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
-import { tasksSelectors } from "../tasksSlice";
+import { tasksSelectors, reorderTask, reorderBetween } from "../tasksSlice";
 import { Box, Flex, Heading } from "@chakra-ui/core";
 import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import SelectBox from "../../../components/SelectBox";
 import SaveButton from "../../../components/SaveButton";
+import { reorder } from "../../../utils/reorder";
 
 // FIXME:
 const MoveTaskPopover = ({ taskId, columnId }) => {
+  const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
 
   const { position } = useSelector(state =>
@@ -28,21 +30,53 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
 
   const selectedIds = watch(["board", "list"]);
 
-  const { columns: boardColumns } = useSelector(state =>
+  const { columns: startColumns } = useSelector(state =>
+    boardsSelectors.selectById(state, currentBoardId)
+  );
+
+  const { columns: endColumns } = useSelector(state =>
     boardsSelectors.selectById(state, selectedIds.board)
   );
 
   const boards = useSelector(state => boardsSelectors.selectAll(state));
 
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
-  const { tasks } = useSelector(state =>
+  const { tasks: startTasks } = useSelector(state =>
+    columnsSelectors.selectById(state, columnId)
+  );
+  const { tasks: endTasks } = useSelector(state =>
     columnsSelectors.selectById(state, selectedIds.list)
   );
 
-  // console.log(selectedIds);
-
+  //FIXME: refactor everything
   const onSubmit = data => {
-    // console.log(data);
+    const endIndex = parseInt(data.position);
+
+    // Move task inside same column
+    if (columnId === selectedIds.list) {
+      const startIndex = startTasks.indexOf(taskId);
+      const newOrder = reorder(endTasks, startIndex, endIndex);
+      dispatch(reorderTask({ columnId, newOrder: newOrder }));
+      return;
+    }
+
+    // Move task to another column
+    if (columnId !== selectedIds.list || currentBoardId !== selectedIds.board) {
+      const startIndex = startTasks.indexOf(taskId);
+      const startOrder = [...startTasks];
+      const [removed] = startOrder.splice(startIndex, 1);
+      const endOrder = [...endTasks];
+      endOrder.splice(endIndex, 0, removed);
+      dispatch(
+        reorderBetween({
+          startColumnId: columnId,
+          endColumnId: selectedIds.list,
+          startOrder,
+          endOrder
+        })
+      );
+      return;
+    }
   };
 
   return (
@@ -77,7 +111,7 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
               mr="2.5%"
               ref={register}
             >
-              {boardColumns.map(column => (
+              {endColumns.map(column => (
                 <option key={column} value={column}>
                   {columns[column].title}
                 </option>
@@ -89,11 +123,24 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
               w="30.5%"
               ref={register}
             >
-              {tasks.map((task, index) => (
-                <option key={task} value={index}>
-                  {index + 1}
+              {endTasks.length === 0 ? (
+                <option key="first" value={0}>
+                  1
                 </option>
-              ))}
+              ) : (
+                <>
+                  {endTasks.map((task, index) => (
+                    <option key={task} value={index}>
+                      {index + 1}
+                    </option>
+                  ))}
+                  {selectedIds.list !== columnId && (
+                    <option key="last" value={endTasks.length}>
+                      {endTasks.length + 1}
+                    </option>
+                  )}
+                </>
+              )}
             </SelectBox>
           </Flex>
           <SaveButton label="Move" mt={2} px={6} />

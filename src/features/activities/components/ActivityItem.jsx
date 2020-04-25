@@ -20,7 +20,12 @@ const ActivityItem = ({ activity }) => {
     <Flex className="ActivityItem" as="li" py={2} ml={2} align="flex-start">
       <UserAvatar ml={-1} />
       <Flex direction="column" ml={2} w="100%">
-        <Text fontSize="0.875rem" color="gray.800" w="90%">
+        <Text
+          fontSize="0.875rem"
+          color="gray.800"
+          w="90%"
+          wordBreak="break-word"
+        >
           <span style={{ fontWeight: "600" }}>{user.name} </span>
           <span>{getActivityMessage(activity)}</span>
         </Text>
