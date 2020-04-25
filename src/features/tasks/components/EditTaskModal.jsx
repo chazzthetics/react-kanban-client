@@ -60,7 +60,6 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
 
             <Heading
               as="h3"
-              py={1}
               fontSize="0.8rem"
               fontWeight={600}
               textTransform="uppercase"

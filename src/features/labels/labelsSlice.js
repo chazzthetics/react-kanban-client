@@ -12,6 +12,9 @@ export const fetchLabels = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await labelsService.get();
+      if (!localStorage.getItem("labels")) {
+        localStorage.setItem("labels", JSON.stringify(data));
+      }
       return data;
     } catch (ex) {
       rejectWithValue(ex.response.data);

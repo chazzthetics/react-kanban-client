@@ -12,6 +12,9 @@ export const fetchPriorities = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await prioritiesService.get();
+      if (!localStorage.getItem("priorities")) {
+        localStorage.setItem("priorities", JSON.stringify(data));
+      }
       return data;
     } catch (ex) {
       rejectWithValue(ex.response.data);

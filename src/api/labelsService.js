@@ -1,7 +1,5 @@
-import axios from "axios";
+import { fetchFromLocalStorage } from "./";
 
 export const labelsService = {
-  get: () => {
-    return axios.get("/labels");
-  }
+  get: () => fetchFromLocalStorage("labels")
 };

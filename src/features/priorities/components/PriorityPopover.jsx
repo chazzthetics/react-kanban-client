@@ -27,6 +27,7 @@ const PriorityPopover = ({ taskId }) => {
   const { priority: taskPriority } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
+
   const dispatch = useDispatch();
 
   const handleTogglePriority = useCallback(

@@ -1,7 +1,5 @@
-import axios from "axios";
+import { fetchFromLocalStorage } from "./";
 
 export const prioritiesService = {
-  get: () => {
-    return axios.get("/priorities");
-  }
+  get: () => fetchFromLocalStorage("priorities")
 };
