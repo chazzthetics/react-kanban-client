@@ -8,7 +8,7 @@ import {
   selectCurrentBoardId,
   updateBoardBackground
 } from "../../features/boards/boardsSlice";
-import { Flex, Text, Link, Spinner } from "@chakra-ui/core";
+import { Flex, Link, Spinner } from "@chakra-ui/core";
 import BackgroundBox from "./BackgroundBox";
 import SearchPhotoForm from "./SearchPhotoForm";
 

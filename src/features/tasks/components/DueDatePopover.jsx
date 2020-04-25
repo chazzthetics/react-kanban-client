@@ -5,16 +5,8 @@ import { addDueDate, removeDueDate, tasksSelectors } from "../tasksSlice";
 import { toDate, addHours } from "date-fns";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverCloseButton,
-  useDisclosure
-} from "@chakra-ui/core";
+import { Flex, useDisclosure } from "@chakra-ui/core";
+import PopoverContainer from "../../../components/PopoverContainer";
 import SaveButton from "../../../components/SaveButton";
 import RemoveButton from "../../../components/RemoveButton";
 import SideModalTrigger from "../../../components/SideModalTrigger";
@@ -57,38 +49,23 @@ const DueDatePopover = ({ taskId }) => {
   }, [due_date]);
 
   return (
-    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-      <PopoverTrigger>
-        <SideModalTrigger icon="time" label="Due Date" />
-      </PopoverTrigger>
-      <PopoverContent
-        w="18rem"
-        zIndex={4}
-        _focus={{ boxShadow: "none", outline: "none" }}
-      >
-        <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
-          Change Due Date
-        </PopoverHeader>
-        <PopoverCloseButton
-          opacity={0.6}
-          _hover={{ opacity: 1 }}
-          _active={{ boxShadow: "none" }}
-        />
-        <form onSubmit={handleSubmit}>
-          <PopoverBody>
-            <DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} />
-          </PopoverBody>
-          <PopoverFooter
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <SaveButton />
-            <RemoveButton onClick={handleRemoveDueDate} />
-          </PopoverFooter>
-        </form>
-      </PopoverContent>
-    </Popover>
+    <PopoverContainer
+      trigger={<SideModalTrigger icon="time" label="Due Date" />}
+      heading="Change Due Date"
+      footer={
+        <Flex justify="space-between" align="center">
+          <SaveButton form="dueDate" />
+          <RemoveButton onClick={handleRemoveDueDate} />
+        </Flex>
+      }
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
+      <form onSubmit={handleSubmit} id="dueDate">
+        <DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} />
+      </form>
+    </PopoverContainer>
   );
 };
 
