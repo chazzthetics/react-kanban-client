@@ -54,20 +54,28 @@ const activitiesSlice = createSlice({
     }
   },
   extraReducers: {
-    [fetchActivities.pending]: state => {},
-    [fetchActivities.fulfilled]: (state, action) => {
-      const { data, current_page, last_page } = action.payload;
-      state.last = last_page;
-      state.current = current_page;
-
-      if (last_page !== 1) {
-        state.next = state.current + 1;
+    [fetchActivities.pending]: state => {
+      if (state.status === "idle" || state.status === "success") {
+        state.status = "pending";
       }
+    },
+    [fetchActivities.fulfilled]: (state, action) => {
+      if (state.status === "pending") {
+        const { data, current_page, last_page } = action.payload;
+        state.last = last_page;
+        state.current = current_page;
 
-      if (state.current > 1) {
-        activitiesAdapter.addMany(state, data);
-      } else {
-        activitiesAdapter.setAll(state, data || {});
+        if (last_page !== 1) {
+          state.next = state.current + 1;
+        }
+
+        if (state.current > 1) {
+          activitiesAdapter.addMany(state, data);
+        } else {
+          activitiesAdapter.setAll(state, data || {});
+        }
+
+        state.status = "success";
       }
     },
     [fetchMostRecentActivity.pending]: state => {},

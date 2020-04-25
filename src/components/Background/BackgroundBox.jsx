@@ -20,6 +20,7 @@ const BackgroundBox = ({
       onClick={onClick}
       _hover={{ opacity: 0.8 }}
       _active={{ opacity: 1 }}
+      transition="opacity 100ms ease-in"
     >
       <Box
         bg={background}

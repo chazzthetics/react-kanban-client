@@ -2,12 +2,14 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { activitiesSelectors, clearActivity } from "../activitiesSlice";
-import { Box, List, Stack, Text } from "@chakra-ui/core";
+import { Flex, Box, List, Stack, Text, Spinner } from "@chakra-ui/core";
 import { FiList } from "react-icons/fi";
 import ActivityItem from "./ActivityItem";
 import SideBarButton from "../../../components/SideBar/SideBarButton";
 
 const ActivityFeed = ({ onShow, count }) => {
+  const { status } = useSelector(state => state.activities);
+
   const activities = useSelector(state => activitiesSelectors.selectAll(state));
   const activityCount = useSelector(state =>
     activitiesSelectors.selectTotal(state)
@@ -29,14 +31,26 @@ const ActivityFeed = ({ onShow, count }) => {
         />
       )}
 
-      <List className="ActivityList" mb={3}>
-        {activities &&
-          activities
-            .slice(0, count)
-            .map(activity => (
-              <ActivityItem key={activity.id} activity={activity} />
-            ))}
-      </List>
+      {status === "pending" ? (
+        <Flex align="center" justify="center" h="6em">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </Flex>
+      ) : (
+        <List className="ActivityList" mb={3}>
+          {activities &&
+            activities
+              .slice(0, count)
+              .map(activity => (
+                <ActivityItem key={activity.id} activity={activity} />
+              ))}
+        </List>
+      )}
 
       {onShow && activityCount > 0 ? (
         <Stack isInline>

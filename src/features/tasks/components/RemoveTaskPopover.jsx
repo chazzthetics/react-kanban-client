@@ -42,8 +42,8 @@ const RemoveTaskPopover = ({ taskId, columnId }) => {
           _active={{ boxShadow: "none" }}
         />
         <PopoverBody>
-          <Flex align="center">
-            <Text fontSize="0.875rem" color="gray.600">
+          <Flex align="center" justify="space-between">
+            <Text fontSize="0.875rem" color="gray.600" w="60%">
               Are you sure you want to remove this card?
             </Text>
             <RemoveButton onClick={handleRemoveTask} />
