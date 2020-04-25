@@ -8,7 +8,7 @@ import { PseudoBox, Flex } from "@chakra-ui/core";
 import BackgroundBox from "./BackgroundBox";
 
 const defaultBackground =
-  "https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&h=130";
+  "https://images.pexels.com/photos/1295138/pexels-photo-1295138.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
 
 const BackgroundContent = ({ onShowColors, onShowPhotos }) => {
   const { background } = useSelector(selectCurrentBoard);

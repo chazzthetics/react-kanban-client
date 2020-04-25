@@ -26,7 +26,15 @@ const photosSlice = createSlice({
     status: "idle",
     error: null
   }),
-  reducers: {},
+  reducers: {
+    creditHovered(state, action) {
+      const { photoId } = action.payload;
+      photosAdapter.updateOne(state, {
+        id: photoId,
+        changes: { isShown: !state.entities[photoId].isShown }
+      });
+    }
+  },
   extraReducers: {
     [fetchPhotos.pending]: (state, action) => {
       if (
@@ -38,7 +46,10 @@ const photosSlice = createSlice({
       }
     },
     [fetchPhotos.fulfilled]: (state, action) => {
-      const { photos } = action.payload;
+      const photos = action.payload.photos.map(photo => ({
+        ...photo,
+        showCredit: false
+      }));
       if (state.status === "pending") {
         photosAdapter.setAll(state, photos);
         state.error = null;
@@ -51,6 +62,8 @@ const photosSlice = createSlice({
     }
   }
 });
+
+export const { creditHovered } = photosSlice.actions;
 
 export const photosSelectors = photosAdapter.getSelectors(
   state => state.photos

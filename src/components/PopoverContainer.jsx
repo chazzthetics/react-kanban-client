@@ -12,7 +12,7 @@ import {
 
 const PopoverContainer = ({ trigger, heading, footer, children, ...rest }) => {
   return (
-    <Popover {...rest}>
+    <Popover placement="bottom-start" {...rest}>
       <PopoverTrigger>{trigger}</PopoverTrigger>
       <PopoverContent
         w="18rem"

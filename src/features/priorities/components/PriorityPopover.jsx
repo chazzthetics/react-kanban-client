@@ -74,4 +74,4 @@ PriorityPopover.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default PriorityPopover;
+export default React.memo(PriorityPopover);

@@ -10,8 +10,8 @@ const SideModalTrigger = forwardRef(({ icon, label, ...rest }, ref) => {
       fontWeight={400}
       w="12rem"
       my={1}
-      h="2.25rem"
-      fontSize="0.9rem"
+      h="2rem"
+      fontSize="0.875rem"
       justifyContent="flex-start"
       backgroundColor="#ebecf0"
       ref={ref}

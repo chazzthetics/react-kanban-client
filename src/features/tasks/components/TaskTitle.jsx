@@ -10,7 +10,7 @@ const TaskTitle = ({ taskId }) => {
   );
 
   return (
-    <Text fontSize="0.875rem" w="100%">
+    <Text fontSize="0.875rem" w="100%" wordBreak="break-word">
       {title}
     </Text>
   );

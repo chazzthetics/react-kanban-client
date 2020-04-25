@@ -37,4 +37,4 @@ DueDateTag.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default React.memo(DueDateTag);
+export default DueDateTag;

@@ -52,4 +52,4 @@ ColoredButton.propTypes = {
   children: PropTypes.element
 };
 
-export default ColoredButton;
+export default React.memo(ColoredButton);

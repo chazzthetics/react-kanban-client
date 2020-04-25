@@ -16,6 +16,7 @@ const ColumnItem = ({ columnId }) => {
       borderRadius={3}
       cursor="pointer"
       _first={{ marginLeft: 0 }}
+      shadow="md"
     >
       <Box w="100%" px={2} height="100%">
         <ColumnHeader columnId={columnId} />

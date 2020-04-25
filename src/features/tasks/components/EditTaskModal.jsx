@@ -13,9 +13,9 @@ import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
 import DueDatePopover from "./DueDatePopover";
 import RemoveTaskPopover from "./RemoveTaskPopover";
+import MoveTaskPopover from "./MoveTaskPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
-import SideModalTrigger from "../../../components/SideModalTrigger";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
   return (
@@ -68,7 +68,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
             </Heading>
             <Box my={2}>
               {/* FIXME: TODO */}
-              <SideModalTrigger icon="arrow-forward" label="Move Card" />
+              {/* <MoveTaskPopover taskId={taskId} columnId={columnId} /> */}
               <RemoveTaskPopover taskId={taskId} columnId={columnId} />
             </Box>
           </Box>

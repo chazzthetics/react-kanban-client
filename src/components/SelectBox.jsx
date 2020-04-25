@@ -14,7 +14,7 @@ const SelectBox = forwardRef(({ label, name, children, ...rest }, ref) => {
       position="relative"
       {...rest}
     >
-      <Box fontSize="0.7rem" fontWeight={500}>
+      <Box fontSize="0.8rem" fontWeight={500}>
         <label htmlFor={name}>{label}</label>
       </Box>
       <Select

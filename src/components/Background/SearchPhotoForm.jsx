@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { fetchPhotos } from "../../features/photos/photosSlice";
@@ -74,4 +74,4 @@ const SearchPhotoForm = () => {
   );
 };
 
-export default SearchPhotoForm;
+export default memo(SearchPhotoForm);

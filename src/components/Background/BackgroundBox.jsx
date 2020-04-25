@@ -5,7 +5,7 @@ import { PseudoBox, Box, Text } from "@chakra-ui/core";
 const BackgroundBox = ({
   onClick,
   children,
-  background = "gray.600",
+  background = "gray.400",
   image = "",
   text = "",
   ...rest

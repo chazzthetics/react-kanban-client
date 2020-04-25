@@ -26,6 +26,7 @@ const ColumnList = () => {
           px={4}
           ref={provided.innerRef}
           {...provided.droppableProps}
+          overflowX="auto"
         >
           {currentBoard &&
             currentBoard.columns.map((column, index) => (

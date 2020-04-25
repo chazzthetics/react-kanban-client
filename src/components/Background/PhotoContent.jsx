@@ -1,32 +1,19 @@
-import React, { useEffect, useCallback } from "react";
+import React, { memo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  photosSelectors,
-  fetchPhotos
+  fetchPhotos,
+  photosSelectors
 } from "../../features/photos/photosSlice";
-import {
-  selectCurrentBoardId,
-  updateBoardBackground
-} from "../../features/boards/boardsSlice";
-import { Flex, Link, Spinner } from "@chakra-ui/core";
-import BackgroundBox from "./BackgroundBox";
+import { Flex, Spinner } from "@chakra-ui/core";
 import SearchPhotoForm from "./SearchPhotoForm";
+import PhotoBox from "./PhotoBox";
 
-//FIXME: show credits only on hover
 const PhotoContent = () => {
-  const boardId = useSelector(selectCurrentBoardId);
   const dispatch = useDispatch();
 
   const { status } = useSelector(state => state.photos);
-  const photos = useSelector(state => photosSelectors.selectAll(state));
+  const photos = useSelector(state => photosSelectors.selectIds(state));
   const count = useSelector(state => photosSelectors.selectTotal(state));
-
-  const handleUpdateBackground = useCallback(
-    background => {
-      dispatch(updateBoardBackground({ boardId, background }));
-    },
-    [dispatch, boardId]
-  );
 
   useEffect(() => {
     const query = "nature";
@@ -51,41 +38,7 @@ const PhotoContent = () => {
       ) : (
         <Flex wrap="wrap">
           {photos.map(photo => (
-            <BackgroundBox
-              key={photo.id}
-              image={`url(${photo.src.small})`}
-              backroundPosition="center"
-              backgroundSize="cover"
-              backgroundRepeat="no-repeat"
-              position="relative"
-              onClick={() => handleUpdateBackground(photo.src.large2x)}
-            >
-              <Flex
-                position="absolute"
-                bottom={0}
-                bg="rgba(0,0,0,0.3)"
-                w="100%"
-                h="1.5rem"
-                borderBottomLeftRadius={4}
-                borderBottomRightRadius={4}
-                align="center"
-              >
-                <Link
-                  fontSize="0.7rem"
-                  ml={2}
-                  alignSelf="center"
-                  color="white"
-                  href={photo.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="Photo provided by Pexels"
-                  _focus={{ outline: "none" }}
-                  isTruncated={true}
-                >
-                  {photo.photographer}
-                </Link>
-              </Flex>
-            </BackgroundBox>
+            <PhotoBox key={photo} photoId={photo} />
           ))}
         </Flex>
       )}
@@ -93,4 +46,4 @@ const PhotoContent = () => {
   );
 };
 
-export default PhotoContent;
+export default memo(PhotoContent);

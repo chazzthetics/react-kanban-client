@@ -21,11 +21,11 @@ import SaveButton from "../../../components/SaveButton";
 const MoveList = ({ columnId, onShowPrevious }) => {
   const dispatch = useDispatch();
 
+  const currentBoardId = useSelector(selectCurrentBoardId);
+
   const { position } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
-
-  const currentBoardId = useSelector(selectCurrentBoardId);
 
   const { register, handleSubmit, watch } = useForm({
     defaultValues: { board: currentBoardId, position }
