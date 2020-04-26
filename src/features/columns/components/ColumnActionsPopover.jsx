@@ -57,6 +57,7 @@ const ColumnActionsPopover = ({ columnId }) => {
         isOpen={is_open}
         onOpen={handleOpenPopover}
         onClose={handleClosePopover}
+        gutter={4}
       >
         <PopoverTrigger>
           <IconButton

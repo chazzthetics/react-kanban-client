@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -8,14 +8,14 @@ import {
 } from "../../boards/boardsSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
 import { tasksSelectors, reorderTask, reorderBetween } from "../tasksSlice";
+import { reorder } from "../../../utils/reorder";
 import { Box, Flex, Heading } from "@chakra-ui/core";
 import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import SelectBox from "../../../components/SelectBox";
 import SaveButton from "../../../components/SaveButton";
-import { reorder } from "../../../utils/reorder";
 
-// FIXME:
+// FIXME: close only popover after submit
 const MoveTaskPopover = ({ taskId, columnId }) => {
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
@@ -30,10 +30,6 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
 
   const selectedIds = watch(["board", "list"]);
 
-  const { columns: startColumns } = useSelector(state =>
-    boardsSelectors.selectById(state, currentBoardId)
-  );
-
   const { columns: endColumns } = useSelector(state =>
     boardsSelectors.selectById(state, selectedIds.board)
   );
@@ -41,6 +37,7 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
   const boards = useSelector(state => boardsSelectors.selectAll(state));
 
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
+
   const { tasks: startTasks } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
@@ -49,35 +46,48 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
   );
 
   //FIXME: refactor everything
-  const onSubmit = data => {
-    const endIndex = parseInt(data.position);
+  const onSubmit = useCallback(
+    data => {
+      const endIndex = parseInt(data.position);
 
-    // Move task inside same column
-    if (columnId === selectedIds.list) {
-      const startIndex = startTasks.indexOf(taskId);
-      const newOrder = reorder(endTasks, startIndex, endIndex);
-      dispatch(reorderTask({ columnId, newOrder: newOrder }));
-      return;
-    }
+      // Move task inside same column
+      if (columnId === selectedIds.list) {
+        const startIndex = startTasks.indexOf(taskId);
+        const newOrder = reorder(endTasks, startIndex, endIndex);
+        dispatch(reorderTask({ columnId, newOrder: newOrder }));
+      }
 
-    // Move task to another column
-    if (columnId !== selectedIds.list || currentBoardId !== selectedIds.board) {
-      const startIndex = startTasks.indexOf(taskId);
-      const startOrder = [...startTasks];
-      const [removed] = startOrder.splice(startIndex, 1);
-      const endOrder = [...endTasks];
-      endOrder.splice(endIndex, 0, removed);
-      dispatch(
-        reorderBetween({
-          startColumnId: columnId,
-          endColumnId: selectedIds.list,
-          startOrder,
-          endOrder
-        })
-      );
+      // Move task to another column
+      if (
+        columnId !== selectedIds.list ||
+        currentBoardId !== selectedIds.board
+      ) {
+        const startIndex = startTasks.indexOf(taskId);
+        const startOrder = [...startTasks];
+        const [removed] = startOrder.splice(startIndex, 1);
+        const endOrder = [...endTasks];
+        endOrder.splice(endIndex, 0, removed);
+        dispatch(
+          reorderBetween({
+            startColumnId: columnId,
+            endColumnId: selectedIds.list,
+            startOrder,
+            endOrder
+          })
+        );
+      }
       return;
-    }
-  };
+    },
+    [
+      dispatch,
+      columnId,
+      currentBoardId,
+      endTasks,
+      selectedIds,
+      startTasks,
+      taskId
+    ]
+  );
 
   return (
     <PopoverContainer
@@ -97,11 +107,12 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
             Select Destination
           </Heading>
           <SelectBox label="Board" name="board" ref={register}>
-            {boards.map(board => (
-              <option key={board.uuid} value={board.uuid}>
-                {board.title}
-              </option>
-            ))}
+            {boards &&
+              boards.map(board => (
+                <option key={board.uuid} value={board.uuid}>
+                  {board.title}
+                </option>
+              ))}
           </SelectBox>
           <Flex>
             <SelectBox
@@ -111,11 +122,12 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
               mr="2.5%"
               ref={register}
             >
-              {endColumns.map(column => (
-                <option key={column} value={column}>
-                  {columns[column].title}
-                </option>
-              ))}
+              {endColumns &&
+                endColumns.map(column => (
+                  <option key={column} value={column}>
+                    {columns[column].title}
+                  </option>
+                ))}
             </SelectBox>
             <SelectBox
               label="Position"
@@ -150,6 +162,9 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
   );
 };
 
-MoveTaskPopover.propTypes = {};
+MoveTaskPopover.propTypes = {
+  taskId: PropTypes.string.isRequired,
+  columnId: PropTypes.string.isRequired
+};
 
-export default React.memo(MoveTaskPopover);
+export default MoveTaskPopover;

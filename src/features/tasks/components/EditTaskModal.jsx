@@ -67,7 +67,6 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
               Actions
             </Heading>
             <Box my={2}>
-              {/* FIXME: TODO */}
               <MoveTaskPopover taskId={taskId} columnId={columnId} />
               <RemoveTaskPopover taskId={taskId} columnId={columnId} />
             </Box>

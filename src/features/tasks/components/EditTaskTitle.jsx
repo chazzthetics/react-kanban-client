@@ -65,7 +65,13 @@ const EditTaskTitle = ({ taskId, columnId }) => {
       >
         {!showEditTitle ? (
           <>
-            <Box ml={"-2px"} cursor="pointer" onClick={handleShowEditTitle}>
+            <Box
+              ml={"-2px"}
+              cursor="pointer"
+              onClick={handleShowEditTitle}
+              w="90%"
+              wordBreak="break-word"
+            >
               {taskTitle}
             </Box>
             <Box fontSize="0.875rem" fontWeight={400} color="gray.600" py={1}>

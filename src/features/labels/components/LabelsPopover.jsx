@@ -50,4 +50,4 @@ LabelsPopover.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default React.memo(LabelsPopover);
+export default LabelsPopover;
