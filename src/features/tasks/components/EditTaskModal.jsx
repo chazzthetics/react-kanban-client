@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
+import TaskActivityFeed from "./TaskActivityFeed";
 import DueDatePopover from "./DueDatePopover";
 import RemoveTaskPopover from "./RemoveTaskPopover";
 import MoveTaskPopover from "./MoveTaskPopover";
@@ -32,7 +33,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         />
         <Grid
           templateColumns="25px 3fr 1fr"
-          templateRows="75px 125px 300px"
+          templateRows="75px 175px 25px auto 100px"
           gridGap={3}
           p={6}
         >
@@ -42,8 +43,11 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
           {/* Edit Description */}
           <EditTaskDescription taskId={taskId} />
 
+          {/* Task Activity */}
+          <TaskActivityFeed taskId={taskId} />
+
           {/* Sidebar */}
-          <Box as="aside" gridColumn="3" gridRow="2 / span" alignSelf="start">
+          <Box as="aside" gridColumn="3" gridRow="2" alignSelf="start">
             <Heading
               as="h3"
               fontSize="0.8rem"

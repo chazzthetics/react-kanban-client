@@ -1,9 +1,14 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleLabel, tasksSelectors } from "../../tasks/tasksSlice";
+import {
+  toggleLabel,
+  clearLabels,
+  tasksSelectors
+} from "../../tasks/tasksSlice";
 import { labelsSelectors } from "../labelsSlice";
 import { FiTag } from "react-icons/fi";
+import { Text } from "@chakra-ui/core";
 import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import ColoredButton from "../../../components/ColoredButton";
@@ -28,11 +33,26 @@ const LabelsPopover = ({ taskId }) => {
     [dispatch, taskId]
   );
 
+  const handleClearLabels = useCallback(() => {
+    dispatch(clearLabels({ taskId }));
+  }, [dispatch, taskId]);
+
   return (
     <PopoverContainer
       trigger={<SideModalTrigger icon={FiTag} label="Labels" />}
       heading="Labels"
-      footer={<div>Create new label</div>}
+      footer={
+        <ColoredButton color={`gray.400`} onClick={handleClearLabels}>
+          <Text
+            textTransform="uppercase"
+            fontWeight={600}
+            fontSize="0.8rem"
+            color="white"
+          >
+            Clear All Labels
+          </Text>
+        </ColoredButton>
+      }
     >
       {labels.map(label => (
         <ColoredButton

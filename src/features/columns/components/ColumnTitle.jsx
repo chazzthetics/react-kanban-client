@@ -45,6 +45,7 @@ const ColumnTitle = ({ columnId }) => {
             borderColor: "#3182ce",
             borderRadius: "2px"
           }}
+          transition="none"
         />
       </Editable>
     </Box>

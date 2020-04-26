@@ -73,17 +73,12 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
-    labelRemoved(state, action) {
-      const {
-        taskId,
-        labelId,
-        status = "success",
-        error = null
-      } = action.payload;
-      const taskLabels = state.entities[taskId].labels;
-      if (taskLabels.includes(labelId)) {
-        taskLabels.splice(taskLabels.indexOf(labelId), 1);
-      }
+    labelsCleared(state, action) {
+      const { taskId, status = "success", error = null } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { labels: [] }
+      });
       state.status = status;
       state.error = error;
     },
@@ -218,6 +213,7 @@ export const {
   titleUpdated,
   descriptionUpdated,
   labelToggled,
+  labelsCleared,
   priorityToggled,
   priorityRemoved,
   dueDateAdded,
@@ -316,6 +312,13 @@ export const toggleLabel = ({ taskId, labelId }) => async (
   } catch (ex) {
     dispatch(handleError(ex, labelToggled, { taskId, labelId }));
   }
+};
+
+export const clearLabels = ({ taskId }) => async dispatch => {
+  try {
+    dispatch(labelsCleared({ taskId }));
+    await tasksService.clearLabels(taskId);
+  } catch (ex) {}
 };
 
 export const togglePriority = ({ taskId, priorityId }) => async (

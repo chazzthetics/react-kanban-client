@@ -25,6 +25,9 @@ export const tasksService = {
   removeLabel: (taskId, label) => {
     return axios.put(`/tasks/${taskId}/labels`, { label });
   },
+  clearLabels: taskId => {
+    return axios.delete(`/tasks/${taskId}/labels`);
+  },
   addPriority: (taskId, priority) => {
     return axios.post(`/tasks/${taskId}/priority`, { priority });
   },

@@ -37,7 +37,7 @@ const ActivityContent = () => {
           onSelect={handleSelect}
         />
       </Box>
-      <ActivityFeed />
+      <ActivityFeed showLoader={false} />
       {current !== last && (
         <SideBarButton
           py={4}

@@ -81,20 +81,21 @@ const EditTaskTitle = ({ taskId, columnId }) => {
           </>
         ) : (
           <Textarea
-            w="90%"
+            w="93%"
             px={1}
             py={0}
-            minH="2.5rem"
+            overflowWrap="break-word"
             resize="none"
             fontSize="1.1rem"
-            ml={"-6px"}
+            ml={"-7px"}
+            mt={"-1px"}
             fontWeight={600}
             borderRadius={2}
+            lineHeight={1.3}
             autoFocus
             value={taskTitle}
             onChange={handleChange}
             ref={container}
-            lineHeight={1.3}
           />
         )}
       </Box>
