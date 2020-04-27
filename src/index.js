@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import store from "./app/store";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import { CSSReset, ThemeProvider } from "@chakra-ui/core";
 import * as serviceWorker from "./serviceWorker";
 
@@ -11,10 +12,12 @@ const render = () => {
   ReactDOM.render(
     <React.StrictMode>
       <Provider store={store}>
-        <ThemeProvider>
-          <CSSReset />
-          <App />
-        </ThemeProvider>
+        <BrowserRouter>
+          <ThemeProvider>
+            <CSSReset />
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
       </Provider>
     </React.StrictMode>,
     document.getElementById("root")

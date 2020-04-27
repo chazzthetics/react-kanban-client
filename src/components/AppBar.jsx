@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
 import { login } from "../features/auth/authSlice";
 import {
@@ -21,6 +22,8 @@ import IconButton from "./IconButton";
 import AppBarOverlay from "./AppBarOverlay";
 
 const AppBar = () => {
+  const { user } = useSelector(state => state.auth);
+
   const background = useSelector(selectBoardBackground);
   const dispatch = useDispatch();
 
@@ -47,7 +50,10 @@ const AppBar = () => {
         >
           <ButtonGroup d="flex" spacing={1}>
             <ListItem mr={1}>
-              <Link>
+              <Link
+                as={RouterLink}
+                to={`/${user.name.split(" ")[0].toLowerCase()}/boards`}
+              >
                 <IconButton icon={FiHome} label="Dashboard" fontSize="1.3rem" />
               </Link>
             </ListItem>

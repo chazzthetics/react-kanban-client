@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Flex, Image, Link, Heading, CloseButton } from "@chakra-ui/core";
+import PexelsLogo from "../../images/pexels.png";
 import BackButton from "../BackButton";
 
 const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
@@ -32,7 +33,7 @@ const SideBarHeading = ({ content, onShowPrevious, onClose }) => {
               _focus={{ outline: "none" }}
             >
               <Image
-                src="images/pexels.png"
+                src={PexelsLogo}
                 alt="Photos provided by Pexels"
                 h="1.75rem"
                 objectFit="cover"
