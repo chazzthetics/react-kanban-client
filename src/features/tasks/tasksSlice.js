@@ -286,7 +286,7 @@ export const updateTaskDescription = ({ taskId, description }) => async (
 
     dispatch(descriptionUpdated({ taskId, description }));
     await tasksService.update(taskId, { description });
-    // dispatch(fetchMostRecentActivity()); //FIXME:
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(
       handleError(ex, descriptionUpdated, {

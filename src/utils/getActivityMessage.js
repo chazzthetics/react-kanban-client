@@ -20,16 +20,21 @@ export const getActivityMessage = activity => {
       } to ${changes.after.title} (from ${changes.before.title})`;
     case "background_updated":
       return `changed the background of this board`;
+    case "description_updated":
+      if (recordable_type === "App\\Board") {
+        return `changed the description of this board`;
+      }
+      return `changed the description of card ${changes.before.title}`;
     case "removed":
       if (getEntityType(recordable_type) === "task") {
-        return `removed ${changes.after.title} from ${changes.after.title}`;
+        return `removed ${changes.after.task_title} from ${changes.after.column_title}`;
       }
 
       return `removed ${getEntityType(recordable_type)} ${changes.after.title}`;
     case "starred":
-      return `starred board ${changes.after.title}`;
+      return `starred this board`;
     case "unstarred":
-      return `unstarred board ${changes.after.title}`;
+      return `unstarred this board`;
     case "locked":
       return `locked list ${changes.after.title}`;
     case "unlocked":
@@ -48,6 +53,8 @@ export const getTaskActivityMessage = activity => {
       return `added ${changes.after.task_title} to this card`;
     case "title_updated":
       return `renamed this card to ${changes.after.title} (from ${changes.before.title})`;
+    case "description_updated":
+      return `changed the description of this card`;
     case "moved":
       return `moved this card from ${changes.before.column_title} to ${changes.after.column_title}`;
     default:

@@ -15,6 +15,8 @@ const TaskActivityFeed = ({ taskId }) => {
       activity.changes.before.uuid === taskId
   );
 
+  console.log(taskActivities);
+
   return (
     <>
       <Box gridColumn="1 / 2">
