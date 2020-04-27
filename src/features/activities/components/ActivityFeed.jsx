@@ -1,7 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { activitiesSelectors, clearActivity } from "../activitiesSlice";
+import {
+  activitiesSelectors,
+  fetchActivities,
+  clearActivity
+} from "../activitiesSlice";
 import { Flex, Box, Stack, Text, Spinner } from "@chakra-ui/core";
 import { FiList } from "react-icons/fi";
 import ActivityList from "./ActivityList";
@@ -20,6 +24,10 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
     dispatch(clearActivity());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchActivities());
+  }, [dispatch]);
+
   return (
     <Box className="ActivityFeed" pt={4}>
       {onShow && (
@@ -32,7 +40,7 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
       )}
 
       {status === "pending" && showLoader ? (
-        <Flex align="center" justify="center" h="6em">
+        <Flex align="center" justify="center" h="100%">
           <Spinner
             thickness="4px"
             speed="0.65s"

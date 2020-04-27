@@ -20,7 +20,7 @@ const ColumnTitle = ({ columnId }) => {
 
   return (
     <Box className="ColumnTitle">
-      <Editable onSubmit={handleSubmit} value={title}>
+      <Editable onSubmit={handleSubmit} value={title} placeholder="">
         <EditablePreview
           d="inline-flex"
           px={2}

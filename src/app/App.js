@@ -6,6 +6,7 @@ import { getBackground } from "../utils/getBackground";
 import { Box, Flex, Spinner } from "@chakra-ui/core";
 import AppBar from "../components/AppBar";
 import MainBoard from "../features/boards/components/MainBoard";
+import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const App = () => {
       bgImage={getBackground(background)}
       bgPos="center"
       bgSize="cover"
+      animation="200ms ease-in fadein"
     >
       <AppBar />
       {status === "pending" && (

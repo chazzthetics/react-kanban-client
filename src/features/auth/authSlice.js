@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { fetchInitialData } from "../../api";
-import { fetchActivities } from "../activities/activitiesSlice";
 import { fetchLabels } from "../labels/labelsSlice";
 import { fetchPriorities } from "../priorities/prioritiesSlice";
 import { getInitials } from "../../utils/getInitials";
@@ -36,7 +35,6 @@ export const hydrate = createAsyncThunk(
       const { payload: labels } = await dispatch(fetchLabels());
       if (priorities && labels) {
         const { data } = await fetchInitialData();
-        dispatch(fetchActivities());
         return data;
       }
     } catch (ex) {

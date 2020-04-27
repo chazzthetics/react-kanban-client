@@ -264,7 +264,7 @@ export const updateTaskTitle = ({ taskId, newTitle }) => async (
     } else {
       dispatch(titleUpdated({ taskId, newTitle }));
       await tasksService.update(taskId, { title: newTitle });
-      // dispatch(fetchMostRecentActivity()); //FIXME:
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, titleUpdated, { taskId, newTitle: oldTitle }));

@@ -39,5 +39,8 @@ export const tasksService = {
   },
   removeDueDate: taskId => {
     return axios.delete(`/tasks/${taskId}/due_date`);
+  },
+  getActivities: taskId => {
+    return axios.get(`/tasks/${taskId}/activities`);
   }
 };

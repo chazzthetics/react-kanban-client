@@ -3,10 +3,6 @@ export const getActivityMessage = activity => {
   const { description, recordable_type, changes } = activity;
 
   switch (description) {
-    case "registered":
-      return "registered a new account";
-    case "logged_in":
-      return `logged in`;
     case "created":
       if (getEntityType(recordable_type) === "task") {
         return `added ${changes.after.task_title} to ${changes.after.column_title}`;
@@ -16,18 +12,20 @@ export const getActivityMessage = activity => {
       return `created this board`;
     case "title_updated":
       return `renamed ${
-        recordable_type === "App\\Board" ? "this board" : "list"
+        recordable_type === "App\\Board"
+          ? "this board"
+          : recordable_type === "App\\Column"
+          ? "list"
+          : "card"
       } to ${changes.after.title} (from ${changes.before.title})`;
     case "background_updated":
       return `changed the background of this board`;
     case "removed":
       if (getEntityType(recordable_type) === "task") {
-        return `removed ${changes.before.title} from ${changes.before.title}`;
+        return `removed ${changes.after.title} from ${changes.after.title}`;
       }
 
-      return `removed ${getEntityType(recordable_type)} ${
-        changes.before.title
-      }`;
+      return `removed ${getEntityType(recordable_type)} ${changes.after.title}`;
     case "starred":
       return `starred board ${changes.after.title}`;
     case "unstarred":
@@ -40,6 +38,20 @@ export const getActivityMessage = activity => {
       return `moved ${changes.after.task_title} from ${changes.before.column_title} to ${changes.after.column_title}`;
     default:
       throw new Error(`Unknown event '${description}'`);
+  }
+};
+
+export const getTaskActivityMessage = activity => {
+  const { description, changes } = activity;
+  switch (description) {
+    case "created":
+      return `added ${changes.after.task_title} to this card`;
+    case "title_updated":
+      return `renamed this card to ${changes.after.title} (from ${changes.before.title})`;
+    case "moved":
+      return `moved this card from ${changes.before.column_title} to ${changes.after.column_title}`;
+    default:
+      throw new Error(`Unknown event ${description}`);
   }
 };
 

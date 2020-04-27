@@ -3,12 +3,16 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
 import { removeActivity } from "../activitiesSlice";
-import { getActivityMessage } from "../../../utils/getActivityMessage";
+import {
+  getActivityMessage,
+  getTaskActivityMessage
+} from "../../../utils/getActivityMessage";
 import { Flex, Text, IconButton } from "@chakra-ui/core";
 import UserAvatar from "../../auth/components/UserAvatar";
 
 //TODO: only show trash icon on hover
-const ActivityItem = ({ activity }) => {
+
+const ActivityItem = ({ activity, fromTasksFeed = false }) => {
   const { user } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
@@ -27,7 +31,11 @@ const ActivityItem = ({ activity }) => {
           wordBreak="break-word"
         >
           <span style={{ fontWeight: "600" }}>{user.name} </span>
-          <span>{getActivityMessage(activity)}</span>
+          <span>
+            {fromTasksFeed
+              ? getTaskActivityMessage(activity)
+              : getActivityMessage(activity)}
+          </span>
         </Text>
 
         <Flex align="baseline" justify="space-between" w="90%">
@@ -56,7 +64,8 @@ ActivityItem.propTypes = {
     recordable_type: PropTypes.string,
     created_at: PropTypes.string,
     updated_at: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  fromTasksFeed: PropTypes.bool
 };
 
 export default memo(ActivityItem);

@@ -13,7 +13,7 @@ import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import ColoredButton from "../../../components/ColoredButton";
 
-const LabelsPopover = ({ taskId }) => {
+const LabelsPopover = ({ taskId, ...rest }) => {
   const labels = useSelector(state => labelsSelectors.selectAll(state));
   const { labels: taskLabels } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
@@ -53,6 +53,7 @@ const LabelsPopover = ({ taskId }) => {
           </Text>
         </ColoredButton>
       }
+      {...rest}
     >
       {labels.map(label => (
         <ColoredButton

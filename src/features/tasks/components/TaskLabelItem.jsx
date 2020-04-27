@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { toggleLabel } from "../tasksSlice";
 import { PseudoBox } from "@chakra-ui/core";
 
-const TaskLabelItem = ({ taskId, label }) => {
+const TaskLabelItem = ({ taskId, label, ...rest }) => {
   const dispatch = useDispatch();
 
   const handleToggleLabel = useCallback(
@@ -17,15 +17,14 @@ const TaskLabelItem = ({ taskId, label }) => {
 
   return (
     <PseudoBox
-      bg={`${label.color}.400` || "blue.400"}
+      bg={`${label.color}.400`}
       h="8px"
       w="2.5rem"
       borderRadius={4}
-      _hover={{ backgroundColor: `${label.color}.500` || "blue.500" }}
+      _hover={{ backgroundColor: `${label.color}.500` }}
+      transition="background-color 100ms ease-in"
       onClick={handleToggleLabel}
-      mx="2px"
-      _first={{ marginLeft: 0 }}
-      _last={{ marginRight: 0 }}
+      {...rest}
     />
   );
 };

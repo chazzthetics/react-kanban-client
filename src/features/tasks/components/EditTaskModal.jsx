@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import {
   Modal,
   ModalOverlay,
@@ -17,8 +19,15 @@ import RemoveTaskPopover from "./RemoveTaskPopover";
 import MoveTaskPopover from "./MoveTaskPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
+import EditTaskModalLabelList from "./EditTaskModalLabelList";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
+  const { labels } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
+  );
+
+  const hasLabels = labels.length > 0;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -33,7 +42,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         />
         <Grid
           templateColumns="25px 3fr 1fr"
-          templateRows="75px 175px 25px auto 100px"
+          templateRows={`155px 175px 25px auto 100px`}
           gridGap={3}
           p={6}
         >
@@ -45,6 +54,9 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
 
           {/* Task Activity */}
           <TaskActivityFeed taskId={taskId} />
+
+          {/* Task Labels */}
+          {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
 
           {/* Sidebar */}
           <Box as="aside" gridColumn="3" gridRow="2" alignSelf="start">
