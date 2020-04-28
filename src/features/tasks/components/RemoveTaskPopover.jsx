@@ -21,7 +21,7 @@ const RemoveTaskPopover = ({ taskId, columnId }) => {
     >
       <Flex align="center" justify="space-between">
         <RemoveButton onClick={handleRemoveTask} />
-        <Text fontSize="0.875rem" color="gray.600" w="60%">
+        <Text fontSize="0.875rem" color="gray.600" w="66%">
           Are you sure you want to remove this card?
         </Text>
       </Flex>

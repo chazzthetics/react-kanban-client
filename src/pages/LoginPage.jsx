@@ -1,10 +1,8 @@
 import React from "react";
-import UserAvatar from "../features/auth/components/UserAvatar";
-
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
-
-import { Route, useHistory } from "react-router-dom";
+import { dashboard } from "../utils/getPath";
+import { useHistory } from "react-router-dom";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -18,13 +16,13 @@ const LoginPage = () => {
 
   React.useEffect(() => {
     if (user) {
-      history.push(`/${user.username}/boards`);
+      history.replace(dashboard(user));
     }
   }, [user, history]);
 
   return (
     <div>
-      <UserAvatar onTempLogin={handleTempLogin} />
+      <button onClick={handleTempLogin}>Login</button>
     </div>
   );
 };

@@ -4,7 +4,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   PseudoBox,
@@ -12,6 +11,7 @@ import {
 } from "@chakra-ui/core";
 import CreateBoardForm from "./CreateBoardForm";
 
+//FIXME: clean up styles
 const CreateBoardModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstFieldRef = useRef(null);

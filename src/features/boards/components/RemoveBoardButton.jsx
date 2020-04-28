@@ -1,21 +1,29 @@
-import React, { useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  selectCurrentBoardId,
+  selectCurrentBoard,
   selectBackgroundIsImage,
   removeBoard
 } from "../boardsSlice";
+import { board as boardPath } from "../../../utils/getPath";
 import IconButton from "../../../components/IconButton";
 
 const RemoveBoardButton = () => {
-  const currentBoardId = useSelector(selectCurrentBoardId);
+  const board = useSelector(selectCurrentBoard);
   const isImage = useSelector(selectBackgroundIsImage);
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
   const handleRemoveBoard = useCallback(() => {
-    dispatch(removeBoard(currentBoardId));
-  }, [dispatch, currentBoardId]);
+    dispatch(removeBoard(board.uuid));
+  }, [dispatch, board.uuid]);
+
+  useEffect(() => {
+    history.replace(boardPath(board));
+  }, [history, board]);
 
   return (
     <IconButton

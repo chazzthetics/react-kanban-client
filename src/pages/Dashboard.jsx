@@ -30,7 +30,7 @@ const Dashboard = () => {
     <Box
       className="Dashboard"
       height="100vh"
-      bg="white"
+      bg="gray.50"
       animation="200ms ease-in fadein"
     >
       <AppBar dashboard={true} />
@@ -46,12 +46,19 @@ const Dashboard = () => {
         </Flex>
       )}
       {status === "success" && (
-        <Grid templateColumns="1fr 3fr" px={"20%"} pt={12}>
-          <aside>
+        <Grid
+          templateColumns={"1fr 3fr"}
+          px={{ sm: "5%", md: "10%", lg: "12%", xl: "20%" }}
+          pt={12}
+        >
+          <Box
+            as="aside"
+            display={{ xs: "none", sm: "none", md: "none", lg: "block" }}
+          >
             <div>Boards</div>
             <div>Boards</div>
             <div>Boards</div>
-          </aside>
+          </Box>
 
           {starredBoards.length > 0 && (
             <BoardGrid

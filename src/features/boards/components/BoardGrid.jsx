@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Grid, Box, Heading, PseudoBox } from "@chakra-ui/core";
+import { Grid, Box, Heading } from "@chakra-ui/core";
 import BoardBox from "./BoardBox";
 import CreateBoardModal from "./CreateBoardModal";
 

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { createBoard } from "../boardsSlice";
 import { makeBoard } from "../../../utils/makeEntity";
+import { board as boardPath } from "../../../utils/getPath";
 import { backgroundColors } from "../../../utils/backgroundColors";
 import {
   Stack,
@@ -34,7 +35,7 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
       dispatch(createBoard(board));
       reset();
       closeOnSubmit();
-      history.push(`/b/${board.uuid}/${board.title}`);
+      history.replace(boardPath(board));
     },
     [dispatch, reset, closeOnSubmit, history]
   );

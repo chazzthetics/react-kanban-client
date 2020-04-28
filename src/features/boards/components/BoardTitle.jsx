@@ -52,7 +52,7 @@ const BoardTitle = () => {
         ml={0}
         mr={2}
         borderRadius={2}
-        maxW={130}
+        maxW={160}
       />
     </Editable>
   );

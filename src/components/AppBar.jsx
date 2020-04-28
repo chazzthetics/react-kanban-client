@@ -1,9 +1,8 @@
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
-import { login } from "../features/auth/authSlice";
 import {
   Box,
   Flex,
@@ -13,9 +12,10 @@ import {
   Link,
   Heading
 } from "@chakra-ui/core";
+import { getBackground } from "../utils/getBackground";
+import { dashboard as dashboardPath } from "../utils/getPath";
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
-import { getBackground } from "../utils/getBackground";
 import SelectBoardPopover from "../features/boards/components/SelectBoardPopover";
 import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
@@ -26,11 +26,6 @@ const AppBar = ({ dashboard = false }) => {
   const { user } = useSelector(state => state.auth);
 
   const background = useSelector(selectBoardBackground);
-  const dispatch = useDispatch();
-
-  const handleTempLogin = useCallback(() => {
-    dispatch(login());
-  }, [dispatch]);
 
   return (
     <Box
@@ -51,7 +46,7 @@ const AppBar = ({ dashboard = false }) => {
         >
           <ButtonGroup d="flex" spacing={1}>
             <ListItem mr={1}>
-              <Link as={RouterLink} to={`/${user.username}/boards`}>
+              <Link as={RouterLink} to={dashboardPath(user)}>
                 <IconButton icon={FiHome} label="Dashboard" fontSize="1.3rem" />
               </Link>
             </ListItem>
@@ -70,7 +65,7 @@ const AppBar = ({ dashboard = false }) => {
           >
             <Link
               href="/"
-              opacity={0.8}
+              opacity={0.9}
               _hover={{ opacity: 1 }}
               _focus={{ outline: "none" }}
               transition="opacity 100ms ease-in"
@@ -96,7 +91,7 @@ const AppBar = ({ dashboard = false }) => {
               <IconButton icon={FiSun} label="Change Theme" />
             </ListItem>
             <ListItem>
-              <UserAvatar onTempLogin={handleTempLogin} />
+              <UserAvatar />
             </ListItem>
           </ButtonGroup>
         </List>
