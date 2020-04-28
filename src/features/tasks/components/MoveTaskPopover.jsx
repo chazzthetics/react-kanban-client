@@ -108,11 +108,13 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
           </Heading>
           <SelectBox label="Board" name="board" ref={register}>
             {boards &&
-              boards.map(board => (
-                <option key={board.uuid} value={board.uuid}>
-                  {board.title}
-                </option>
-              ))}
+              boards
+                .filter(board => board.columns.length > 0)
+                .map(board => (
+                  <option key={board.uuid} value={board.uuid}>
+                    {board.title}
+                  </option>
+                ))}
           </SelectBox>
           <Flex>
             <SelectBox

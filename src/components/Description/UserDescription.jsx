@@ -14,7 +14,7 @@ const UserDescription = () => {
           {user.name}
         </Text>
         <Text fontSize="0.875rem" color="gray.500">
-          @jdoe660
+          {user.username}
         </Text>
         <Link fontSize="0.875rem" color="gray.600" textDecor="underline">
           Edit profile info

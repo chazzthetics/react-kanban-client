@@ -97,4 +97,4 @@ EditTaskDescription.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default EditTaskDescription;
+export default React.memo(EditTaskDescription);

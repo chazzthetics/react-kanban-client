@@ -32,9 +32,9 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
     ({ title, background }) => {
       const board = makeBoard(title, background);
       dispatch(createBoard(board));
-      history.push(`/b/${board.uuid}/${board.title}`);
       reset();
       closeOnSubmit();
+      history.push(`/b/${board.uuid}/${board.title}`);
     },
     [dispatch, reset, closeOnSubmit, history]
   );

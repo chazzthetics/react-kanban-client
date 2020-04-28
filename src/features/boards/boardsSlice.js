@@ -253,6 +253,8 @@ export const changeBoard = boardId => async (dispatch, getState) => {
   const { current: previousBoard } = getPreviousValue(getState(), "boards");
 
   try {
+    if (previousBoard === boardId) return;
+
     dispatch(changed({ boardId }));
     await boardsService.update(boardId, { current: true });
     dispatch(fetchActivities());

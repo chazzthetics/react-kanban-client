@@ -12,11 +12,14 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverBody
+  PopoverBody,
+  useDisclosure
 } from "@chakra-ui/core";
 import IconButton from "../../../components/IconButton";
 
+//FIXME: finish styles, use smaller photos for bgimage etc
 const SelectBoardInput = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const boardIds = useSelector(state => boardsSelectors.selectIds(state));
 
   const boards = useSelector(state => boardsSelectors.selectEntities(state));
@@ -26,12 +29,18 @@ const SelectBoardInput = () => {
   const handleChangeBoard = useCallback(
     id => {
       dispatch(changeBoard(id));
+      onClose();
     },
-    [dispatch]
+    [dispatch, onClose]
   );
 
   return (
-    <Popover placement="bottom">
+    <Popover
+      placement="bottom"
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
       <PopoverTrigger>
         <IconButton
           icon={FiTrello}
@@ -46,7 +55,7 @@ const SelectBoardInput = () => {
         left={0}
         boxShadow="md"
         w="17rem"
-        _focus={{ boxShadow: "none", outline: "none" }}
+        _focus={{ boxShadow: "md", outline: "none" }}
       >
         <PopoverBody>
           <Heading

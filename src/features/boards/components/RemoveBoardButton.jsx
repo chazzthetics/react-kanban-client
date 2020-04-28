@@ -8,9 +8,10 @@ import {
 import IconButton from "../../../components/IconButton";
 
 const RemoveBoardButton = () => {
-  const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
   const isImage = useSelector(selectBackgroundIsImage);
+
+  const dispatch = useDispatch();
 
   const handleRemoveBoard = useCallback(() => {
     dispatch(removeBoard(currentBoardId));

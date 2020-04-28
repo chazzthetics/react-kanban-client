@@ -16,7 +16,7 @@ import {
 import { FiHome, FiSun } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
 import { getBackground } from "../utils/getBackground";
-import SelectBoardInput from "../features/boards/components/SelectBoardInput";
+import SelectBoardPopover from "../features/boards/components/SelectBoardPopover";
 import CreateBoardPopover from "../features/boards/components/CreateBoardPopover";
 import UserAvatar from "../features/auth/components/UserAvatar";
 import IconButton from "./IconButton";
@@ -56,7 +56,7 @@ const AppBar = ({ dashboard = false }) => {
               </Link>
             </ListItem>
             <ListItem d="flex" alignItems="center">
-              <SelectBoardInput />
+              <SelectBoardPopover />
             </ListItem>
           </ButtonGroup>
         </List>

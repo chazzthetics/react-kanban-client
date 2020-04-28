@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { hydrate } from "../features/auth/authSlice";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
@@ -10,9 +11,16 @@ import "./App.css";
 
 const AppContainer = () => {
   // const dispatch = useDispatch();
-  // const { isAuthenticated } = useSelector(state => state.auth);
+  const { user } = useSelector(state => state.auth);
   const background = useSelector(selectBoardBackground);
-  const { status } = useSelector(state => state.boards);
+  const { status, current } = useSelector(state => state.boards);
+
+  const history = useHistory();
+  useEffect(() => {
+    if (!current) {
+      history.push(`/${user.username}/boards`);
+    }
+  }, [current, history, user.username]);
 
   // useEffect(() => {
   //   if (isAuthenticated) {
