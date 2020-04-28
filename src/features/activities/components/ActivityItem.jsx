@@ -48,6 +48,8 @@ const ActivityItem = ({ activity, fromTasksFeed = false }) => {
             size="xs"
             color="gray.600"
             onClick={handleRemoveActivity}
+            opacity={0.3}
+            _hover={{ opacity: 1 }}
             _focus={{ boxShadow: "none" }}
           />
         </Flex>

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { changeBoard } from "../boardsSlice";
+import { changeBoard, toggleBoardStar } from "../boardsSlice";
 import { getBackground } from "../../../utils/getBackground";
 import { board as boardPath } from "../../../utils/getPath";
 import { FiStar } from "react-icons/fi";
@@ -14,6 +14,13 @@ const BoardBox = ({ board }) => {
   const handleChangeBoard = useCallback(() => {
     dispatch(changeBoard(board.uuid));
   }, [dispatch, board.uuid]);
+
+  const handleToggleStar = useCallback(
+    boardId => {
+      dispatch(toggleBoardStar(boardId));
+    },
+    [dispatch]
+  );
 
   return (
     <Link
@@ -76,6 +83,10 @@ const BoardBox = ({ board }) => {
             bottom={2}
             right={2}
             zIndex={12}
+            onClick={e => {
+              e.preventDefault();
+              handleToggleStar(board.uuid);
+            }}
           />
         )}
       </PseudoBox>

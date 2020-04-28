@@ -35,7 +35,7 @@ const SelectBoardInput = () => {
         />
       </PopoverTrigger>
       <PopoverContent
-        zIndex={4}
+        zIndex={6}
         left={0}
         boxShadow="sm"
         bg="gray.50"
