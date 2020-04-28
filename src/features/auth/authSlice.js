@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { fetchInitialData } from "../../api";
+import { fetchInitialData, checkToHydrate } from "../../api";
 import { fetchLabels } from "../labels/labelsSlice";
 import { fetchPriorities } from "../priorities/prioritiesSlice";
 import { getInitials } from "../../utils/getInitials";
@@ -31,12 +31,16 @@ export const hydrate = createAsyncThunk(
   "hydrate",
   async (_, { dispatch, rejectWithValue }) => {
     try {
+      const { data: count } = await checkToHydrate();
       const { payload: priorities } = await dispatch(fetchPriorities());
       const { payload: labels } = await dispatch(fetchLabels());
-      if (priorities && labels) {
+
+      if (count > 0 && priorities && labels) {
         const { data } = await fetchInitialData();
         return data;
       }
+
+      return [];
     } catch (ex) {
       rejectWithValue(ex.response.data);
     }

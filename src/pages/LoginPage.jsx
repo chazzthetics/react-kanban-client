@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   React.useEffect(() => {
     if (user) {
-      history.push(`/${user.name.split(" ")[0].toLowerCase()}/boards`);
+      history.push(`/${user.username}/boards`);
     }
   }, [user, history]);
 

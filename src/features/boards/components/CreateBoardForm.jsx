@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { createBoard } from "../boardsSlice";
@@ -23,16 +24,19 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
 
   const { isValid } = formState;
 
+  const history = useHistory();
+
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(
     ({ title, background }) => {
       const board = makeBoard(title, background);
       dispatch(createBoard(board));
+      history.push(`/b/${board.uuid}/${board.title}`);
       reset();
       closeOnSubmit();
     },
-    [dispatch, reset, closeOnSubmit]
+    [dispatch, reset, closeOnSubmit, history]
   );
 
   return (

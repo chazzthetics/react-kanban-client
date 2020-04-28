@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from "react";
+import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
@@ -21,7 +22,7 @@ import UserAvatar from "../features/auth/components/UserAvatar";
 import IconButton from "./IconButton";
 import AppBarOverlay from "./AppBarOverlay";
 
-const AppBar = () => {
+const AppBar = ({ dashboard = false }) => {
   const { user } = useSelector(state => state.auth);
 
   const background = useSelector(selectBoardBackground);
@@ -34,7 +35,7 @@ const AppBar = () => {
   return (
     <Box
       as="header"
-      bg={getBackground(background)}
+      bg={dashboard ? "blue.600" : getBackground(background)}
       h="2.5rem"
       position="relative"
       w="100%"
@@ -50,10 +51,7 @@ const AppBar = () => {
         >
           <ButtonGroup d="flex" spacing={1}>
             <ListItem mr={1}>
-              <Link
-                as={RouterLink}
-                to={`/${user.name.split(" ")[0].toLowerCase()}/boards`}
-              >
+              <Link as={RouterLink} to={`/${user.username}/boards`}>
                 <IconButton icon={FiHome} label="Dashboard" fontSize="1.3rem" />
               </Link>
             </ListItem>
@@ -105,6 +103,10 @@ const AppBar = () => {
       </Flex>
     </Box>
   );
+};
+
+AppBar.propTypes = {
+  dashboard: PropTypes.bool
 };
 
 export default memo(AppBar);

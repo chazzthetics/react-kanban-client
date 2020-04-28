@@ -34,6 +34,7 @@ const IconButton = forwardRef(
       <Button
         size="sm"
         type="button"
+        aria-label={label}
         fontSize={fontSize}
         color="white"
         leftIcon={icon}

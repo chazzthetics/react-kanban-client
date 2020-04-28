@@ -7,10 +7,10 @@ import AppContainer from "./AppContainer";
 const Routes = () => {
   return (
     <Switch>
-      <Route exact path="/login">
+      <Route exact path={"/login"}>
         <LoginPage />
       </Route>
-      <Route exact path="/register">
+      <Route exact path={"/register"}>
         <h1>Register</h1>
       </Route>
       <Route exact path={`/:username/boards`}>
