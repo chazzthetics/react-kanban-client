@@ -11,6 +11,7 @@ import { Editable, EditableInput, EditablePreview } from "@chakra-ui/core";
 const BoardTitle = () => {
   const dispatch = useDispatch();
   const currentBoard = useSelector(selectCurrentBoard);
+
   const isImage = useSelector(selectBackgroundIsImage);
 
   const [title, handleChange] = useEditable(currentBoard, "title");
@@ -22,7 +23,7 @@ const BoardTitle = () => {
         newTitle: title
       })
     );
-  }, [dispatch, currentBoard, title]);
+  }, [dispatch, title, currentBoard.uuid]);
 
   return (
     <Editable onSubmit={handleSubmit} value={title} placeholder="">
@@ -44,7 +45,6 @@ const BoardTitle = () => {
       />
       <EditableInput
         as="input"
-        onChange={handleChange}
         backgroundColor="white"
         fontSize="1.2rem"
         fontWeight={700}
@@ -53,6 +53,7 @@ const BoardTitle = () => {
         mr={2}
         borderRadius={2}
         maxW={160}
+        onChange={handleChange}
       />
     </Editable>
   );

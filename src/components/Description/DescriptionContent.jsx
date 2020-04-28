@@ -1,16 +1,34 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentBoard } from "../../features/boards/boardsSlice";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectCurrentBoard,
+  updateBoardDescription
+} from "../../features/boards/boardsSlice";
 import { FiUser, FiAlignLeft } from "react-icons/fi";
-import { Button, useDisclosure } from "@chakra-ui/core";
+import { Box, Button, useDisclosure } from "@chakra-ui/core";
 import ContentHeading from "./ContentHeading";
 import UserDescription from "./UserDescription";
 import DescriptionForm from "./DescriptionForm";
 
-//FIXME: and form
 const DescriptionContent = () => {
-  const { description } = useSelector(selectCurrentBoard);
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const { description, uuid } = useSelector(selectCurrentBoard);
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = useCallback(
+    data => {
+      dispatch(
+        updateBoardDescription({
+          boardId: uuid,
+          description: data.description.trim()
+        })
+      );
+      onClose();
+    },
+    [dispatch, uuid, onClose]
+  );
 
   return (
     <>
@@ -36,7 +54,15 @@ const DescriptionContent = () => {
           ) : null
         }
       />
-      <DescriptionForm isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <Box px={3} pt={3} pb={6}>
+        <DescriptionForm
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          onSubmit={handleSubmit}
+          description={description}
+        />
+      </Box>
     </>
   );
 };
