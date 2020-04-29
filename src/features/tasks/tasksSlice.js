@@ -1,4 +1,8 @@
-import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createEntityAdapter,
+  createAsyncThunk
+} from "@reduxjs/toolkit";
 import { hydrate } from "../auth/authSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
@@ -9,6 +13,18 @@ import { isDueDateEqual } from "../../utils/isDueDateEqual";
 const tasksAdapter = createEntityAdapter({
   selectId: state => state.uuid
 });
+
+export const fetchTaskActivities = createAsyncThunk(
+  "tasks/activities",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const { data } = await tasksService.getActivities(taskId);
+      return { taskId, activities: data };
+    } catch (ex) {
+      rejectWithValue(ex);
+    }
+  }
+);
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -172,12 +188,35 @@ const tasksSlice = createSlice({
           .map(task => ({
             ...task,
             labels: task.labels.map(label => label.id),
-            priority: task.priority[0] ? task.priority[0].id : null
+            priority: task.priority[0] ? task.priority[0].id : null,
+            activities: []
           }))
       );
 
       tasksAdapter.setAll(state, tasks);
       state.status = "success";
+    },
+    [fetchTaskActivities.fulfilled]: (state, action) => {
+      const { taskId, activities } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { activities }
+      });
+    },
+    [fetchMostRecentActivity.fulfilled]: (state, action) => {
+      const { recordable_type, changes } = action.payload;
+      if (recordable_type === "App\\Task") {
+        const activities = [
+          action.payload,
+          ...state.entities[changes.before.uuid].activities
+        ];
+        tasksAdapter.updateOne(state, {
+          id: changes.before.uuid,
+          changes: {
+            activities
+          }
+        });
+      }
     },
     "boards/removed": (state, action) => {
       const { tasks } = action.payload;

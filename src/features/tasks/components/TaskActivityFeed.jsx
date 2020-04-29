@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { activitiesSelectors } from "../../activities/activitiesSlice";
+import { useSelector, useDispatch } from "react-redux";
 import { FiList } from "react-icons/fi";
 import { Box } from "@chakra-ui/core";
 import ActivityList from "../../activities/components/ActivityList";
 
-const TaskActivityFeed = ({ taskId }) => {
-  const activities = useSelector(state => activitiesSelectors.selectAll(state));
+import { fetchTaskActivities, tasksSelectors } from "../tasksSlice";
 
-  const taskActivities = activities.filter(
-    activity =>
-      activity.recordable_type === "App\\Task" &&
-      activity.changes.before.uuid === taskId
+const TaskActivityFeed = ({ taskId }) => {
+  const { activities } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
   );
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchTaskActivities(taskId));
+  }, [dispatch, taskId]);
 
   return (
     <>
@@ -31,11 +33,7 @@ const TaskActivityFeed = ({ taskId }) => {
         <Box ml={"-2px"}>Activity</Box>
       </Box>
       <Box gridColumn="1 / 3" gridRow="4" ml={"-9px"}>
-        <ActivityList
-          activities={taskActivities}
-          count={4}
-          fromTasksFeed={true}
-        />
+        <ActivityList activities={activities} count={4} fromTasksFeed={true} />
       </Box>
     </>
   );

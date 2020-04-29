@@ -1,7 +1,11 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { activitiesSelectors, clearActivity } from "../activitiesSlice";
+import {
+  activitiesSelectors,
+  clearActivity,
+  fetchActivities
+} from "../activitiesSlice";
 import { Flex, Box, Stack, Text, Spinner } from "@chakra-ui/core";
 import { FiList } from "react-icons/fi";
 import ActivityList from "./ActivityList";
@@ -18,6 +22,10 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
   const dispatch = useDispatch();
   const handleClearActivity = useCallback(() => {
     dispatch(clearActivity());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(fetchActivities());
   }, [dispatch]);
 
   return (

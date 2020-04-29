@@ -37,6 +37,7 @@ export const makeTask = (title, position) => {
     checklist: null,
     labels: [],
     position,
+    activities: [],
     created_at: Date.now()
   };
 };

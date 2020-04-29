@@ -50,7 +50,7 @@ export const getTaskActivityMessage = activity => {
   const { description, changes } = activity;
   switch (description) {
     case "created":
-      return `added ${changes.after.task_title} to this card`;
+      return `added this card to ${changes.after.column_title}`;
     case "title_updated":
       return `renamed this card to ${changes.after.title} (from ${changes.before.title})`;
     case "description_updated":
