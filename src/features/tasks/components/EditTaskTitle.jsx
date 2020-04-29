@@ -5,7 +5,7 @@ import { useEditable } from "../../../hooks/useEditable";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import { tasksSelectors, updateTaskTitle } from "../tasksSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
-import { Box, Textarea } from "@chakra-ui/core";
+import { Box, Input } from "@chakra-ui/core";
 import { FiCreditCard } from "react-icons/fi";
 
 const EditTaskTitle = ({ taskId, columnId }) => {
@@ -63,41 +63,41 @@ const EditTaskTitle = ({ taskId, columnId }) => {
         lineHeight="21px"
         textAlign="left"
       >
-        {!showEditTitle ? (
-          <>
+        <Box h="65px">
+          {!showEditTitle ? (
             <Box
               ml={"-2px"}
               cursor="pointer"
               onClick={handleShowEditTitle}
               w="90%"
               wordBreak="break-word"
+              mb={"3px"}
             >
               {taskTitle}
             </Box>
-            <Box fontSize="0.875rem" fontWeight={400} color="gray.600" py={1}>
-              in list{" "}
-              <span style={{ textDecoration: "underline" }}>{columnTitle}</span>
-            </Box>
-          </>
-        ) : (
-          <Textarea
-            w="93%"
-            px={1}
-            py={0}
-            overflowWrap="break-word"
-            resize="none"
-            fontSize="1.1rem"
-            ml={"-7px"}
-            mt={"-1px"}
-            fontWeight={600}
-            borderRadius={2}
-            lineHeight={1.3}
-            autoFocus
-            value={taskTitle}
-            onChange={handleChange}
-            ref={container}
-          />
-        )}
+          ) : (
+            <Input
+              w="93%"
+              h="29px"
+              px={1}
+              overflowWrap="break-word"
+              fontSize="1.1rem"
+              ml={"-7px"}
+              mt={"-4px"}
+              fontWeight={600}
+              borderRadius={2}
+              lineHeight="19px"
+              autoFocus
+              value={taskTitle}
+              onChange={handleChange}
+              ref={container}
+            />
+          )}
+          <Box fontSize="0.875rem" fontWeight={400} color="gray.600" py={1}>
+            in list{" "}
+            <span style={{ textDecoration: "underline" }}>{columnTitle}</span>
+          </Box>
+        </Box>
       </Box>
     </>
   );

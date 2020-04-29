@@ -41,7 +41,7 @@ const EditTaskDescription = ({ taskId }) => {
         lineHeight="21px"
         textAlign="left"
       >
-        <Box ml={"-2px"} mb={4}>
+        <Box ml={"-2px"} mb={3}>
           Description
         </Box>
         <Box gridColumn="2 / 3">

@@ -42,12 +42,15 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
         />
         <Grid
           templateColumns="25px 3fr 1fr"
-          templateRows={`155px 175px 25px auto 100px`}
+          templateRows={`${hasLabels ? "120px" : "65px"} 175px 25px auto 100px`}
           gridGap={3}
           p={6}
         >
           {/* Edit Title */}
           <EditTaskTitle taskId={taskId} columnId={columnId} />
+
+          {/* Task Labels */}
+          {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
 
           {/* Edit Description */}
           <EditTaskDescription taskId={taskId} />
@@ -55,11 +58,8 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
           {/* Task Activity */}
           <TaskActivityFeed taskId={taskId} />
 
-          {/* Task Labels */}
-          {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
-
           {/* Sidebar */}
-          <Box as="aside" gridColumn="3" gridRow="2" alignSelf="start">
+          <Box as="aside" gridColumn="3" gridRow="2 / 3" alignSelf="start">
             <Heading
               as="h3"
               fontSize="0.8rem"

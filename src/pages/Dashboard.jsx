@@ -48,7 +48,7 @@ const Dashboard = () => {
       {status === "success" && (
         <Grid
           templateColumns={"1fr 3fr"}
-          px={{ sm: "5%", md: "10%", lg: "12%", xl: "20%" }}
+          px={{ sm: "5%", md: "10%", lg: "12%", xl: "16%" }}
           pt={12}
         >
           <Box

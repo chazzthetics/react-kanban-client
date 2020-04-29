@@ -49,23 +49,26 @@ const PriorityPopover = ({ taskId }) => {
         </ColoredButton>
       }
     >
-      {priorities.map(priority => (
-        <ColoredButton
-          key={priority.id}
-          color={priority.color}
-          onClick={() => handleTogglePriority(priority.id)}
-          isChecked={taskPriority === priority.id}
-        >
-          <Text
-            textTransform="uppercase"
-            fontWeight={600}
-            fontSize="0.8rem"
-            color="white"
+      {priorities
+        .slice()
+        .sort((a, b) => b.id - a.id)
+        .map(priority => (
+          <ColoredButton
+            key={priority.id}
+            color={priority.color}
+            onClick={() => handleTogglePriority(priority.id)}
+            isChecked={taskPriority === priority.id}
           >
-            {priority.name}
-          </Text>
-        </ColoredButton>
-      ))}
+            <Text
+              textTransform="uppercase"
+              fontWeight={600}
+              fontSize="0.8rem"
+              color="white"
+            >
+              {priority.name}
+            </Text>
+          </ColoredButton>
+        ))}
     </PopoverContainer>
   );
 };

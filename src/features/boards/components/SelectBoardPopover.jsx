@@ -44,12 +44,14 @@ const SelectBoardInput = () => {
         borderRadius={4}
       >
         <PopoverBody>
-          <SelectContainer
-            icon={FiStar}
-            heading="Starred Boards"
-            onClose={onClose}
-            boards={starredBoards}
-          />
+          {starredBoards.length > 0 && (
+            <SelectContainer
+              icon={FiStar}
+              heading="Starred Boards"
+              onClose={onClose}
+              boards={starredBoards}
+            />
+          )}
           <SelectContainer
             icon={FiTrello}
             heading="Personal Boards"

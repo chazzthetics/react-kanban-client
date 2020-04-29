@@ -42,16 +42,18 @@ const ActivityItem = ({ activity, fromTasksFeed = false }) => {
           <Text fontSize="xs" color="gray.400">
             {`${formatDistanceToNow(new Date(activity.created_at))} ago`}
           </Text>
-          <IconButton
-            icon="delete"
-            aria-label="Delete activity"
-            size="xs"
-            color="gray.600"
-            onClick={handleRemoveActivity}
-            opacity={0.3}
-            _hover={{ opacity: 1 }}
-            _focus={{ boxShadow: "none" }}
-          />
+          {!fromTasksFeed && (
+            <IconButton
+              icon="delete"
+              aria-label="Delete activity"
+              size="xs"
+              color="gray.600"
+              onClick={handleRemoveActivity}
+              opacity={0.3}
+              _hover={{ opacity: 1 }}
+              _focus={{ boxShadow: "none" }}
+            />
+          )}
         </Flex>
       </Flex>
     </Flex>
