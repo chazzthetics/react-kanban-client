@@ -1,11 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  activitiesSelectors,
-  clearActivity,
-  fetchActivities
-} from "../activitiesSlice";
+import { activitiesSelectors, clearActivity } from "../activitiesSlice";
 import { Flex, Box, Stack, Text, Spinner } from "@chakra-ui/core";
 import { FiList } from "react-icons/fi";
 import ActivityList from "./ActivityList";
@@ -15,17 +11,11 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
   const { status } = useSelector(state => state.activities);
 
   const activities = useSelector(state => activitiesSelectors.selectAll(state));
-  const activityCount = useSelector(state =>
-    activitiesSelectors.selectTotal(state)
-  );
 
   const dispatch = useDispatch();
+
   const handleClearActivity = useCallback(() => {
     dispatch(clearActivity());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(fetchActivities());
   }, [dispatch]);
 
   return (
@@ -53,7 +43,7 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
         <ActivityList count={count} activities={activities} />
       )}
 
-      {onShow && activityCount > 0 ? (
+      {onShow && activities.length > 0 ? (
         <Stack isInline>
           <SideBarButton
             py={4}
@@ -75,7 +65,7 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
             onClick={handleClearActivity}
           />
         </Stack>
-      ) : activityCount === 0 ? (
+      ) : activities.length === 0 ? (
         <Text textAlign="center" fontSize="0.875rem" color="gray.700">
           No activities recorded...
         </Text>

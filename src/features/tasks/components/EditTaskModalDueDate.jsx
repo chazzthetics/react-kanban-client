@@ -1,27 +1,23 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { tasksSelectors, toggleCompleted } from "../tasksSlice";
-import { format, addHours } from "date-fns";
-import { Box, Flex, Button, Text, Badge, Checkbox } from "@chakra-ui/core";
-import DueDatePopover from "../components/DueDatePopover";
+import { formatDate } from "../../../utils/formatDate";
 import {
   getDueDateMessage,
   getDueDateColor
 } from "../../../utils/getDueDateColor";
+import { Box, Flex, Button, Text, Badge, Checkbox } from "@chakra-ui/core";
+import DueDatePopover from "../components/DueDatePopover";
 
 const EditTaskModalDueDate = ({ taskId }) => {
   const { due_date, completed } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
-  const dispatch = useDispatch();
+  const formattedDate = formatDate(due_date, "MMM do");
 
-  // FIXME: move into selectorR? (also in duedatetag)
-  const formattedDate = useMemo(
-    () => format(addHours(new Date(due_date), 4), "MMM do"),
-    [due_date]
-  );
+  const dispatch = useDispatch();
 
   const handleComplete = useCallback(() => {
     dispatch(toggleCompleted({ taskId, completed }));

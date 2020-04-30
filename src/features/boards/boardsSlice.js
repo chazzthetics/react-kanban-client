@@ -267,6 +267,7 @@ export const createBoard = board => async dispatch => {
   try {
     dispatch(created({ board }));
     await boardsService.create(board);
+    dispatch(fetchActivities());
   } catch (ex) {
     dispatch(handleError(ex, removed, { boardId: board.uuid }));
   }

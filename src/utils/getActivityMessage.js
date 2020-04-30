@@ -41,6 +41,10 @@ export const getActivityMessage = activity => {
       return `unlocked list ${changes.after.title}`;
     case "moved":
       return `moved ${changes.after.task_title} from ${changes.before.column_title} to ${changes.after.column_title}`;
+    case "completed":
+      return `marked the due date on ${changes.after.title} complete`;
+    case "incompleted":
+      return `marked the due date on ${changes.after.title} incomplete`;
     default:
       throw new Error(`Unknown event '${description}'`);
   }
@@ -57,6 +61,10 @@ export const getTaskActivityMessage = activity => {
       return `changed the description of this card`;
     case "moved":
       return `moved this card from ${changes.before.column_title} to ${changes.after.column_title}`;
+    case "completed":
+      return "marked the due date complete";
+    case "incompleted":
+      return "marked the due date incomplete";
     default:
       throw new Error(`Unknown event ${description}`);
   }

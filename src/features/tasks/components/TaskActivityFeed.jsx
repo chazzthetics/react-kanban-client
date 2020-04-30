@@ -35,7 +35,7 @@ const TaskActivityFeed = ({ taskId }) => {
         <Box ml={"-46px"}>
           <ActivityList
             activities={activities}
-            count={4}
+            count={6}
             fromTasksFeed={true}
           />
         </Box>

@@ -32,6 +32,7 @@ export const makeTask = (title, position) => {
     description: null,
     priority: null,
     comment: null,
+    completed: false,
     attatchment: null,
     due_date: null,
     checklist: null,

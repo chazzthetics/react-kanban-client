@@ -218,11 +218,11 @@ const tasksSlice = createSlice({
       });
     },
     [fetchMostRecentActivity.fulfilled]: (state, action) => {
-      const { recordable_type, changes } = action.payload;
-      if (recordable_type === "App\\Task") {
+      const { recordable_type, description, changes } = action.payload;
+      if (recordable_type === "App\\Task" && description !== "removed") {
         const activities = [
           action.payload,
-          ...state.entities[changes.before.uuid].activities
+          ...state.entities[changes.before.uuid].activities.slice(0, 5)
         ];
         tasksAdapter.updateOne(state, {
           id: changes.before.uuid,
@@ -355,6 +355,7 @@ export const toggleCompleted = ({ taskId, completed }) => async dispatch => {
   try {
     dispatch(completedToggled({ taskId, completed }));
     await tasksService.update(taskId, { completed });
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(
       handleError(ex, completedToggled, { taskId, completed: !completed })

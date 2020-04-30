@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { tasksSelectors } from "../tasksSlice";
+import { formatDate } from "../../../utils/formatDate";
 import { getDueDateColor } from "../../../utils/getDueDateColor";
-import { format, addHours } from "date-fns";
 import { Icon, Tag, TagLabel } from "@chakra-ui/core";
 
 const DueDateTag = ({ taskId }) => {
@@ -11,10 +11,7 @@ const DueDateTag = ({ taskId }) => {
     tasksSelectors.selectById(state, taskId)
   );
 
-  const formattedDate = useMemo(
-    () => format(addHours(new Date(due_date), 4), "MMM d"),
-    [due_date]
-  );
+  const formattedDate = formatDate(due_date);
 
   return due_date ? (
     <Tag

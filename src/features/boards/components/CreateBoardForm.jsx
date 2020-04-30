@@ -35,7 +35,7 @@ const CreateBoardForm = ({ closeOnSubmit, firstFieldRef }) => {
       dispatch(createBoard(board));
       reset();
       closeOnSubmit();
-      history.replace(boardPath(board));
+      history.push(boardPath(board));
     },
     [dispatch, reset, closeOnSubmit, history]
   );
