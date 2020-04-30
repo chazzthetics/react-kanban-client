@@ -157,10 +157,11 @@ const boardsSlice = createSlice({
           columns: board.columns.map(column => column.uuid)
         }));
         boardsAdapter.setAll(state, boards);
-        state.current =
-          state.ids.find(id => state.entities[id].is_current) ||
-          state.ids[0] ||
-          "";
+        state.current = "";
+        // state.current =
+        //   state.ids.find(id => state.entities[id].is_current) ||
+        //   state.ids[0] ||
+        //   "";
         state.status = "success";
       }
     },
@@ -315,6 +316,7 @@ export const clearBoard = boardId => async (dispatch, getState) => {
         cleared({ boardId, columns: board.columns, tasks: columnTasks })
       );
       await boardsService.update(boardId, { clear: true });
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(
@@ -387,6 +389,7 @@ export const updateBoardDescription = ({ boardId, description }) => async (
 
     dispatch(descriptionUpdated({ boardId, description }));
     await boardsService.update(boardId, { description });
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
     dispatch(
       handleError(ex, descriptionUpdated, {

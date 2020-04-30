@@ -400,6 +400,7 @@ export const togglePriority = ({ taskId, priorityId }) => async (
     if (priorityId !== oldPriority) {
       dispatch(priorityToggled({ taskId, priorityId }));
       await tasksService.addPriority(taskId, priorityId);
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, priorityRemoved, { taskId }));
@@ -413,6 +414,7 @@ export const removePriority = ({ taskId }) => async (dispatch, getState) => {
     if (priority) {
       dispatch(priorityRemoved({ taskId }));
       await tasksService.removePriority(taskId);
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, priorityToggled, { taskId, priority }));
@@ -429,6 +431,7 @@ export const addDueDate = ({ taskId, due_date }) => async (
     if (!isDueDateEqual(old, due_date)) {
       dispatch(dueDateAdded({ taskId, due_date: due_date.toLocaleString() }));
       await tasksService.addDueDate(taskId, due_date);
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, dueDateRemoved, { taskId }));
@@ -441,6 +444,7 @@ export const removeDueDate = ({ taskId }) => async (dispatch, getState) => {
     if (due_date) {
       dispatch(dueDateRemoved({ taskId }));
       await tasksService.removeDueDate(taskId);
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(handleError(ex, addDueDate, { taskId, due_date }));

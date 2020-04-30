@@ -33,7 +33,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent maxW="48rem" borderRadius={3} bg="#f4f5f7">
+      <ModalContent maxW="48rem" minH="40rem" borderRadius={3} bg="#f4f5f7">
         <ModalCloseButton
           zIndex={6}
           color="gray.600"

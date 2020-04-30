@@ -233,6 +233,7 @@ export const clearColumn = columnId => async (dispatch, getState) => {
     if (column.tasks.length > 0) {
       dispatch(cleared({ columnId, tasks: column.tasks }));
       await columnsService.update(columnId, { clear: true });
+      dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
     dispatch(

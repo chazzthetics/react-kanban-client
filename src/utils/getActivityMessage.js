@@ -1,3 +1,5 @@
+import { formatDate } from "./formatDate";
+
 //TODO: FIXME: looks disgusting
 export const getActivityMessage = activity => {
   const { description, recordable_type, changes } = activity;
@@ -10,6 +12,11 @@ export const getActivityMessage = activity => {
         return `added ${changes.after.title} to this board`;
       }
       return `created this board`;
+    case "cleared":
+      if (getEntityType(recordable_type) === "list") {
+        return `cleared ${changes.after.title}`;
+      }
+      return "cleared this board";
     case "title_updated":
       return `renamed ${
         recordable_type === "App\\Board"
@@ -36,15 +43,29 @@ export const getActivityMessage = activity => {
     case "unstarred":
       return `unstarred this board`;
     case "locked":
-      return `locked list ${changes.after.title}`;
+      return `locked  ${changes.after.title}`;
     case "unlocked":
-      return `unlocked list ${changes.after.title}`;
+      return `unlocked  ${changes.after.title}`;
     case "moved":
       return `moved ${changes.after.task_title} from ${changes.before.column_title} to ${changes.after.column_title}`;
     case "completed":
       return `marked the due date on ${changes.after.title} complete`;
     case "incompleted":
       return `marked the due date on ${changes.after.title} incomplete`;
+    case "due_date":
+      return !changes.before.due_date
+        ? `added a due date to ${changes.after.title}`
+        : !changes.after.due_date
+        ? `removed the due date from ${changes.after.title}`
+        : `changed the due date of ${changes.after.title} to ${formatDate(
+            changes.after.due_date,
+            "MMM do"
+          )}`;
+
+    case "priority":
+      return !changes.after.priority
+        ? `removed the priority from ${changes.after.title}`
+        : `changed the priority of ${changes.after.title} to ${changes.after.priority}`;
     default:
       throw new Error(`Unknown event '${description}'`);
   }
@@ -65,6 +86,19 @@ export const getTaskActivityMessage = activity => {
       return "marked the due date complete";
     case "incompleted":
       return "marked the due date incomplete";
+    case "due_date":
+      return !changes.before.due_date
+        ? `added a due date to this card`
+        : !changes.after.due_date
+        ? "removed the due date from this card"
+        : `changed the due date of this card to ${formatDate(
+            changes.after.due_date,
+            "MMM do"
+          )}`;
+    case "priority":
+      return !changes.after.priority
+        ? `removed the priority of this card`
+        : `changed the priority of this card to ${changes.after.priority}`;
     default:
       throw new Error(`Unknown event ${description}`);
   }
