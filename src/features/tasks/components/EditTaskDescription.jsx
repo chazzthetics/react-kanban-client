@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { tasksSelectors, updateTaskDescription } from "../tasksSlice";
 import { FiAlignLeft } from "react-icons/fi";
-import { Box, useDisclosure } from "@chakra-ui/core";
+import { Box, Flex, Heading, useDisclosure } from "@chakra-ui/core";
 import DescriptionForm from "../../../components/Description/DescriptionForm";
 
 const EditTaskDescription = ({ taskId }) => {
@@ -29,22 +29,20 @@ const EditTaskDescription = ({ taskId }) => {
   );
 
   return (
-    <>
-      <Box gridColumn="1 / 2">
-        <Box as={FiAlignLeft} mr={2} fontSize="1.4rem" />
-      </Box>
-      <Box
-        gridColumn="2 / 3"
-        gridRow="2"
-        fontSize="1rem"
-        fontWeight={600}
-        lineHeight="21px"
-        textAlign="left"
-      >
-        <Box ml={"-2px"} mb={3}>
+    <Flex align="flex-start" pb={2}>
+      <Box as={FiAlignLeft} mr={4} fontSize="1.4rem" />
+      <Box w="100%">
+        <Heading
+          as="h3"
+          fontSize="1rem"
+          fontWeight={600}
+          lineHeight="21px"
+          ml={"-2px"}
+          mb={3}
+        >
           Description
-        </Box>
-        <Box gridColumn="2 / 3">
+        </Heading>
+        <Box w="100%">
           <DescriptionForm
             ml={-1}
             placeholder="Add a more detailed description..."
@@ -56,7 +54,7 @@ const EditTaskDescription = ({ taskId }) => {
           />
         </Box>
       </Box>
-    </>
+    </Flex>
   );
 };
 

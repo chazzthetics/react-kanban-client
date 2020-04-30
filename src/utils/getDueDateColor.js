@@ -18,10 +18,23 @@ export const getDueDateColor = date => {
     end: nextWeek
   });
 
-  if (isToday(dueDate)) return "red";
-  if (isPast(dueDate)) return "yellow";
+  if (isPast(dueDate)) return "red";
+  if (isToday(dueDate)) return "yellow";
   if (isTomorrow(dueDate)) return "orange";
   if (isNextWeek) return "blue";
 
   return "green";
+};
+
+export const getDueDateMessage = date => {
+  switch (getDueDateColor(date)) {
+    case "red":
+      return "Overdue";
+    case "yellow":
+      return "Today";
+    case "orange":
+      return "Tomorrow";
+    default:
+      return "";
+  }
 };

@@ -7,9 +7,10 @@ import {
   ModalOverlay,
   ModalCloseButton,
   ModalContent,
+  ModalBody,
   Box,
   Heading,
-  Grid
+  Flex
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
@@ -20,9 +21,10 @@ import MoveTaskPopover from "./MoveTaskPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
 import EditTaskModalLabelList from "./EditTaskModalLabelList";
+import EditTaskModalDueDate from "./EditTaskModalDueDate";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  const { labels } = useSelector(state =>
+  const { labels, due_date } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
@@ -40,54 +42,60 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
           _focus={{ outline: "none" }}
           borderRadius={50}
         />
-        <Grid
-          templateColumns="25px 3fr 1fr"
-          templateRows={`${hasLabels ? "120px" : "65px"} 175px 25px auto 100px`}
-          gridGap={3}
-          p={6}
-        >
-          {/* Edit Title */}
+        <ModalBody py={6}>
           <EditTaskTitle taskId={taskId} columnId={columnId} />
 
-          {/* Task Labels */}
-          {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
+          <Box position="relative">
+            <Flex w="72%" pl={10} ml={-1} pb={4}>
+              {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
+              {due_date && <EditTaskModalDueDate taskId={taskId} />}
+            </Flex>
 
-          {/* Edit Description */}
-          <EditTaskDescription taskId={taskId} />
-
-          {/* Task Activity */}
-          <TaskActivityFeed taskId={taskId} />
-
-          {/* Sidebar */}
-          <Box as="aside" gridColumn="3" gridRow="2 / 3" alignSelf="start">
-            <Heading
-              as="h3"
-              fontSize="0.8rem"
-              fontWeight={600}
-              textTransform="uppercase"
-            >
-              Add to Card
-            </Heading>
-            <Box my={2}>
-              <LabelsPopover taskId={taskId} />
-              <PriorityPopover taskId={taskId} />
-              <DueDatePopover taskId={taskId} />
+            <Box w="72%">
+              <EditTaskDescription taskId={taskId} />
+              <TaskActivityFeed taskId={taskId} />
             </Box>
-
-            <Heading
-              as="h3"
-              fontSize="0.8rem"
-              fontWeight={600}
-              textTransform="uppercase"
+            <Box
+              className="ModalSideBar"
+              as="aside"
+              ml={3}
+              position="absolute"
+              right={0}
+              top={0}
+              bottom={-4}
+              zIndex={2}
             >
-              Actions
-            </Heading>
-            <Box my={2}>
-              <MoveTaskPopover taskId={taskId} columnId={columnId} />
-              <RemoveTaskPopover taskId={taskId} columnId={columnId} />
+              <Flex flexDir="column">
+                <Heading
+                  as="h3"
+                  fontSize="0.8rem"
+                  fontWeight={600}
+                  textTransform="uppercase"
+                >
+                  Add to Card
+                </Heading>
+                <Flex flexDir="column" my={2}>
+                  <LabelsPopover taskId={taskId} />
+                  <PriorityPopover taskId={taskId} />
+                  <DueDatePopover taskId={taskId} />
+                </Flex>
+
+                <Heading
+                  as="h3"
+                  fontSize="0.8rem"
+                  fontWeight={600}
+                  textTransform="uppercase"
+                >
+                  Actions
+                </Heading>
+                <Flex flexDir="column" my={2}>
+                  <MoveTaskPopover taskId={taskId} columnId={columnId} />
+                  <RemoveTaskPopover taskId={taskId} columnId={columnId} />
+                </Flex>
+              </Flex>
             </Box>
           </Box>
-        </Grid>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

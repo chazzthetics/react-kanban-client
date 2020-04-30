@@ -73,6 +73,20 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    completedToggled(state, action) {
+      const {
+        taskId,
+        completed,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { completed: !completed }
+      });
+      state.status = status;
+      state.error = error;
+    },
     labelToggled(state, action) {
       const {
         taskId,
@@ -251,6 +265,7 @@ export const {
   removed,
   titleUpdated,
   descriptionUpdated,
+  completedToggled,
   labelToggled,
   labelsCleared,
   priorityToggled,
@@ -332,6 +347,17 @@ export const updateTaskDescription = ({ taskId, description }) => async (
         taskId,
         description: oldDescription
       })
+    );
+  }
+};
+
+export const toggleCompleted = ({ taskId, completed }) => async dispatch => {
+  try {
+    dispatch(completedToggled({ taskId, completed }));
+    await tasksService.update(taskId, { completed });
+  } catch (ex) {
+    dispatch(
+      handleError(ex, completedToggled, { taskId, completed: !completed })
     );
   }
 };

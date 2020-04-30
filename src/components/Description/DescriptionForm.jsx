@@ -27,7 +27,7 @@ const DescriptionForm = ({
   }, [description, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <Textarea
         onFocus={onOpen}
         name="description"

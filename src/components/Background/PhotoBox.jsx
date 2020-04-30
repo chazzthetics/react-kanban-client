@@ -62,7 +62,7 @@ const PhotoBox = ({ photoId }) => {
             ml={2}
             alignSelf="center"
             color="white"
-            href={photo.url}
+            href={photo.photographer_url}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="Photo provided by Pexels"

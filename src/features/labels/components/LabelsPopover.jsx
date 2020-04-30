@@ -13,7 +13,7 @@ import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import ColoredButton from "../../../components/ColoredButton";
 
-const LabelsPopover = ({ taskId, ...rest }) => {
+const LabelsPopover = ({ taskId, trigger, ...rest }) => {
   const labels = useSelector(state => labelsSelectors.selectAll(state));
   const { labels: taskLabels } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
@@ -39,7 +39,9 @@ const LabelsPopover = ({ taskId, ...rest }) => {
 
   return (
     <PopoverContainer
-      trigger={<SideModalTrigger icon={FiTag} label="Labels" />}
+      trigger={
+        trigger ? trigger : <SideModalTrigger icon={FiTag} label="Labels" />
+      }
       heading="Labels"
       footer={
         <ColoredButton color={`gray.400`} onClick={handleClearLabels}>
@@ -68,7 +70,8 @@ const LabelsPopover = ({ taskId, ...rest }) => {
 };
 
 LabelsPopover.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
+  trigger: PropTypes.element
 };
 
 export default LabelsPopover;

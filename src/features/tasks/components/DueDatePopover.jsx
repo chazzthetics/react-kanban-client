@@ -11,7 +11,7 @@ import SaveButton from "../../../components/SaveButton";
 import RemoveButton from "../../../components/RemoveButton";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 
-const DueDatePopover = ({ taskId }) => {
+const DueDatePopover = ({ taskId, trigger }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const dispatch = useDispatch();
@@ -50,7 +50,9 @@ const DueDatePopover = ({ taskId }) => {
 
   return (
     <PopoverContainer
-      trigger={<SideModalTrigger icon="time" label="Due Date" />}
+      trigger={
+        trigger ? trigger : <SideModalTrigger icon="time" label="Due Date" />
+      }
       heading="Change Due Date"
       footer={
         <Flex justify="space-between" align="center">
@@ -70,7 +72,8 @@ const DueDatePopover = ({ taskId }) => {
 };
 
 DueDatePopover.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
+  trigger: PropTypes.element
 };
 
 export default DueDatePopover;

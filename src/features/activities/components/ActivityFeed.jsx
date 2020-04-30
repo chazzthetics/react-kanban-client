@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -24,7 +24,7 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
     dispatch(clearActivity());
   }, [dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchActivities());
   }, [dispatch]);
 

@@ -7,7 +7,7 @@ import { format, addHours } from "date-fns";
 import { Icon, Tag, TagLabel } from "@chakra-ui/core";
 
 const DueDateTag = ({ taskId }) => {
-  const { due_date } = useSelector(state =>
+  const { due_date, completed } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
@@ -18,7 +18,7 @@ const DueDateTag = ({ taskId }) => {
 
   return due_date ? (
     <Tag
-      bg={`${getDueDateColor(due_date)}.200`}
+      bg={completed ? "green.200" : `${getDueDateColor(due_date)}.200`}
       size="sm"
       display="flex"
       alignItems="center"

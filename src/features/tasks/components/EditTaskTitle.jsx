@@ -5,7 +5,7 @@ import { useEditable } from "../../../hooks/useEditable";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import { tasksSelectors, updateTaskTitle } from "../tasksSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
-import { Box, Input } from "@chakra-ui/core";
+import { Box, Flex, Input } from "@chakra-ui/core";
 import { FiCreditCard } from "react-icons/fi";
 
 const EditTaskTitle = ({ taskId, columnId }) => {
@@ -51,19 +51,16 @@ const EditTaskTitle = ({ taskId, columnId }) => {
   );
 
   return (
-    <>
-      <Box gridColumn="1 / 2">
-        <Box as={FiCreditCard} mr={2} fontSize="1.4rem" />
-      </Box>
+    <Flex align="flex-start" pb={4}>
+      <Box as={FiCreditCard} mr={4} fontSize="1.4rem" />
       <Box
-        gridColumn="2 / 4"
-        gridRow="1"
         fontSize="1.1rem"
         fontWeight={600}
         lineHeight="21px"
         textAlign="left"
+        w="90%"
       >
-        <Box h="65px">
+        <Box>
           {!showEditTitle ? (
             <Box
               ml={"-2px"}
@@ -71,13 +68,13 @@ const EditTaskTitle = ({ taskId, columnId }) => {
               onClick={handleShowEditTitle}
               w="90%"
               wordBreak="break-word"
-              mb={"3px"}
+              mb={1}
             >
               {taskTitle}
             </Box>
           ) : (
             <Input
-              w="93%"
+              w="100%"
               h="29px"
               px={1}
               overflowWrap="break-word"
@@ -93,13 +90,13 @@ const EditTaskTitle = ({ taskId, columnId }) => {
               ref={container}
             />
           )}
-          <Box fontSize="0.875rem" fontWeight={400} color="gray.600" py={1}>
+          <Box fontSize="0.875rem" fontWeight={400} color="gray.600">
             in list{" "}
             <span style={{ textDecoration: "underline" }}>{columnTitle}</span>
           </Box>
         </Box>
       </Box>
-    </>
+    </Flex>
   );
 };
 
