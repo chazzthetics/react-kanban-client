@@ -73,6 +73,7 @@ const CreateTaskForm = ({ columnId }) => {
             minHeight="66px"
             marginBottom="6px"
             autoFocus
+            boxShadow="sm"
           />
           <SaveButtonGroup label="Add Card" onClose={onClose} />
         </form>

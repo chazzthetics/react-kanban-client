@@ -6,3 +6,17 @@
     opacity: 1;
   }
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(87, 124, 98);
+  outline: 1px solid slategrey;
+}

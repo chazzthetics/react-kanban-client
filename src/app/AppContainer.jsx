@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
 import { selectCurrentBoard } from "../features/boards/boardsSlice";
 import { getBackground } from "../utils/getBackground";
 import { dashboard, board as boardPath } from "../utils/getPath";
@@ -15,10 +16,21 @@ const AppContainer = () => {
 
   const history = useHistory();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (!board) {
+    if (!user && localStorage.getItem("access_token")) {
+      dispatch(login());
+    }
+  }, [user, dispatch]);
+
+  //FIXME:
+  useEffect(() => {
+    if (!board && user) {
       history.replace(dashboard(user));
-    } else {
+    }
+
+    if (board && user) {
       history.replace(boardPath(board));
     }
   }, [board, history, user]);

@@ -1,8 +1,9 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { selectBoardBackground } from "../features/boards/boardsSlice";
+import { logout } from "../features/auth/authSlice";
 import {
   Box,
   Flex,
@@ -27,6 +28,13 @@ const AppBar = ({ dashboard = false }) => {
 
   const background = useSelector(selectBoardBackground);
 
+  // FIXME: change
+  const dispatch = useDispatch();
+  const handleTempLogout = () => {
+    dispatch(logout());
+    window.location.replace("/login");
+  };
+
   return (
     <Box
       as="header"
@@ -46,7 +54,7 @@ const AppBar = ({ dashboard = false }) => {
         >
           <ButtonGroup d="flex" spacing={1}>
             <ListItem mr={1}>
-              <Link as={RouterLink} to={dashboardPath(user)}>
+              <Link as={RouterLink} to={user ? dashboardPath(user) : "/"}>
                 <IconButton icon={FiHome} label="Dashboard" fontSize="1.3rem" />
               </Link>
             </ListItem>
@@ -90,7 +98,7 @@ const AppBar = ({ dashboard = false }) => {
             <ListItem>
               <IconButton icon={FiSun} label="Change Theme" />
             </ListItem>
-            <ListItem>
+            <ListItem onClick={handleTempLogout}>
               <UserAvatar />
             </ListItem>
           </ButtonGroup>

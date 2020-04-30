@@ -37,7 +37,9 @@ const SelectButton = ({ board, onClose }) => {
             h="100%"
             w="45px"
             bg={getBackground(board.background)}
-            bgImage={getBackground(board.background)}
+            bgImage={getBackground(
+              board.background.replace("h=650&w=940", "h=36&w=45")
+            )}
             bgPos="center"
             bgSize="cover"
             borderTopLeftRadius={3}
@@ -46,9 +48,11 @@ const SelectButton = ({ board, onClose }) => {
           <PseudoBox
             h="100%"
             w="100%"
-            opacity={0.4}
+            opacity={0.2}
             bg={getBackground(board.background)}
-            bgImage={getBackground(board.background)}
+            bgImage={getBackground(
+              board.background.replace("h=650&w=940", "h=50&w=264")
+            )}
             bgPos="center"
             bgSize="cover"
             borderTopRightRadius={3}

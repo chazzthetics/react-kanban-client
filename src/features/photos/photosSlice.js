@@ -36,7 +36,7 @@ const photosSlice = createSlice({
     }
   },
   extraReducers: {
-    [fetchPhotos.pending]: (state, action) => {
+    [fetchPhotos.pending]: state => {
       if (
         state.status === "idle" ||
         state.status === "success" ||
@@ -47,7 +47,13 @@ const photosSlice = createSlice({
     },
     [fetchPhotos.fulfilled]: (state, action) => {
       const photos = action.payload.photos.map(photo => ({
-        ...photo,
+        id: photo.id,
+        photographer: photo.photographer,
+        photographer_url: photo.photographer_url,
+        src: {
+          large2x: photo.src.large2x,
+          small: photo.src.small
+        },
         showCredit: false
       }));
       if (state.status === "pending") {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { hydrate } from "../features/auth/authSlice";
+import { login, hydrate } from "../features/auth/authSlice";
 import { boardsSelectors } from "../features/boards/boardsSlice";
 import { labelsSelectors } from "../features/labels/labelsSlice";
 import { FiStar, FiUser } from "react-icons/fi";
@@ -10,13 +10,19 @@ import BoardGrid from "../features/boards/components/BoardGrid";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { user, isAuthenticated } = useSelector(state => state.auth);
 
   const { status } = useSelector(state => state.boards);
   const labels = useSelector(state => labelsSelectors.selectTotal(state));
 
   const boards = useSelector(state => boardsSelectors.selectAll(state));
   const starredBoards = boards.filter(board => board.is_starred);
+
+  useEffect(() => {
+    if (!user && localStorage.getItem("access_token")) {
+      dispatch(login());
+    }
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (isAuthenticated && !labels) {

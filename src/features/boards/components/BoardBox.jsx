@@ -35,7 +35,9 @@ const BoardBox = ({ board }) => {
         w="auto"
         borderRadius={3}
         bg={getBackground(board.background)}
-        bgImage={getBackground(board.background)}
+        bgImage={getBackground(
+          board.background.replace("h=650&w=940", "h=100&w=230")
+        )}
         bgPos="center"
         bgSize="cover"
         position="relative"
@@ -72,7 +74,7 @@ const BoardBox = ({ board }) => {
         >
           {board.title}
         </Text>
-        {board.is_starred && (
+        {board.is_starred ? (
           <Box
             position="absolute"
             bottom={2}
@@ -91,6 +93,29 @@ const BoardBox = ({ board }) => {
                 transform: "rotate(180deg) scale(1.3)"
               }}
               transition="transform 300ms ease-in-out"
+            />
+          </Box>
+        ) : (
+          <Box
+            position="absolute"
+            bottom={2}
+            right={2}
+            zIndex={12}
+            onClick={e => {
+              e.preventDefault();
+              handleToggleStar(board.uuid);
+            }}
+          >
+            <PseudoBox
+              as={FiStar}
+              color="yellow.400"
+              aria-label="Star"
+              opacity={0}
+              _hover={{
+                transform: "rotate(180deg) scale(1.3)",
+                opacity: 1
+              }}
+              transition="transform 300ms ease-in-out, opacity 180ms ease-in-out"
             />
           </Box>
         )}

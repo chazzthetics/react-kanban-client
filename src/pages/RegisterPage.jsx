@@ -2,15 +2,13 @@ import React, { useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { login } from "../features/auth/authSlice";
+import { login, register as registerUser } from "../features/auth/authSlice";
 import { dashboard } from "../utils/getPath";
 import {
   Box,
   Flex,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
   Input,
   Button,
   Stack
@@ -24,15 +22,20 @@ const LoginPage = () => {
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
-      email: "jdoe@test.com",
+      name: "Jane Kim",
+      email: "jkim@test.com",
       password: "password"
     }
   });
 
   const onSubmit = useCallback(
     data => {
-      const credentials = { email: data.email, password: data.password };
-      dispatch(login(credentials));
+      const credentials = {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      };
+      dispatch(registerUser(credentials));
     },
     [dispatch]
   );
@@ -54,6 +57,18 @@ const LoginPage = () => {
       <Flex px={16} flexDir="column" justify="center" align="center" h="80vh">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2}>
+            <FormControl>
+              <FormLabel htmlFor="name" fontSize="0.875rem">
+                Name
+              </FormLabel>
+              <Input
+                type="text"
+                id="name"
+                size="sm"
+                name="name"
+                ref={register({ required: true })}
+              />
+            </FormControl>
             <FormControl>
               <FormLabel htmlFor="email" fontSize="0.875rem">
                 Email Address
@@ -86,16 +101,11 @@ const LoginPage = () => {
                 display="block"
                 w="100%"
                 isLoading={status === "pending"}
-                loadingText="Logging in..."
+                loadingText="Registering..."
                 mb={2}
               >
-                Login
+                Register
               </Button>
-              <Box>
-                <Box fontSize="xs" color="red.400" textAlign="center">
-                  {error?.message && "Invalid Credentials"}
-                </Box>
-              </Box>
             </Box>
           </Stack>
         </form>
