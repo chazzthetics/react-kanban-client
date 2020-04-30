@@ -19,6 +19,8 @@ const PriorityBadge = ({ taskId }) => {
       bg={priorities[priority].color}
       color="white"
       alignSelf="flex-end"
+      fontWeight={600}
+      borderRadius={3}
     >
       {priorities[priority].name}
     </Badge>

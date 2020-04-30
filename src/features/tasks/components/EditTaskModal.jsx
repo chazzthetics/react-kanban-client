@@ -22,9 +22,10 @@ import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
 import EditTaskModalLabelList from "./EditTaskModalLabelList";
 import EditTaskModalDueDate from "./EditTaskModalDueDate";
+import EditTaskModalPriority from "./EditTaskModalPriority";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  const { labels, due_date } = useSelector(state =>
+  const { labels, due_date, priority } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
@@ -51,6 +52,10 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
               {due_date && <EditTaskModalDueDate taskId={taskId} />}
             </Flex>
 
+            <Flex w="72%" pl={10} ml={-1} pb={4}>
+              {priority && <EditTaskModalPriority taskId={taskId} />}
+            </Flex>
+
             <Box w="72%">
               <EditTaskDescription taskId={taskId} />
               <TaskActivityFeed taskId={taskId} />
@@ -65,7 +70,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
               bottom={-4}
               zIndex={2}
             >
-              <Flex flexDir="column">
+              <Flex flexDir="column" pt={"2px"}>
                 <Heading
                   as="h3"
                   fontSize="0.8rem"

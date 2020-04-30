@@ -13,7 +13,7 @@ import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import ColoredButton from "../../../components/ColoredButton";
 
-const PriorityPopover = ({ taskId }) => {
+const PriorityPopover = ({ taskId, trigger }) => {
   const priorities = useSelector(state => prioritiesSelectors.selectAll(state));
   const { priority: taskPriority } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
@@ -34,7 +34,13 @@ const PriorityPopover = ({ taskId }) => {
 
   return (
     <PopoverContainer
-      trigger={<SideModalTrigger icon={FiAlertCircle} label="Priority" />}
+      trigger={
+        trigger ? (
+          trigger
+        ) : (
+          <SideModalTrigger icon={FiAlertCircle} label="Priority" />
+        )
+      }
       heading="Change Priority"
       footer={
         <ColoredButton color="gray.400" onClick={handleRemovePriority}>
@@ -74,7 +80,8 @@ const PriorityPopover = ({ taskId }) => {
 };
 
 PriorityPopover.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
+  trigger: PropTypes.element
 };
 
 export default React.memo(PriorityPopover);
