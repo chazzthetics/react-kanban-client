@@ -42,7 +42,7 @@ const BoardBox = ({ board }) => {
         zIndex={4}
         boxShadow="md"
         _hover={{ opacity: 0.9 }}
-        transition="opacity 100ms ease-in, transform 100ms ease-in"
+        transition="opacity 130ms ease-in, transform 130ms ease-in"
       >
         <PseudoBox
           w="100%"
@@ -60,8 +60,6 @@ const BoardBox = ({ board }) => {
           color="white"
           fontSize="1rem"
           fontWeight={600}
-          h="100%"
-          w="100%"
           py={1}
           px={2}
           position="absolute"
@@ -76,9 +74,6 @@ const BoardBox = ({ board }) => {
         </Text>
         {board.is_starred && (
           <Box
-            as={FiStar}
-            color="yellow.400"
-            aria-label="Star"
             position="absolute"
             bottom={2}
             right={2}
@@ -87,7 +82,17 @@ const BoardBox = ({ board }) => {
               e.preventDefault();
               handleToggleStar(board.uuid);
             }}
-          />
+          >
+            <PseudoBox
+              as={FiStar}
+              color="yellow.400"
+              aria-label="Star"
+              _hover={{
+                transform: "rotate(180deg) scale(1.3)"
+              }}
+              transition="transform 300ms ease-in-out"
+            />
+          </Box>
         )}
       </PseudoBox>
     </Link>

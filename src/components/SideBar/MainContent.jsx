@@ -57,7 +57,7 @@ const MainContent = ({
         />
       </Box>
 
-      <ActivityFeed onShow={onShowActivity} count={6} />
+      <ActivityFeed onShow={onShowActivity} count={7} />
     </>
   );
 };

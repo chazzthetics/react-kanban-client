@@ -13,7 +13,7 @@ const TaskLabelList = ({ taskId, ...rest }) => {
   );
 
   return taskLabels && taskLabels.length > 0 ? (
-    <Stack isInline spacing={1}>
+    <Stack isInline spacing={1} mb={1}>
       {taskLabels.map(label => (
         <TaskLabelItem
           key={label}
