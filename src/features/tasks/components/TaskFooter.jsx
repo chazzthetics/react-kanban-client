@@ -22,9 +22,13 @@ const TaskFooter = ({ taskId }) => {
     [due_date, description, attachment, checklist, priority]
   );
 
+  const checklistItemsCount = checklist && checklist.items.length;
+  const isDoneCount =
+    checklist && checklist.items.filter(item => item.completed).length;
+
   return (
     hasExtra && (
-      <Stack isInline pt={1} spacing={3} alignItems="flex-end">
+      <Stack isInline pt={1} alignItems="flex-end">
         <DueDateTag taskId={taskId} />
         {description && (
           <Box className="Description" as={FiAlignLeft} fontSize="1rem" />
@@ -38,11 +42,11 @@ const TaskFooter = ({ taskId }) => {
             </Text>
           </Flex>
         )}
-        {checklist && (
+        {checklist && checklistItemsCount > 0 && (
           <Flex className="CheckList" align="center">
             <Box as={FiCheckSquare} size="0.9rem" mr={1} />
             <Text fontSize="0.8rem" color="gray.800">
-              0/2
+              {isDoneCount}/{checklistItemsCount}
             </Text>
           </Flex>
         )}

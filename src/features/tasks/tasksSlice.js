@@ -166,6 +166,44 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    checklistAdded(state, action) {
+      const {
+        taskId,
+        checklist,
+        status = "success",
+        error = null
+      } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          checklist: { title: checklist.title, list: [] }
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
+    itemAddedToChecklist(state, action) {
+      const { taskId, item, status = "success", error = null } = action.payload;
+      state.entities[taskId].checklist.items.push(item);
+      state.status = status;
+      state.error = error;
+    },
+    checklistItemToggled(state, action) {
+      const {
+        taskId,
+        itemId,
+        status = "success",
+        error = null
+      } = action.payload;
+      const item = state.entities[taskId].checklist.items.find(
+        item => item.uuid === itemId
+      );
+      if (item) {
+        item.completed = !item.completed;
+      }
+      state.status = status;
+      state.error = error;
+    },
     reordered(state, action) {
       const { newOrder, status = "success", error = null } = action.payload;
       tasksAdapter.updateMany(
@@ -203,6 +241,7 @@ const tasksSlice = createSlice({
             ...task,
             labels: task.labels.map(label => label.id),
             priority: task.priority[0] ? task.priority[0].id : null,
+            checklist: { ...task.checklist, items: task.checklist.items },
             activities: []
           }))
       );
@@ -280,6 +319,9 @@ export const {
   priorityRemoved,
   dueDateAdded,
   dueDateRemoved,
+  checklistAdded,
+  itemAddedToChecklist,
+  checklistItemToggled,
   reordered,
   reorderedBetween,
   sortedBy
@@ -456,6 +498,33 @@ export const removeDueDate = ({ taskId }) => async (dispatch, getState) => {
     }
   } catch (ex) {
     dispatch(handleError(ex, addDueDate, { taskId, due_date }));
+  }
+};
+
+export const addChecklist = ({ taskId, checklist }) => async dispatch => {
+  try {
+    dispatch(checklistAdded({ taskId, checklist }));
+    await tasksService.addChecklist(taskId, checklist);
+  } catch (ex) {
+    //TODO:
+  }
+};
+
+export const addItemToChecklist = ({ taskId, item }) => async dispatch => {
+  try {
+    dispatch(itemAddedToChecklist({ taskId, item }));
+    await tasksService.addChecklistItem(taskId, item);
+  } catch (ex) {
+    //TODO:
+  }
+};
+
+export const toggleChecklistItem = ({ taskId, itemId }) => async dispatch => {
+  try {
+    dispatch(checklistItemToggled({ taskId, itemId }));
+    await tasksService.toggleChecklistItem(itemId);
+  } catch (ex) {
+    //TODO:
   }
 };
 

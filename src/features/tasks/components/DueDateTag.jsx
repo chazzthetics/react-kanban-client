@@ -19,7 +19,7 @@ const DueDateTag = ({ taskId }) => {
       size="sm"
       display="flex"
       alignItems="center"
-      mr={3}
+      mr={1}
       onClick={e => e.stopPropagation()}
     >
       <Icon name="time" size="0.875rem" mr={1} />

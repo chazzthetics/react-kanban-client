@@ -27,7 +27,7 @@ import EditTaskModalDueDate from "./EditTaskModalDueDate";
 import EditTaskModalPriority from "./EditTaskModalPriority";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  const { labels, due_date, priority } = useSelector(state =>
+  const { labels, due_date, priority, checklist } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
@@ -60,7 +60,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
 
             <Box w="72%">
               <EditTaskDescription taskId={taskId} />
-              <EditTaskChecklist taskId={taskId} />
+              {checklist && <EditTaskChecklist taskId={taskId} />}
               <TaskActivityFeed taskId={taskId} />
             </Box>
             <Box

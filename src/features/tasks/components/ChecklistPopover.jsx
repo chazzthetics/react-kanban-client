@@ -1,22 +1,33 @@
 import React, { useCallback, useRef } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { FormControl, FormLabel, Input } from "@chakra-ui/core";
+import { addChecklist } from "../tasksSlice";
+import { makeChecklist } from "../../../utils/makeEntity";
 import { FiCheckSquare } from "react-icons/fi";
+import { FormControl, FormLabel, Input, useDisclosure } from "@chakra-ui/core";
 import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import SaveButton from "../../../components/SaveButton";
 
 const ChecklistPopover = ({ taskId, trigger }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialFocusRef = useRef(null);
+
   const { register, handleSubmit } = useForm({
     defaultValues: { title: "Checklist" }
   });
 
-  const onSubmit = useCallback(data => {
-    console.log(data);
-  }, []);
+  const dispatch = useDispatch();
 
-  const initialFocusRef = useRef(null);
+  const onSubmit = useCallback(
+    data => {
+      const checklist = makeChecklist(data.title);
+      dispatch(addChecklist({ taskId, checklist }));
+      onClose();
+    },
+    [dispatch, taskId, onClose]
+  );
 
   return (
     <PopoverContainer
@@ -29,6 +40,9 @@ const ChecklistPopover = ({ taskId, trigger }) => {
       }
       heading="Add Checklist"
       initialFocusRef={initialFocusRef}
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl mb={2}>

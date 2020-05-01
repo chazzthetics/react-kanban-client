@@ -42,3 +42,18 @@ export const makeTask = (title, position) => {
     created_at: Date.now()
   };
 };
+
+export const makeChecklist = title => {
+  return {
+    uuid: nanoid(),
+    title
+  };
+};
+
+export const makeChecklistItem = title => {
+  return {
+    uuid: nanoid(),
+    title,
+    completed: false
+  };
+};
