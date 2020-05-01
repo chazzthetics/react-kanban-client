@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -54,6 +54,15 @@ const EditTaskChecklist = ({ taskId }) => {
     [dispatch, taskId]
   );
 
+  console.log(checklist);
+
+  const calculateProgressValue = useMemo(() => {
+    const totalItems = checklist.items.length;
+    const completedItems = checklist.items.filter(item => item.completed)
+      .length;
+    return totalItems ? (completedItems / totalItems) * 100 : 0;
+  }, [checklist.items]);
+
   return (
     <Box pt={4} pb={6}>
       <Flex align="flex-start">
@@ -90,7 +99,12 @@ const EditTaskChecklist = ({ taskId }) => {
           0%
         </Box>
         <Box w="100%" mr={1}>
-          <Progress size="sm" borderRadius={3} value={0} bg="gray.200" />
+          <Progress
+            size="sm"
+            borderRadius={3}
+            value={calculateProgressValue}
+            bg="gray.200"
+          />
         </Box>
       </Flex>
 
