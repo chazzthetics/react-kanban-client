@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import PrivateRoute from "../features/auth/components/PrivateRoute";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
@@ -17,12 +18,12 @@ const Routes = () => {
       <Route exact path={"/register"}>
         <RegisterPage />
       </Route>
-      <Route exact path={`/:username/boards`}>
+      <PrivateRoute exact path={`/:username/boards`}>
         <Dashboard />
-      </Route>
-      <Route exact path={`/b/:uuid/:slug`}>
+      </PrivateRoute>
+      <PrivateRoute exact path={`/b/:uuid/:slug`}>
         <AppContainer />
-      </Route>
+      </PrivateRoute>
     </Switch>
   );
 };

@@ -28,12 +28,11 @@ const AppBar = ({ dashboard = false }) => {
 
   const background = useSelector(selectBoardBackground);
 
-  // FIXME: change
+  // FIXME: change/move
   const dispatch = useDispatch();
-  const handleTempLogout = () => {
+  const handleTempLogout = React.useCallback(() => {
     dispatch(logout());
-    window.location.replace("/login");
-  };
+  }, [dispatch]);
 
   return (
     <Box

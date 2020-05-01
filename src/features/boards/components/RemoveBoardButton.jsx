@@ -1,21 +1,27 @@
 import React, { useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectCurrentBoard,
   selectBackgroundIsImage,
   removeBoard
 } from "../boardsSlice";
+import { dashboard } from "../../../utils/getPath";
 import IconButton from "../../../components/IconButton";
 
 const RemoveBoardButton = () => {
+  const { user } = useSelector(state => state.auth);
   const board = useSelector(selectCurrentBoard);
   const isImage = useSelector(selectBackgroundIsImage);
 
   const dispatch = useDispatch();
 
+  const history = useHistory();
+
   const handleRemoveBoard = useCallback(() => {
     dispatch(removeBoard(board.uuid));
-  }, [dispatch, board]);
+    history.replace(dashboard(user));
+  }, [dispatch, board, history, user]);
 
   return (
     <IconButton
@@ -28,4 +34,4 @@ const RemoveBoardButton = () => {
   );
 };
 
-export default RemoveBoardButton;
+export default React.memo(RemoveBoardButton);

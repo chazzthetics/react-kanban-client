@@ -60,13 +60,8 @@ const boardsSlice = createSlice({
       const { boardId, status = "success", error = null } = action.payload;
       state.status = status;
       state.error = error;
+      state.current = "";
       boardsAdapter.removeOne(state, boardId);
-      boardsAdapter.updateOne(state, {
-        id: state.current,
-        changes: { is_current: true }
-      });
-
-      state.current = state.ids[state.ids.length - 1] || "";
     },
     cleared(state, action) {
       const { boardId, status = "success", error = null } = action.payload;
@@ -157,11 +152,7 @@ const boardsSlice = createSlice({
           columns: board.columns.map(column => column.uuid)
         }));
         boardsAdapter.setAll(state, boards);
-        state.current = "";
-        // state.current =
-        //   state.ids.find(id => state.entities[id].is_current) ||
-        //   state.ids[0] ||
-        //   "";
+        state.current = action.meta.arg || "";
         state.status = "success";
       }
     },
@@ -286,12 +277,7 @@ export const removeBoard = boardId => async (dispatch, getState) => {
 
       dispatch(removed({ boardId, columns: board.columns, tasks }));
       await boardsService.remove(boardId);
-
-      if (getState().boards.ids.length === 0) {
-        dispatch({ type: "activities/cleared" });
-      } else {
-        dispatch(fetchActivities());
-      }
+      dispatch({ type: "activities/cleared" });
     }
   } catch (ex) {
     dispatch(handleError(ex, created, { board }));

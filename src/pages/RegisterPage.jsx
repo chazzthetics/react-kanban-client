@@ -1,8 +1,11 @@
 import React, { useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { login, register as registerUser } from "../features/auth/authSlice";
+import {
+  authenticate,
+  register as registerUser
+} from "../features/auth/authSlice";
 import { dashboard } from "../utils/getPath";
 import {
   Box,
@@ -16,9 +19,7 @@ import {
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const { status, error, user } = useSelector(state => state.auth);
-
-  const history = useHistory();
+  const { status, access_token, user } = useSelector(state => state.auth);
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -41,16 +42,14 @@ const LoginPage = () => {
   );
 
   useEffect(() => {
-    if (localStorage.getItem("access_token")) {
-      dispatch(login());
+    if (status === "idle" && access_token) {
+      dispatch(authenticate(access_token));
     }
-  }, [dispatch]);
+  }, [dispatch, status, access_token]);
 
-  useEffect(() => {
-    if (user) {
-      history.replace(dashboard(user));
-    }
-  }, [user, history]);
+  if (user) {
+    return <Redirect to={dashboard(user)} push={true} />;
+  }
 
   return (
     <Box bg="gray.200" h="100vh">

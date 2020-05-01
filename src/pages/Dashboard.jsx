@@ -1,36 +1,17 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { login, hydrate } from "../features/auth/authSlice";
+import React from "react";
+import { useSelector } from "react-redux";
 import { boardsSelectors } from "../features/boards/boardsSlice";
-import { labelsSelectors } from "../features/labels/labelsSlice";
 import { FiStar, FiUser } from "react-icons/fi";
-import { Box, Flex, Grid, Spinner } from "@chakra-ui/core";
+import { Box, Grid } from "@chakra-ui/core";
+import Spinner from "../components/Spinner";
 import AppBar from "../components/AppBar";
 import BoardGrid from "../features/boards/components/BoardGrid";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  const { user, isAuthenticated } = useSelector(state => state.auth);
-
   const { status } = useSelector(state => state.boards);
-  const labels = useSelector(state => labelsSelectors.selectTotal(state));
 
   const boards = useSelector(state => boardsSelectors.selectAll(state));
   const starredBoards = boards.filter(board => board.is_starred);
-
-  useEffect(() => {
-    if (!user && localStorage.getItem("access_token")) {
-      dispatch(login());
-    }
-  }, [user, dispatch]);
-
-  useEffect(() => {
-    if (isAuthenticated && !labels) {
-      dispatch(hydrate());
-    } else {
-      return;
-    }
-  }, [dispatch, isAuthenticated, labels]);
 
   return (
     <Box
@@ -40,17 +21,7 @@ const Dashboard = () => {
       animation="200ms ease-in fadein"
     >
       <AppBar dashboard={true} />
-      {status === "pending" && (
-        <Flex justify="center" align="center" h="85vh">
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="gray.500"
-            size="xl"
-          />
-        </Flex>
-      )}
+      {status === "pending" && <Spinner />}
       {status === "success" && (
         <Grid
           templateColumns={"1fr 3fr"}

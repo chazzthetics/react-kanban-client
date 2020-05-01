@@ -1,16 +1,14 @@
 import React, { useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { login } from "../features/auth/authSlice";
+import { login, authenticate } from "../features/auth/authSlice";
 import { dashboard } from "../utils/getPath";
 import {
   Box,
   Flex,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
   Input,
   Button,
   Stack
@@ -18,9 +16,11 @@ import {
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const { status, error, user } = useSelector(state => state.auth);
+  const { status, access_token, error, user, isAuthenticated } = useSelector(
+    state => state.auth
+  );
 
-  const history = useHistory();
+  const location = useLocation();
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -38,16 +38,18 @@ const LoginPage = () => {
   );
 
   useEffect(() => {
-    if (localStorage.getItem("access_token")) {
-      dispatch(login());
+    if (status === "idle" && access_token) {
+      dispatch(authenticate(access_token));
     }
-  }, [dispatch]);
+  }, [dispatch, status, access_token]);
 
-  useEffect(() => {
-    if (user) {
-      history.replace(dashboard(user));
-    }
-  }, [user, history]);
+  if (isAuthenticated && location.state && location.state.from.pathname) {
+    return <Redirect push={true} to={location.state.from.pathname} />;
+  }
+
+  if (isAuthenticated) {
+    return <Redirect push={true} to={dashboard(user)} />;
+  }
 
   return (
     <Box bg="gray.200" h="100vh">
@@ -64,6 +66,7 @@ const LoginPage = () => {
                 size="sm"
                 name="email"
                 ref={register({ required: true })}
+                autoComplete="username"
               />
             </FormControl>
             <FormControl>
@@ -75,6 +78,7 @@ const LoginPage = () => {
                 id="password"
                 size="sm"
                 name="password"
+                autoComplete="current-password"
                 ref={register({ required: true })}
               />
             </FormControl>

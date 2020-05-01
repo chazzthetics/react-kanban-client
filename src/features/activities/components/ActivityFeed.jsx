@@ -2,8 +2,9 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { activitiesSelectors, clearActivity } from "../activitiesSlice";
-import { Flex, Box, Stack, Text, Spinner } from "@chakra-ui/core";
+import { Box, Stack, Text } from "@chakra-ui/core";
 import { FiList } from "react-icons/fi";
+import Spinner from "../../../components/Spinner";
 import ActivityList from "./ActivityList";
 import SideBarButton from "../../../components/SideBar/SideBarButton";
 
@@ -30,15 +31,7 @@ const ActivityFeed = ({ onShow, count, showLoader = true }) => {
       )}
 
       {status === "pending" && showLoader ? (
-        <Flex align="center" justify="center" h="100%">
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-          />
-        </Flex>
+        <Spinner h="100%" />
       ) : (
         <ActivityList count={count} activities={activities} />
       )}

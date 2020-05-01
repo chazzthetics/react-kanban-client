@@ -1,7 +1,16 @@
 export const getInitials = name => {
-  const split = name.split(" ");
-  const first = split[0][0];
-  const last = split[1][0];
+  let split = name.split(" ");
+  let first;
+  let last;
 
-  return `${first} ${last}`;
+  if (split.length >= 2) {
+    first = split[0][0];
+    last = split[1][0];
+  } else {
+    split = name.split("");
+    first = split[0];
+    last = split[1];
+  }
+
+  return `${first.toUpperCase()} ${last.toUpperCase()}`;
 };

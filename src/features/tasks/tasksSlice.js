@@ -210,12 +210,20 @@ const tasksSlice = createSlice({
       tasksAdapter.setAll(state, tasks);
       state.status = "success";
     },
+    [fetchTaskActivities.pending]: state => {
+      if (state.status === "success") {
+        state.status = "pending";
+      }
+    },
     [fetchTaskActivities.fulfilled]: (state, action) => {
-      const { taskId, activities } = action.payload;
-      tasksAdapter.updateOne(state, {
-        id: taskId,
-        changes: { activities }
-      });
+      if (state.status === "pending") {
+        const { taskId, activities } = action.payload;
+        tasksAdapter.updateOne(state, {
+          id: taskId,
+          changes: { activities }
+        });
+        state.status = "success";
+      }
     },
     [fetchMostRecentActivity.fulfilled]: (state, action) => {
       const { recordable_type, description, changes } = action.payload;

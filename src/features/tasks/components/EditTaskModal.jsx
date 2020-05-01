@@ -14,10 +14,12 @@ import {
 } from "@chakra-ui/core";
 import EditTaskTitle from "./EditTaskTitle";
 import EditTaskDescription from "./EditTaskDescription";
+import EditTaskChecklist from "./EditTaskChecklist";
 import TaskActivityFeed from "./TaskActivityFeed";
 import DueDatePopover from "./DueDatePopover";
 import RemoveTaskPopover from "./RemoveTaskPopover";
 import MoveTaskPopover from "./MoveTaskPopover";
+import ChecklistPopover from "./ChecklistPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
 import EditTaskModalLabelList from "./EditTaskModalLabelList";
@@ -58,6 +60,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
 
             <Box w="72%">
               <EditTaskDescription taskId={taskId} />
+              <EditTaskChecklist taskId={taskId} />
               <TaskActivityFeed taskId={taskId} />
             </Box>
             <Box
@@ -82,6 +85,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
                 <Flex flexDir="column" my={2}>
                   <LabelsPopover taskId={taskId} />
                   <PriorityPopover taskId={taskId} />
+                  <ChecklistPopover taskId={taskId} />
                   <DueDatePopover taskId={taskId} />
                 </Flex>
 
