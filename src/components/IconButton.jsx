@@ -60,7 +60,7 @@ const IconButton = forwardRef(
 );
 
 IconButton.propTypes = {
-  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   label: PropTypes.string.isRequired,
   text: PropTypes.string,
   isImage: PropTypes.bool,

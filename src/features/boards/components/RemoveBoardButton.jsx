@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -7,7 +7,10 @@ import {
   removeBoard
 } from "../boardsSlice";
 import { dashboard } from "../../../utils/getPath";
+import { Flex, Text } from "@chakra-ui/core";
 import IconButton from "../../../components/IconButton";
+import PopoverContainer from "../../../components/PopoverContainer";
+import RemoveButton from "../../../components/RemoveButton";
 
 const RemoveBoardButton = () => {
   const { user } = useSelector(state => state.auth);
@@ -24,14 +27,25 @@ const RemoveBoardButton = () => {
   }, [dispatch, board, history, user]);
 
   return (
-    <IconButton
-      icon="delete"
-      label="Delete Board"
-      onClick={handleRemoveBoard}
-      isImage={isImage}
-      mr={1}
-    />
+    <PopoverContainer
+      trigger={
+        <IconButton
+          icon="delete"
+          label="Delete Board"
+          isImage={isImage}
+          mr={1}
+        />
+      }
+      heading="Remove Board?"
+    >
+      <Flex flexDir="column" align="stretch" justify="space-between">
+        <Text fontSize="0.875rem" color="gray.600" mb={2}>
+          Are you sure you want to remove this board? This action is permanent.
+        </Text>
+        <RemoveButton onClick={handleRemoveBoard} />
+      </Flex>
+    </PopoverContainer>
   );
 };
 
-export default React.memo(RemoveBoardButton);
+export default memo(RemoveBoardButton);

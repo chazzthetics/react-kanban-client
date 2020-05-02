@@ -9,7 +9,7 @@ import TaskList from "../../tasks/components/TaskList";
 const ColumnItem = ({ columnId }) => {
   return (
     <PseudoBox
-      className="ColumnItem "
+      className="ColumnItem"
       w="17rem"
       bg="#ebecf0"
       mx={2}
@@ -23,10 +23,10 @@ const ColumnItem = ({ columnId }) => {
         <Droppable droppableId={columnId} type="task">
           {provided => (
             <Flex
-              className="scrollbar"
-              overflowY="auto"
-              overflowX="hidden"
-              maxH="80vh"
+              // className="scrollbar"
+              // overflowY="auto"
+              // overflowX="hidden"
+              // maxH="80vh"
               direction="column"
               minH="1px"
               ref={provided.innerRef}
@@ -48,3 +48,5 @@ ColumnItem.propTypes = {
 };
 
 export default memo(ColumnItem);
+
+//FIXME: scrollbar and overflow

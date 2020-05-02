@@ -19,11 +19,11 @@ const RemoveTaskPopover = ({ taskId, columnId }) => {
       trigger={<SideModalTrigger icon="delete" label="Remove" />}
       heading="Remove Card?"
     >
-      <Flex align="center" justify="space-between">
-        <RemoveButton onClick={handleRemoveTask} />
-        <Text fontSize="0.875rem" color="gray.600" w="66%">
-          Are you sure you want to remove this card?
+      <Flex flexDir="column" align="stretch" justify="space-between">
+        <Text fontSize="0.875rem" color="gray.600" mb={2}>
+          Are you sure you want to remove this card? This action is permanent.
         </Text>
+        <RemoveButton onClick={handleRemoveTask} />
       </Flex>
     </PopoverContainer>
   );
