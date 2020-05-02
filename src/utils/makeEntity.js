@@ -46,7 +46,8 @@ export const makeTask = (title, position) => {
 export const makeChecklist = title => {
   return {
     uuid: nanoid(),
-    title
+    title,
+    items: []
   };
 };
 

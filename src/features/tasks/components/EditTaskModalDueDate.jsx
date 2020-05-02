@@ -8,7 +8,7 @@ import {
   getDueDateColor
 } from "../../../utils/getDueDateColor";
 import { Box, Flex, Button, Text, Badge, Checkbox } from "@chakra-ui/core";
-import DueDatePopover from "../components/DueDatePopover";
+import DueDatePopover from "./DueDatePopover";
 
 const EditTaskModalDueDate = ({ taskId }) => {
   const { due_date, completed } = useSelector(state =>

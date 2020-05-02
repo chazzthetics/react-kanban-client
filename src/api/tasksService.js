@@ -46,6 +46,9 @@ export const tasksService = {
   addChecklist: (taskId, checklist) => {
     return axios.post(`/tasks/${taskId}/checklist`, checklist);
   },
+  removeChecklist: taskId => {
+    return axios.delete(`/tasks/${taskId}/checklist`);
+  },
   addChecklistItem: (taskId, item) => {
     return axios.post(`/tasks/${taskId}/checklist/items`, item);
   },

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { useHistory, Redirect } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { selectCurrentBoard } from "../features/boards/boardsSlice";
 import { getBackground } from "../utils/getBackground";
 import { board as boardPath } from "../utils/getPath";

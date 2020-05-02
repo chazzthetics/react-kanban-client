@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { FiList } from "react-icons/fi";
-import { Flex, Box, Heading, Button } from "@chakra-ui/core";
+import { Flex, Box, Heading } from "@chakra-ui/core";
 import ActivityList from "../../activities/components/ActivityList";
+import LightButton from "../../../components/LightButton";
 import Spinner from "../../../components/Spinner";
 
 import { fetchTaskActivities, tasksSelectors } from "../tasksSlice";
@@ -22,6 +23,7 @@ const TaskActivityFeed = ({ taskId }) => {
   const { status } = useSelector(state => state.tasks);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchTaskActivities(taskId));
   }, [dispatch, taskId]);
@@ -42,18 +44,10 @@ const TaskActivityFeed = ({ taskId }) => {
           >
             Activity
           </Heading>
-          <Button
-            size="sm"
-            fontWeight={400}
-            h="2rem"
-            fontSize="0.875rem"
-            backgroundColor="#ebecf0"
-            mr={1}
-            _focus={{ boxShadow: "none" }}
+          <LightButton
+            label={showFeed ? "Hide Details" : "Show Details"}
             onClick={handleShowFeed}
-          >
-            {showFeed ? "Hide Details" : "Show Details"}
-          </Button>
+          />
         </Flex>
         <Box ml={"-46px"}>
           {status === "pending" ? (

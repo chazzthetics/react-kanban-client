@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { prioritiesSelectors } from "../prioritiesSlice";
 import { tasksSelectors } from "../../tasks/tasksSlice";
-import { Badge } from "@chakra-ui/core";
+import { Box, Badge } from "@chakra-ui/core";
 
 const PriorityBadge = ({ taskId }) => {
   const priorities = useSelector(state =>
@@ -14,17 +14,17 @@ const PriorityBadge = ({ taskId }) => {
   );
 
   return priority ? (
-    <Badge
-      fontSize="0.675rem"
-      bg={priorities[priority].color}
-      color="white"
-      alignSelf="flex-end"
-      fontWeight={600}
-      borderRadius={3}
-      mr={2}
-    >
-      {priorities[priority].name}
-    </Badge>
+    <Box pt={1} mr={2} display="flex" alignItems="flex-end">
+      <Badge
+        fontSize="0.675rem"
+        bg={priorities[priority].color}
+        color="white"
+        fontWeight={600}
+        borderRadius={3}
+      >
+        {priorities[priority].name}
+      </Badge>
+    </Box>
   ) : null;
 };
 

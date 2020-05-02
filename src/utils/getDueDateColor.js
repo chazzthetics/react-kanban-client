@@ -23,7 +23,7 @@ export const getDueDateColor = date => {
   if (isTomorrow(dueDate)) return "orange";
   if (isNextWeek) return "blue";
 
-  return "green";
+  return "gray";
 };
 
 export const getDueDateMessage = date => {

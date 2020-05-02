@@ -31,7 +31,7 @@ export const getActivityMessage = activity => {
       if (recordable_type === "App\\Board") {
         return `changed the description of this board`;
       }
-      return `changed the description of card ${changes.before.title}`;
+      return `changed the description of ${changes.before.title}`;
     case "removed":
       if (getEntityType(recordable_type) === "task") {
         return `removed ${changes.after.task_title} from ${changes.after.column_title}`;
@@ -66,6 +66,10 @@ export const getActivityMessage = activity => {
       return !changes.after.priority
         ? `removed the priority from ${changes.after.title}`
         : `changed the priority of ${changes.after.title} to ${changes.after.priority}`;
+    case "checklist_added":
+      return `added ${changes.after.checklist} to ${changes.after.title}`;
+    case "checklist_removed":
+      return `removed the checklist from ${changes.after.title}`;
     default:
       throw new Error(`Unknown event '${description}'`);
   }
@@ -99,6 +103,10 @@ export const getTaskActivityMessage = activity => {
       return !changes.after.priority
         ? `removed the priority of this card`
         : `changed the priority of this card to ${changes.after.priority}`;
+    case "checklist_added":
+      return `added ${changes.after.checklist} to this card`;
+    case "checklist_removed":
+      return `removed the checklist from this card`;
     default:
       throw new Error(`Unknown event ${description}`);
   }

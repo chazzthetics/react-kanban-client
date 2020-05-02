@@ -176,7 +176,18 @@ const tasksSlice = createSlice({
       tasksAdapter.updateOne(state, {
         id: taskId,
         changes: {
-          checklist: { title: checklist.title, list: [] }
+          checklist: { ...checklist, items: [] }
+        }
+      });
+      state.status = status;
+      state.error = error;
+    },
+    checklistRemoved(state, action) {
+      const { taskId, status = "success", error = null } = action.payload;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: {
+          checklist: null
         }
       });
       state.status = status;
@@ -241,7 +252,12 @@ const tasksSlice = createSlice({
             ...task,
             labels: task.labels.map(label => label.id),
             priority: task.priority[0] ? task.priority[0].id : null,
-            checklist: { ...task.checklist, items: task.checklist.items },
+            checklist: task.checklist
+              ? {
+                  ...task.checklist,
+                  items: task.checklist ? task.checklist.items : []
+                }
+              : null,
             activities: []
           }))
       );
@@ -320,6 +336,7 @@ export const {
   dueDateAdded,
   dueDateRemoved,
   checklistAdded,
+  checklistRemoved,
   itemAddedToChecklist,
   checklistItemToggled,
   reordered,
@@ -505,8 +522,22 @@ export const addChecklist = ({ taskId, checklist }) => async dispatch => {
   try {
     dispatch(checklistAdded({ taskId, checklist }));
     await tasksService.addChecklist(taskId, checklist);
+    dispatch(fetchMostRecentActivity());
   } catch (ex) {
-    //TODO:
+    dispatch(handleError(ex, removeChecklist, { taskId }));
+  }
+};
+
+export const removeChecklist = ({ taskId }) => async (dispatch, getState) => {
+  const { checklist } = getPreviousValue(getState(), "tasks", taskId);
+  try {
+    if (checklist) {
+      dispatch(checklistRemoved({ taskId }));
+      await tasksService.removeChecklist(taskId);
+      dispatch(fetchMostRecentActivity());
+    }
+  } catch (ex) {
+    dispatch(handleError(ex, addChecklist, { taskId, checklist }));
   }
 };
 
