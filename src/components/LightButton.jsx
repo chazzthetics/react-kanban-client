@@ -23,7 +23,7 @@ const LightButton = ({ label, onClick, ...rest }) => {
 
 LightButton.propTypes = {
   label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func
 };
 
 export default LightButton;

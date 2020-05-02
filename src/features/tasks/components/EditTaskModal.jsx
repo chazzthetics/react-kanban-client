@@ -28,7 +28,7 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
   const hasLabels = labels.length > 0;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} preserveScrollBarGap={true}>
       <ModalOverlay />
       <ModalContent maxW="48rem" minH="43rem" borderRadius={3} bg="#f4f5f7">
         <ModalCloseButton

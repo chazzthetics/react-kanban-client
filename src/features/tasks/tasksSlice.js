@@ -586,7 +586,7 @@ export const toggleChecklistItem = ({ taskId, itemId }) => async dispatch => {
     dispatch(checklistItemToggled({ taskId, itemId }));
     await tasksService.toggleChecklistItem(itemId);
   } catch (ex) {
-    //TODO:
+    dispatch(handleError(ex, checklistItemToggled, { taskId, itemId }));
   }
 };
 
