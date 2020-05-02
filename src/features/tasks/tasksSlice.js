@@ -199,6 +199,19 @@ const tasksSlice = createSlice({
       state.status = status;
       state.error = error;
     },
+    itemRemovedFromChecklist(state, action) {
+      const {
+        taskId,
+        itemId,
+        status = "success",
+        error = null
+      } = action.payload;
+      const items = state.entities[taskId].checklist.items;
+      const itemIndex = items.findIndex(item => item.uuid === itemId);
+      items.splice(itemIndex, 1);
+      state.status = status;
+      state.error = error;
+    },
     checklistItemToggled(state, action) {
       const {
         taskId,
@@ -338,6 +351,7 @@ export const {
   checklistAdded,
   checklistRemoved,
   itemAddedToChecklist,
+  itemRemovedFromChecklist,
   checklistItemToggled,
   reordered,
   reorderedBetween,
@@ -514,7 +528,7 @@ export const removeDueDate = ({ taskId }) => async (dispatch, getState) => {
       dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
-    dispatch(handleError(ex, addDueDate, { taskId, due_date }));
+    dispatch(handleError(ex, dueDateAdded, { taskId, due_date }));
   }
 };
 
@@ -524,7 +538,7 @@ export const addChecklist = ({ taskId, checklist }) => async dispatch => {
     await tasksService.addChecklist(taskId, checklist);
     dispatch(fetchMostRecentActivity());
   } catch (ex) {
-    dispatch(handleError(ex, removeChecklist, { taskId }));
+    dispatch(handleError(ex, checklistRemoved, { taskId }));
   }
 };
 
@@ -537,7 +551,7 @@ export const removeChecklist = ({ taskId }) => async (dispatch, getState) => {
       dispatch(fetchMostRecentActivity());
     }
   } catch (ex) {
-    dispatch(handleError(ex, addChecklist, { taskId, checklist }));
+    dispatch(handleError(ex, checklistAdded, { taskId, checklist }));
   }
 };
 
@@ -546,7 +560,24 @@ export const addItemToChecklist = ({ taskId, item }) => async dispatch => {
     dispatch(itemAddedToChecklist({ taskId, item }));
     await tasksService.addChecklistItem(taskId, item);
   } catch (ex) {
-    //TODO:
+    dispatch(
+      handleError(ex, itemRemovedFromChecklist, { taskId, itemId: item.uuid })
+    );
+  }
+};
+
+export const removeItemFromChecklist = ({ taskId, itemId }) => async (
+  dispatch,
+  getState
+) => {
+  const { checklist } = getPreviousValue(getState(), "tasks", taskId);
+  const item = checklist.items.find(item => item.uuid === itemId);
+
+  try {
+    dispatch(itemRemovedFromChecklist({ taskId, itemId }));
+    await tasksService.removeChecklistItem(itemId);
+  } catch (ex) {
+    dispatch(handleError(ex, itemAddedToChecklist, { taskId, item }));
   }
 };
 

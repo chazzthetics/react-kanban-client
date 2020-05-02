@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { toggleChecklistItem } from "../tasksSlice";
+import { toggleChecklistItem, removeItemFromChecklist } from "../tasksSlice";
 import { ListItem, Flex, Checkbox, Text, IconButton } from "@chakra-ui/core";
 
 const ChecklistItem = ({ taskId, item }) => {
@@ -10,6 +10,10 @@ const ChecklistItem = ({ taskId, item }) => {
   const handleToggleComplete = useCallback(() => {
     dispatch(toggleChecklistItem({ taskId, itemId: item.uuid }));
   }, [dispatch, taskId, item]);
+
+  const handleRemove = useCallback(() => {
+    dispatch(removeItemFromChecklist({ taskId, itemId: item.uuid }));
+  }, [dispatch, taskId, item.uuid]);
 
   return (
     <ListItem key={item.uuid}>
@@ -38,6 +42,7 @@ const ChecklistItem = ({ taskId, item }) => {
             _focus={{ boxShadow: "none" }}
             _hover={{ opacity: 0.6 }}
             transition="opacity 100ms ease-in-out"
+            onClick={handleRemove}
           />
         </Flex>
       </Flex>

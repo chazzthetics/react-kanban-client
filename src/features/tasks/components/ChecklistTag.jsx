@@ -22,13 +22,12 @@ const ChecklistTag = ({ taskId }) => {
   return items && items.length > 0 ? (
     <Box pt={1} mr={1} display="flex" alignItems="flex-end">
       <Tag
-        className="CheckList"
         size="sm"
         display="flex"
         alignItems="center"
         variantColor={isDoneCount === totalCount ? "green" : "gray"}
       >
-        <Box as={FiCheckSquare} size="0.8rem" mr={"2px"} />
+        <Box as={FiCheckSquare} size="0.8rem" mr={1} />
         <TagLabel fontSize="0.8rem" color="gray.800">
           {isDoneCount}/{totalCount}
         </TagLabel>
