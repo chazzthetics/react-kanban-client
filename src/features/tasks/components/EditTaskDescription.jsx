@@ -9,7 +9,7 @@ import DescriptionForm from "../../../components/Description/DescriptionForm";
 const EditTaskDescription = ({ taskId }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const { uuid, description } = useSelector(state =>
+  const { description } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
@@ -19,13 +19,13 @@ const EditTaskDescription = ({ taskId }) => {
     data => {
       dispatch(
         updateTaskDescription({
-          taskId: uuid,
+          taskId,
           description: data.description.trim()
         })
       );
       onClose();
     },
-    [dispatch, uuid, onClose]
+    [dispatch, taskId, onClose]
   );
 
   return (

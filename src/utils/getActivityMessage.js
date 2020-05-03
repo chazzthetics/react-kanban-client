@@ -1,121 +1,119 @@
 import { formatDate } from "./formatDate";
 
-//TODO: FIXME: looks disgusting
-export const getActivityMessage = activity => {
+const BOARD = "App\\Board";
+const COLUMN = "App\\Column";
+const TASK = "App\\Task";
+
+export const getActivityMessage = (activity, fromTask) => {
   const { description, recordable_type, changes } = activity;
-
-  switch (description) {
-    case "created":
-      if (getEntityType(recordable_type) === "task") {
-        return `added ${changes.after.task_title} to ${changes.after.column_title}`;
-      } else if (getEntityType(recordable_type) === "list") {
-        return `added ${changes.after.title} to this board`;
+  switch (recordable_type) {
+    case BOARD:
+      switch (description) {
+        case "created":
+          return `created this board`;
+        case "starred":
+          return `starred this board`;
+        case "unstarred":
+          return `unstarred this board`;
+        case "title_updated":
+          return `renamed this board to ${changes.after.title} (from ${changes.before.title})`;
+        case "background_updated":
+          return `changed the background of this board`;
+        case "description_updated":
+          return `changed the description of this board`;
+        case "cleared":
+          return "cleared this board";
+        default:
+          throw new Error(`Unknown activity: ${description}`);
       }
-      return `created this board`;
-    case "cleared":
-      if (getEntityType(recordable_type) === "list") {
-        return `cleared ${changes.after.title}`;
+    case COLUMN:
+      switch (description) {
+        case "created":
+          return `added ${changes.title} to this board`;
+        case "removed":
+          return `removed list ${changes.title}`;
+        case "cleared":
+          return `cleared list ${changes.title}`;
+        case "locked":
+          return `locked list ${changes.title}`;
+        case "unlocked":
+          return `unlocked list ${changes.title}`;
+        case "title_updated":
+          return `renamed list to ${changes.after.title} (from ${changes.before.title})`;
+        default:
+          throw new Error(`Unknown activity: ${description}`);
       }
-      return "cleared this board";
-    case "title_updated":
-      return `renamed ${
-        recordable_type === "App\\Board"
-          ? "this board"
-          : recordable_type === "App\\Column"
-          ? "list"
-          : "card"
-      } to ${changes.after.title} (from ${changes.before.title})`;
-    case "background_updated":
-      return `changed the background of this board`;
-    case "description_updated":
-      if (recordable_type === "App\\Board") {
-        return `changed the description of this board`;
-      }
-      return `changed the description of ${changes.before.title}`;
-    case "removed":
-      if (getEntityType(recordable_type) === "task") {
-        return `removed ${changes.after.task_title} from ${changes.after.column_title}`;
-      }
-
-      return `removed ${getEntityType(recordable_type)} ${changes.after.title}`;
-    case "starred":
-      return `starred this board`;
-    case "unstarred":
-      return `unstarred this board`;
-    case "locked":
-      return `locked  ${changes.after.title}`;
-    case "unlocked":
-      return `unlocked  ${changes.after.title}`;
-    case "moved":
-      return `moved ${changes.after.task_title} from ${changes.before.column_title} to ${changes.after.column_title}`;
-    case "completed":
-      return `marked the due date on ${changes.after.title} complete`;
-    case "incompleted":
-      return `marked the due date on ${changes.after.title} incomplete`;
-    case "due_date":
-      return !changes.before.due_date
-        ? `added a due date to ${changes.after.title}`
-        : !changes.after.due_date
-        ? `removed the due date from ${changes.after.title}`
-        : `changed the due date of ${changes.after.title} to ${formatDate(
-            changes.after.due_date,
-            "MMM do"
+    case TASK:
+      switch (description) {
+        case "created":
+          return `added ${showThisOrTitle(fromTask, changes.title)} to ${
+            changes.parent_title
+          }`;
+        case "removed":
+          return `removed ${changes.title} from ${changes.parent_title}`;
+        case "title_updated":
+          return fromTask
+            ? `renamed this card to ${changes.after.title} from (${changes.before.title})`
+            : `renamed card to ${changes.after.title} (from ${changes.before.title})`;
+        case "description_updated":
+          return `changed the description of ${showThisOrTitle(
+            fromTask,
+            changes.title
           )}`;
-
-    case "priority":
-      return !changes.after.priority
-        ? `removed the priority from ${changes.after.title}`
-        : `changed the priority of ${changes.after.title} to ${changes.after.priority}`;
-    case "checklist_added":
-      return `added ${changes.after.checklist} to ${changes.after.title}`;
-    case "checklist_removed":
-      return `removed the checklist from ${changes.after.title}`;
+        case "completed":
+          return `marked the due date on ${showThisOrTitle(
+            fromTask,
+            changes.title
+          )} complete`;
+        case "incompleted":
+          return `marked the due date on ${showThisOrTitle(
+            fromTask,
+            changes.title
+          )} incomplete`;
+        case "checklist_added":
+          return `added ${changes.checklist} to ${showThisOrTitle(
+            fromTask,
+            changes.title
+          )}`;
+        case "checklist_removed":
+          return `removed the checklist from ${showThisOrTitle(
+            fromTask,
+            changes.title
+          )}`;
+        case "due_date_changed":
+          return !changes.before.due_date
+            ? `added a due date to ${showThisOrTitle(fromTask, changes.title)}`
+            : !changes.after.due_date
+            ? `removed the due date from ${showThisOrTitle(
+                fromTask,
+                changes.title
+              )}`
+            : `changed the due date of ${showThisOrTitle(
+                fromTask,
+                changes.title
+              )} to ${formatDate(changes.after.due_date, "MMM do")}`;
+        case "priority_changed":
+          return !changes.priority
+            ? `removed the priority from ${showThisOrTitle(
+                fromTask,
+                changes.title
+              )}`
+            : `changed the priority of ${showThisOrTitle(
+                fromTask,
+                changes.title
+              )} to ${changes.priority}`;
+        case "moved":
+          return `moved ${showThisOrTitle(fromTask, changes.title)} from ${
+            changes.before.title
+          } to ${changes.after.title}`;
+        default:
+          throw new Error(`Unknown activity: ${description}`);
+      }
     default:
-      throw new Error(`Unknown event '${description}'`);
+      return;
   }
 };
 
-export const getTaskActivityMessage = activity => {
-  const { description, changes } = activity;
-  switch (description) {
-    case "created":
-      return `added this card to ${changes.after.column_title}`;
-    case "title_updated":
-      return `renamed this card to ${changes.after.title} (from ${changes.before.title})`;
-    case "description_updated":
-      return `changed the description of this card`;
-    case "moved":
-      return `moved this card from ${changes.before.column_title} to ${changes.after.column_title}`;
-    case "completed":
-      return "marked the due date complete";
-    case "incompleted":
-      return "marked the due date incomplete";
-    case "due_date":
-      return !changes.before.due_date
-        ? `added a due date to this card`
-        : !changes.after.due_date
-        ? "removed the due date from this card"
-        : `changed the due date of this card to ${formatDate(
-            changes.after.due_date,
-            "MMM do"
-          )}`;
-    case "priority":
-      return !changes.after.priority
-        ? `removed the priority of this card`
-        : `changed the priority of this card to ${changes.after.priority}`;
-    case "checklist_added":
-      return `added ${changes.after.checklist} to this card`;
-    case "checklist_removed":
-      return `removed the checklist from this card`;
-    default:
-      throw new Error(`Unknown event ${description}`);
-  }
-};
-
-function getEntityType(entity) {
-  if (entity === "App\\Column") {
-    return "list";
-  }
-
-  return entity.split("\\")[1].toLowerCase();
+function showThisOrTitle(show, title) {
+  return show ? "this card" : title;
 }

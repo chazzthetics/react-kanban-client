@@ -298,10 +298,10 @@ const tasksSlice = createSlice({
       if (recordable_type === "App\\Task" && description !== "removed") {
         const activities = [
           action.payload,
-          ...state.entities[changes.before.uuid].activities.slice(0, 5)
+          ...state.entities[changes.uuid].activities.slice(0, 5)
         ];
         tasksAdapter.updateOne(state, {
-          id: changes.before.uuid,
+          id: changes.uuid,
           changes: {
             activities
           }

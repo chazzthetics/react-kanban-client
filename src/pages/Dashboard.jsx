@@ -14,6 +14,7 @@ import {
 import { Box, Grid, Link, Stack } from "@chakra-ui/core";
 import Spinner from "../components/Spinner";
 import AppBar from "../components/AppBar";
+import DashboardLink from "../components/DashboardLink";
 import BoardGrid from "../features/boards/components/BoardGrid";
 
 const Dashboard = () => {
@@ -47,23 +48,16 @@ const Dashboard = () => {
             display={{ xs: "none", sm: "none", md: "none", lg: "block" }}
           >
             <Stack spacing={1}>
-              <Link
-                as={NavLink}
-                d="block"
+              <DashboardLink
                 to={dashboard(user)}
-                fontWeight={700}
+                as={NavLink}
                 bg="blue.100"
-                color="blue.700"
-                w={"80%"}
-                py={1}
-                px={2}
-                borderRadius={3}
-                display="flex"
-                alignItems="center"
-                _hover={{ textDecor: "none" }}
+                color="blue.600"
               >
-                <Box as={FiTrello} mr={2} color="inherit" /> <div>Boards</div>
-              </Link>
+                <Box as={FiTrello} mr={2} color="inherit" />
+                <div>Boards</div>
+              </DashboardLink>
+
               <Link
                 d="block"
                 href="https://github.com/chazzthetics"

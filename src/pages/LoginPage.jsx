@@ -7,6 +7,7 @@ import { dashboard } from "../utils/getPath";
 import {
   Box,
   Flex,
+  Heading,
   FormControl,
   FormLabel,
   Input,
@@ -54,6 +55,9 @@ const LoginPage = () => {
   return (
     <Box bg="gray.200" h="100vh">
       <Flex px={16} flexDir="column" justify="center" align="center" h="80vh">
+        <Heading as="h1" size="md" fontWeight={600} py={2}>
+          Login
+        </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2}>
             <FormControl>

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchTaskActivities, tasksSelectors } from "../tasksSlice";
 import { FiList } from "react-icons/fi";
 import { Flex, Box, Heading } from "@chakra-ui/core";
 import ActivityList from "../../activities/components/ActivityList";
 import LightButton from "../../../components/LightButton";
 import Spinner from "../../../components/Spinner";
-
-import { fetchTaskActivities, tasksSelectors } from "../tasksSlice";
 
 const TaskActivityFeed = ({ taskId }) => {
   const [showFeed, setShowFeed] = useState(true);

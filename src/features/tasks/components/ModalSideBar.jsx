@@ -18,6 +18,7 @@ const ModalSideBar = ({ taskId, columnId }) => {
       right={0}
       top={0}
       zIndex={2}
+      display={{ xs: "none", md: "block" }}
     >
       <Flex flexDir="column" pt={"2px"}>
         <Heading

@@ -31,11 +31,7 @@ const ActivityItem = ({ activity, fromTasksFeed = false }) => {
           wordBreak="break-word"
         >
           <span style={{ fontWeight: "600" }}>{user.name} </span>
-          <span>
-            {fromTasksFeed
-              ? getTaskActivityMessage(activity)
-              : getActivityMessage(activity)}
-          </span>
+          {getActivityMessage(activity, fromTasksFeed)}
         </Text>
 
         <Flex align="baseline" justify="space-between" w="90%">
