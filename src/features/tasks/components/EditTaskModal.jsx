@@ -1,7 +1,5 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { tasksSelectors } from "../tasksSlice";
 import {
   Modal,
   ModalOverlay,
@@ -21,14 +19,8 @@ import EditTaskModalPriority from "./EditTaskModalPriority";
 import ModalSideBar from "./ModalSideBar";
 
 const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
-  const { labels, due_date, priority, checklist } = useSelector(state =>
-    tasksSelectors.selectById(state, taskId)
-  );
-
-  const hasLabels = labels.length > 0;
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} preserveScrollBarGap={true}>
       <ModalOverlay />
       <ModalContent maxW="48rem" minH="43rem" borderRadius={3} bg="#f4f5f7">
         <ModalCloseButton
@@ -44,17 +36,17 @@ const EditTaskModal = ({ taskId, columnId, isOpen, onClose }) => {
 
           <Box position="relative">
             <Flex w="72%" pl={10} ml={-1} pb={4}>
-              {hasLabels && <EditTaskModalLabelList taskId={taskId} />}
-              {due_date && <EditTaskModalDueDate taskId={taskId} />}
+              <EditTaskModalLabelList taskId={taskId} />
+              <EditTaskModalDueDate taskId={taskId} />
             </Flex>
 
             <Flex w="72%" pl={10} ml={-1} pb={4}>
-              {priority && <EditTaskModalPriority taskId={taskId} />}
+              <EditTaskModalPriority taskId={taskId} />
             </Flex>
 
             <Box w="72%">
               <EditTaskDescription taskId={taskId} />
-              {checklist && <EditTaskChecklist taskId={taskId} />}
+              <EditTaskChecklist taskId={taskId} />
               <TaskActivityFeed taskId={taskId} />
             </Box>
             <ModalSideBar taskId={taskId} columnId={columnId} />

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { tasksSelectors } from "../tasksSlice";
 import { prioritiesSelectors } from "../../priorities/prioritiesSlice";
 import PriorityPopver from "../../priorities/components/PriorityPopover";
-import { Box, Text, Flex, Button } from "@chakra-ui/core";
+import { Text, Flex, Button } from "@chakra-ui/core";
 
 const EditTaskModalPriority = ({ taskId }) => {
   const { priority } = useSelector(state =>
@@ -15,8 +15,8 @@ const EditTaskModalPriority = ({ taskId }) => {
     prioritiesSelectors.selectEntities(state)
   );
 
-  return (
-    <Box>
+  return priority ? (
+    <div>
       <Text
         fontSize="0.8rem"
         textTransform="uppercase"
@@ -48,8 +48,8 @@ const EditTaskModalPriority = ({ taskId }) => {
           }
         />
       </Flex>
-    </Box>
-  );
+    </div>
+  ) : null;
 };
 
 EditTaskModalPriority.propTypes = {

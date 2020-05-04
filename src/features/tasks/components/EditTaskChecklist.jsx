@@ -14,7 +14,7 @@ const EditTaskChecklist = ({ taskId }) => {
     tasksSelectors.selectById(state, taskId)
   );
 
-  return (
+  return checklist ? (
     <Box pb={6}>
       <Flex align="center">
         <Box as={FiCheckSquare} mr={4} fontSize="1.4rem" />
@@ -37,7 +37,7 @@ const EditTaskChecklist = ({ taskId }) => {
       <TaskChecklist taskId={taskId} />
       <CreateChecklistItemForm taskId={taskId} />
     </Box>
-  );
+  ) : null;
 };
 
 EditTaskChecklist.propTypes = {

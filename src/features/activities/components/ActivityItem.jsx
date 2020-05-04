@@ -3,14 +3,9 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
 import { removeActivity } from "../activitiesSlice";
-import {
-  getActivityMessage,
-  getTaskActivityMessage
-} from "../../../utils/getActivityMessage";
+import { getActivityMessage } from "../../../utils/getActivityMessage";
 import { Flex, Text, IconButton } from "@chakra-ui/core";
 import UserAvatar from "../../auth/components/UserAvatar";
-
-//TODO: only show trash icon on hover
 
 const ActivityItem = ({ activity, fromTasksFeed = false }) => {
   const { user } = useSelector(state => state.auth);

@@ -28,7 +28,7 @@ const TaskActivityFeed = ({ taskId }) => {
   }, [dispatch, taskId]);
 
   return (
-    <Flex py={2}>
+    <Flex py={2} h="100%">
       <Box as={FiList} mr={4} fontSize="1.4rem" />
       <Box w="100%">
         <Flex justify="space-between" align="baseline">
@@ -54,7 +54,7 @@ const TaskActivityFeed = ({ taskId }) => {
           ) : showFeed ? (
             <ActivityList
               activities={activities}
-              count={5}
+              count={4}
               fromTasksFeed={true}
             />
           ) : null}

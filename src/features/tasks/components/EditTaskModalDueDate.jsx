@@ -7,7 +7,7 @@ import {
   getDueDateMessage,
   getDueDateColor
 } from "../../../utils/getDueDateColor";
-import { Box, Flex, Button, Text, Badge, Checkbox } from "@chakra-ui/core";
+import { Flex, Button, Text, Badge, Checkbox } from "@chakra-ui/core";
 import DueDatePopover from "./DueDatePopover";
 
 const EditTaskModalDueDate = ({ taskId }) => {
@@ -23,8 +23,8 @@ const EditTaskModalDueDate = ({ taskId }) => {
     dispatch(toggleCompleted({ taskId, completed }));
   }, [dispatch, taskId, completed]);
 
-  return (
-    <Box>
+  return due_date ? (
+    <div>
       <Text
         fontSize="0.8rem"
         textTransform="uppercase"
@@ -72,8 +72,8 @@ const EditTaskModalDueDate = ({ taskId }) => {
           }
         />
       </Flex>
-    </Box>
-  );
+    </div>
+  ) : null;
 };
 
 EditTaskModalDueDate.propTypes = {

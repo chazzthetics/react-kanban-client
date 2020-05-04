@@ -4,7 +4,7 @@ import store from "./app/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { CSSReset, ThemeProvider } from "@chakra-ui/core";
-import * as serviceWorker from "./serviceWorker";
+// import * as serviceWorker from "./serviceWorker";
 
 const render = () => {
   const App = require("./app/App").default;
@@ -33,4 +33,4 @@ if (process.env.NODE_ENV === "development" && module.hot) {
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();

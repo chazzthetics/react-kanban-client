@@ -11,7 +11,7 @@ import {
   FiGithub,
   FiArrowLeftCircle
 } from "react-icons/fi";
-import { Box, Grid, Link, Stack } from "@chakra-ui/core";
+import { Box, Grid, Stack } from "@chakra-ui/core";
 import Spinner from "../components/Spinner";
 import AppBar from "../components/AppBar";
 import DashboardLink from "../components/DashboardLink";
@@ -55,44 +55,20 @@ const Dashboard = () => {
                 color="blue.600"
               >
                 <Box as={FiTrello} mr={2} color="inherit" />
-                <div>Boards</div>
+                Boards
               </DashboardLink>
-
-              <Link
-                d="block"
-                href="https://github.com/chazzthetics"
+              <DashboardLink
+                to={dashboard(user)}
+                as="a"
+                href="https://github.com/chazzthetics/react-kanban-client"
                 rel="noopener noreferrer"
                 target="_blank"
-                fontWeight={700}
-                bg="inherit"
-                color="gray.700"
-                w={"80%"}
-                py={1}
-                px={2}
-                borderRadius={3}
-                display="flex"
-                alignItems="center"
-                _hover={{ backgroundColor: "blue.100", color: "blue.700" }}
               >
-                <Box as={FiGithub} mr={2} color="inherit" /> <div>Github</div>
-              </Link>
-              <Link
-                d="block"
-                onClick={handleLogout}
-                fontWeight={700}
-                bg="inherit"
-                color="gray.700"
-                w={"80%"}
-                py={1}
-                px={2}
-                borderRadius={3}
-                display="flex"
-                alignItems="center"
-                _hover={{ backgroundColor: "blue.100", color: "blue.700" }}
-              >
-                <Box as={FiArrowLeftCircle} mr={2} color="inherit" />
-                <div>Logout</div>
-              </Link>
+                <Box as={FiGithub} mr={2} color="inherit" /> Github
+              </DashboardLink>
+              <DashboardLink as="button" onClick={handleLogout}>
+                <Box as={FiArrowLeftCircle} mr={2} color="inherit" /> Logout
+              </DashboardLink>
             </Stack>
           </Box>
 

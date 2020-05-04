@@ -1,12 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import { PseudoBox, Box, Text, Flex, Icon } from "@chakra-ui/core";
 import TaskLabelList from "./TaskLabelList";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 
-//TODO: style
 const EditTaskModalLabelList = ({ taskId }) => {
-  return (
+  const { labels } = useSelector(state =>
+    tasksSelectors.selectById(state, taskId)
+  );
+
+  return labels.length > 0 ? (
     <Box mr={4}>
       <Text
         fontSize="0.8rem"
@@ -50,7 +55,7 @@ const EditTaskModalLabelList = ({ taskId }) => {
         />
       </Flex>
     </Box>
-  );
+  ) : null;
 };
 
 EditTaskModalLabelList.propTypes = {

@@ -16,35 +16,34 @@ const ChecklistItem = ({ taskId, item }) => {
   }, [dispatch, taskId, item.uuid]);
 
   return (
-    <ListItem key={item.uuid}>
-      <Flex align="center">
-        <Checkbox
-          size="lg"
-          mr={4}
-          isChecked={item.completed}
-          name="completed"
-          onChange={handleToggleComplete}
+    <ListItem display="flex" alignItems="center">
+      <Checkbox
+        size="lg"
+        mr={4}
+        isChecked={item.completed}
+        name="completed"
+        onChange={handleToggleComplete}
+      />
+      <Flex w="100%" align="center" justify="space-between">
+        <Text
+          fontSize="0.875rem"
+          textDecor={item.completed ? "line-through" : "none"}
+          color={item.completed ? "gray.500" : "gray.700"}
+        >
+          {item.title}
+        </Text>
+        <IconButton
+          size="sm"
+          icon="delete"
+          bg="inherit"
+          opacity={0.2}
+          fontSize="0.7rem"
+          aria-label="Remove checklist item"
+          _focus={{ boxShadow: "none" }}
+          _hover={{ opacity: 0.6 }}
+          transition="opacity 100ms ease-in-out"
+          onClick={handleRemove}
         />
-        <Flex py={1} w="100%" align="center" justify="space-between">
-          <Text
-            fontSize="0.8rem"
-            textDecor={item.completed ? "line-through" : "none"}
-          >
-            {item.title}
-          </Text>
-          <IconButton
-            size="sm"
-            icon="delete"
-            bg="inherit"
-            opacity={0.2}
-            fontSize="0.7rem"
-            aria-label="Remove checklist item"
-            _focus={{ boxShadow: "none" }}
-            _hover={{ opacity: 0.6 }}
-            transition="opacity 100ms ease-in-out"
-            onClick={handleRemove}
-          />
-        </Flex>
       </Flex>
     </ListItem>
   );

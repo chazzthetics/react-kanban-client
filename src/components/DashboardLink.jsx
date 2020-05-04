@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "@chakra-ui/core";
 
-//FIXME:
 const DashboardLink = ({ as, to, children, ...rest }) => {
   return (
     <Link
@@ -18,7 +17,11 @@ const DashboardLink = ({ as, to, children, ...rest }) => {
       borderRadius={3}
       display="flex"
       alignItems="center"
-      _hover={{ textDecor: "none" }}
+      _hover={{
+        textDecor: "none",
+        backgroundColor: "blue.100",
+        color: "blue.700"
+      }}
       _active={{ backgroundColor: "blue.200", color: "blue.600" }}
       _focus={{ boxShadow: "none" }}
       transition="background-color 100ms ease-in"
@@ -27,6 +30,13 @@ const DashboardLink = ({ as, to, children, ...rest }) => {
       {children}
     </Link>
   );
+};
+
+//FIXME:
+DashboardLink.propTypes = {
+  // as: PropTypes
+  // to: PropTypes
+  // children: PropTypes
 };
 
 export default DashboardLink;

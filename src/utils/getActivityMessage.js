@@ -4,7 +4,7 @@ const BOARD = "App\\Board";
 const COLUMN = "App\\Column";
 const TASK = "App\\Task";
 
-export const getActivityMessage = (activity, fromTask) => {
+export const getActivityMessage = (activity, fromTask = false) => {
   const { description, recordable_type, changes } = activity;
   switch (recordable_type) {
     case BOARD:
