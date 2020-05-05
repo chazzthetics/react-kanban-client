@@ -25,7 +25,7 @@ const LockColumnButton = ({ columnId }) => {
       _hover={{
         backgroundColor: "rgba(9,30,66,.08)",
         color: "gray.700",
-        opacity: 1
+        opacity: is_locked ? 1 : 0.7
       }}
       _focus={{
         boxShadow: "none",
