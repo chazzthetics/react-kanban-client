@@ -1,10 +1,22 @@
-import React from "react";
+import React, { memo, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { PseudoBox } from "@chakra-ui/core";
 
 const TaskContainer = ({ onHover, onLeave, onOpen, children }) => {
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({
+        block: "center",
+        inline: "start"
+      });
+    }
+  }, [scrollRef]);
+
   return (
     <PseudoBox
+      ref={scrollRef}
       className="TaskItem"
       cursor="pointer"
       bg="white"
@@ -12,6 +24,7 @@ const TaskContainer = ({ onHover, onLeave, onOpen, children }) => {
       py="6px"
       mb={2}
       borderRadius={3}
+      minW="16rem"
       shadow="sm"
       _hover={{ backgroundColor: "gray.100" }}
       transition="background-color 120ms ease-in"
@@ -35,4 +48,4 @@ TaskContainer.propTypes = {
   ]).isRequired
 };
 
-export default TaskContainer;
+export default memo(TaskContainer);

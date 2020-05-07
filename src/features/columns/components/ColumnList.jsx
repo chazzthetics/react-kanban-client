@@ -3,7 +3,7 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { selectCurrentBoard } from "../../boards/boardsSlice";
 import { columnsSelectors } from "../columnsSlice";
-import { Flex, Box } from "@chakra-ui/core";
+import { Flex, Box, PseudoBox } from "@chakra-ui/core";
 import ColumnItem from "./ColumnItem";
 import CreateColumnForm from "./CreateColumnForm";
 
@@ -22,11 +22,10 @@ const ColumnList = () => {
     <Droppable droppableId="all-columns" direction="horizontal" type="column">
       {provided => (
         <Flex
-          className="ColumnList"
           px={4}
+          minH="300px"
           ref={provided.innerRef}
           {...provided.droppableProps}
-          minH="300px"
         >
           {currentBoard &&
             currentBoard.columns.map((column, index) => (
@@ -39,7 +38,7 @@ const ColumnList = () => {
                 {provided => (
                   <Box
                     h="100%"
-                    cursor="pointer"
+                    w="auto"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
@@ -57,4 +56,4 @@ const ColumnList = () => {
   );
 };
 
-export default ColumnList;
+export default React.memo(ColumnList);

@@ -49,8 +49,9 @@ const CreateTaskForm = ({ columnId }) => {
     handleSubmit(onSubmit)
   );
 
+  //FIXME: borderradius
   return (
-    <Box className="TaskForm" pb={2}>
+    <Box className="TaskForm" pb={2} pt={"2px"}>
       {!isOpen ? (
         <CreateTaskButton columnId={columnId} onShow={onOpen} />
       ) : (

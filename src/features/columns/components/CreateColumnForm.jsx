@@ -43,7 +43,7 @@ const CreateColumnForm = () => {
   );
 
   return (
-    <Box className="ColumnForm" minW="17rem" w="17rem">
+    <Box className="ColumnForm" minW="17rem" w="17rem" h="100%">
       {!isOpen ? (
         <CreateColumnButton onShow={onOpen} />
       ) : (
