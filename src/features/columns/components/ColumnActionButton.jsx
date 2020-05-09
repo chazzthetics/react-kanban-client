@@ -9,7 +9,7 @@ const ColumnActionButton = ({ label, onClick, ...rest }) => {
       fontSize="0.9rem"
       onClick={onClick}
       aria-label={label}
-      opacity={0.8}
+      opacity={0.9}
       py={1}
       mb={1}
       borderRadius={3}

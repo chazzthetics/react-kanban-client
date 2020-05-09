@@ -24,7 +24,7 @@ const TaskContainer = ({ onHover, onLeave, onOpen, children }) => {
       py="6px"
       mb={2}
       borderRadius={3}
-      minW="16rem"
+      w={"16rem"}
       shadow="sm"
       _hover={{ backgroundColor: "gray.100" }}
       transition="background-color 120ms ease-in"

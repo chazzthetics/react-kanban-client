@@ -331,6 +331,10 @@ const tasksSlice = createSlice({
     "columns/restored": (state, action) => {
       const { tasks } = action.payload;
       tasksAdapter.upsertMany(state, tasks);
+    },
+    "columns/copied": (state, action) => {
+      const { tasks } = action.payload;
+      tasksAdapter.upsertMany(state, tasks);
     }
   }
 });

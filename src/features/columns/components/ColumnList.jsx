@@ -23,7 +23,7 @@ const ColumnList = () => {
       {provided => (
         <Flex
           px={4}
-          minH="300px"
+          minH="18.75rem"
           ref={provided.innerRef}
           {...provided.droppableProps}
         >

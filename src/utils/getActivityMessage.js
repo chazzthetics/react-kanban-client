@@ -40,6 +40,8 @@ export const getActivityMessage = (activity, fromTask = false) => {
           return `unlocked list ${changes.title}`;
         case "title_updated":
           return `renamed list to ${changes.after.title} (from ${changes.before.title})`;
+        case "copied":
+          return "copied this list **FIX";
         default:
           throw new Error(`Unknown activity: ${description}`);
       }

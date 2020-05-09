@@ -152,7 +152,7 @@ const boardsSlice = createSlice({
           columns: board.columns.map(column => column.uuid)
         }));
         boardsAdapter.setAll(state, boards);
-        state.current = action.meta.arg || "";
+        state.current = action.meta.arg || ""; //FIXME:
         state.status = "success";
       }
     },
@@ -162,6 +162,13 @@ const boardsSlice = createSlice({
     "columns/created": (state, action) => {
       const { boardId, column } = action.payload;
       state.entities[boardId].columns.push(column.uuid);
+    },
+    "columns/copied": (state, action) => {
+      const { boardId, columnId, column } = action.payload;
+      const columns = state.entities[boardId].columns;
+      const index = state.entities[boardId].columns.indexOf(columnId);
+
+      columns.splice(index + 1, 0, column.uuid);
     },
     "columns/removed": (state, action) => {
       const { columnId, boardId } = action.payload;

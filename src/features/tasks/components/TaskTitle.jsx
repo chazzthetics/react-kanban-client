@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { tasksSelectors } from "../tasksSlice";
@@ -20,4 +20,4 @@ TaskTitle.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
-export default TaskTitle;
+export default memo(TaskTitle);

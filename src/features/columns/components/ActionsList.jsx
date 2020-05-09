@@ -42,6 +42,10 @@ const ActionsList = ({ columnId, onShow }) => {
     onShow("move");
   };
 
+  const handleShowCopy = () => {
+    onShow("copy");
+  };
+
   return (
     <>
       <ColumnActionsButton
@@ -54,10 +58,15 @@ const ActionsList = ({ columnId, onShow }) => {
         disabled={is_locked}
       />
       <ColumnActionsButton
-        label="Move List"
+        label="Move List..."
         onClick={handleShowMove}
-        mb={hasTasks ? 0 : 2}
         disabled={is_locked}
+      />
+      <ColumnActionsButton
+        label="Copy List..."
+        onClick={handleShowCopy}
+        disabled={is_locked}
+        mb={hasTasks ? 0 : 2}
       />
       {hasTasks && (
         <>

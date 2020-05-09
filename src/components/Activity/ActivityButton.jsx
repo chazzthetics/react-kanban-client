@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@chakra-ui/core";
 
-const ActivityButton = ({ label, isSelected, onSelect }) => {
+const ActivityButton = ({ label, isSelected, onSelect, ...rest }) => {
   return (
     <Button
       w="47%"
@@ -32,6 +32,7 @@ const ActivityButton = ({ label, isSelected, onSelect }) => {
       }}
       transition="all 120ms ease-in"
       onClick={onSelect}
+      {...rest}
     >
       {label}
     </Button>

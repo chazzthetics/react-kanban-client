@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Droppable } from "react-beautiful-dnd";
 import { PseudoBox, Flex, Box } from "@chakra-ui/core";
@@ -6,7 +6,28 @@ import ColumnHeader from "./ColumnHeader";
 import CreateTaskForm from "../../tasks/components/CreateTaskForm";
 import TaskList from "../../tasks/components/TaskList";
 
+//FIXME:
+const overflown = (clientHeight, scrollHeight) => {
+  return scrollHeight > clientHeight;
+};
+
 const ColumnItem = ({ columnId }) => {
+  const scrollRef = React.useRef(null);
+  // const [isOverflow, setIsOverflow] = React.useState(false);
+
+  // React.useEffect(() => {
+  //   if (scrollRef.current) {
+  //     if (
+  //       overflown(
+  //         scrollRef.current.clientHeight,
+  //         scrollRef.current.scrollHeight
+  //       )
+  //     ) {
+  //       setIsOverflow(true);
+  //     }
+  //   }
+  // }, [scrollRef]);
+
   return (
     <PseudoBox
       px={2}
@@ -19,13 +40,20 @@ const ColumnItem = ({ columnId }) => {
       <Box>
         <ColumnHeader columnId={columnId} />
       </Box>
-      <Box maxH="74vh" overflowX="hidden" overflowY="auto">
+      <Box
+        maxH="74vh"
+        overflowX="hidden"
+        overflowY={"auto"}
+        // overflowY={isOverflow ? "auto" : "hidden"}
+        className="scrollbar"
+        ref={scrollRef}
+      >
         <Droppable droppableId={columnId} type="task">
           {(provided, snapshot) => (
             <Flex
               direction="column"
               minH="1px"
-              w="100%"
+              flexBasis="100%"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
@@ -46,6 +74,4 @@ ColumnItem.propTypes = {
   columnId: PropTypes.string.isRequired
 };
 
-export default ColumnItem;
-
-//FIXME: scrollbar and overflow
+export default memo(ColumnItem);

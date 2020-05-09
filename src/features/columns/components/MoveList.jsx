@@ -70,9 +70,9 @@ const MoveList = ({ columnId, onShowPrevious }) => {
         // Reorder column
         const newOrder = reorder(endColumns, startIndex, endIndex);
         dispatch(reorderColumn({ boardId: selectedId, newOrder }));
-        onShowPrevious("main");
       }
       // Close popover and set content to main after submit
+      onShowPrevious("main");
       dispatch(actionsToggled({ columnId, isOpen: false }));
     },
     [

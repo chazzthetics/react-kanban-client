@@ -56,4 +56,4 @@ ColumnTitle.propTypes = {
   columnId: PropTypes.string.isRequired
 };
 
-export default ColumnTitle;
+export default React.memo(ColumnTitle);

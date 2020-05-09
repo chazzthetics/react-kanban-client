@@ -34,9 +34,9 @@ const DashboardLink = ({ as, to, children, ...rest }) => {
 
 //FIXME:
 DashboardLink.propTypes = {
-  // as: PropTypes
-  // to: PropTypes
-  // children: PropTypes
+  as: PropTypes.any.isRequired,
+  to: PropTypes.string,
+  children: PropTypes.node.isRequired
 };
 
 export default DashboardLink;

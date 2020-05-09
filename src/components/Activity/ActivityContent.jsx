@@ -35,6 +35,8 @@ const ActivityContent = () => {
           label="Comments"
           isSelected={!isSelected}
           onSelect={handleSelect}
+          disabled={true}
+          textDecor="none"
         />
       </Box>
       <ActivityFeed showLoader={false} />

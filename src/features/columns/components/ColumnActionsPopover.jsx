@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useClickOutside } from "../../../hooks/useClickOutside";
@@ -17,6 +17,7 @@ import BackButton from "../../../components/BackButton";
 import ActionsList from "./ActionsList";
 import SortByList from "./SortByList";
 import MoveList from "./MoveList";
+import CopyList from "./CopyList";
 
 const ColumnActionsPopover = ({ columnId }) => {
   const [action, setAction] = useState("main");
@@ -50,6 +51,8 @@ const ColumnActionsPopover = ({ columnId }) => {
     close: { click: true, esc: true, enter: false }
   });
 
+  const firstFieldRef = useRef(null);
+
   return (
     <div ref={container}>
       <Popover
@@ -58,6 +61,7 @@ const ColumnActionsPopover = ({ columnId }) => {
         onOpen={handleOpenPopover}
         onClose={handleClosePopover}
         gutter={4}
+        initialFocusRef={firstFieldRef}
       >
         <PopoverTrigger>
           <IconButton
@@ -95,6 +99,8 @@ const ColumnActionsPopover = ({ columnId }) => {
           <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
             {action === "sort"
               ? "Sort List"
+              : action === "copy"
+              ? "Copy List"
               : action === "move"
               ? "Move List"
               : "List Actions"}
@@ -111,6 +117,12 @@ const ColumnActionsPopover = ({ columnId }) => {
               <MoveList
                 columnId={columnId}
                 onShowPrevious={handleShowPrevious}
+              />
+            ) : action === "copy" ? (
+              <CopyList
+                columnId={columnId}
+                onClose={handleClosePopover}
+                firstFieldRef={firstFieldRef}
               />
             ) : (
               <ActionsList columnId={columnId} onShow={handleShowAction} />

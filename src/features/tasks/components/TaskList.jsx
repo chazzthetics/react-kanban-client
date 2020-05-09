@@ -16,13 +16,12 @@ function getStyle(style, snapshot) {
   const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
   // add a bit of turn for fun
   const rotate = "rotate(5deg)";
-
   // patching the existing style
   return {
     ...style,
     transform: `${translate} ${rotate}`,
     // slowing down the drop because we can
-    transition: `all ${curve} ${duration}s`
+    transition: `all ${curve} 180ms`
   };
 }
 
@@ -39,8 +38,9 @@ const TaskList = ({ columnId }) => {
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
-            isDragging={snapshot.isDragging && !snapshot.isDropAnimating}
+            isDragging={snapshot.isDragging}
             style={getStyle(provided.draggableProps.style, snapshot)}
+            transform={snapshot.isDragging ? "rotate(5deg)" : ""}
           >
             <TaskItem taskId={task} columnId={columnId} />
           </Box>

@@ -18,6 +18,5 @@
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgb(87, 124, 98);
-  outline: 1px solid slategrey;
+  background-color: rgb(151, 151, 151);
 }

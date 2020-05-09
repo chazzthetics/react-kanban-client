@@ -108,6 +108,13 @@ const columnsSlice = createSlice({
       );
       state.status = status;
       state.error = error;
+    },
+    copied(state, action) {
+      const { column, status = "success", error = null } = action.payload;
+
+      columnsAdapter.addOne(state, column);
+      state.status = status;
+      state.error = error;
     }
   },
   extraReducers: {
@@ -181,7 +188,8 @@ export const {
   lockToggled,
   actionsToggled,
   reordered,
-  moved
+  moved,
+  copied
 } = columnsSlice.actions;
 export default columnsSlice.reducer;
 
@@ -330,4 +338,15 @@ export const moveColumn = ({
       })
     );
   }
+};
+
+export const copyColumn = ({
+  boardId,
+  columnId,
+  column,
+  tasks
+}) => async dispatch => {
+  try {
+    dispatch(copied({ boardId, columnId, column, tasks }));
+  } catch (ex) {}
 };
