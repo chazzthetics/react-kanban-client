@@ -9,10 +9,12 @@ const MainBoard = () => {
   const handleDragEnd = useDrag();
 
   return (
-    <Box className="MainBoard" h="calc(100vh - 2.5rem)" overflowX="auto">
+    <Box className="MainBoard" h="calc(100vh - 2.5rem)">
       <BoardHeader />
       <DragDropContext onDragEnd={handleDragEnd}>
-        <ColumnList />
+        <Box overflowX="auto" minH="80vh">
+          <ColumnList />
+        </Box>
       </DragDropContext>
     </Box>
   );

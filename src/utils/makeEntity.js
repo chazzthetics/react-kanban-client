@@ -58,3 +58,22 @@ export const makeChecklistItem = title => {
     completed: false
   };
 };
+
+export const copyChecklist = checklist => {
+  return checklist
+    ? {
+        uuid: nanoid(),
+        title: checklist.title,
+        items: checklist.items.map(item => makeChecklistItem(item.title))
+      }
+    : null;
+};
+
+export const copyTasks = (taskIds, tasks) => {
+  return taskIds.map(id => ({
+    ...tasks[id],
+    uuid: nanoid(),
+    checklist: copyChecklist(tasks[id].checklist),
+    activities: []
+  }));
+};

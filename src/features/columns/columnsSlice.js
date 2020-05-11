@@ -7,7 +7,10 @@ import { hydrate } from "../auth/authSlice";
 import { getPreviousValue } from "../../utils/getPreviousValue";
 import { handleError } from "../../utils/handleError";
 import { columnsService } from "../../api/columnsService";
-import { fetchMostRecentActivity } from "../activities/activitiesSlice";
+import {
+  fetchMostRecentActivity,
+  fetchActivities
+} from "../activities/activitiesSlice";
 
 const columnsAdapter = createEntityAdapter({
   selectId: column => column.uuid
@@ -110,9 +113,26 @@ const columnsSlice = createSlice({
       state.error = error;
     },
     copied(state, action) {
-      const { column, status = "success", error = null } = action.payload;
-
+      const {
+        columnId,
+        column,
+        status = "success",
+        error = null
+      } = action.payload;
       columnsAdapter.addOne(state, column);
+
+      //TODO: refactor
+      const columnsToUpdate = state.ids
+        .filter(id => id !== columnId)
+        .filter(id => id !== column.uuid)
+        .filter(id => state.entities[id].position >= column.position);
+
+      columnsAdapter.updateMany(
+        state,
+        columnsToUpdate.map(
+          id => (state.entities[id].position = state.entities[id].position + 1)
+        )
+      );
       state.status = status;
       state.error = error;
     }
@@ -348,5 +368,7 @@ export const copyColumn = ({
 }) => async dispatch => {
   try {
     dispatch(copied({ boardId, columnId, column, tasks }));
+    await columnsService.copy(columnId, { column, tasks });
+    dispatch(fetchActivities());
   } catch (ex) {}
 };

@@ -15,5 +15,8 @@ export const columnsService = {
   },
   move: (boardId, data) => {
     return axios.put(`/boards/${boardId}/columns/move`, data);
+  },
+  copy: (columnId, data) => {
+    return axios.post(`/columns/${columnId}/copy`, data);
   }
 };

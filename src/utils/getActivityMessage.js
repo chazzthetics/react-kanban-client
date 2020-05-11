@@ -108,6 +108,10 @@ export const getActivityMessage = (activity, fromTask = false) => {
           return `moved ${showThisOrTitle(fromTask, changes.title)} from ${
             changes.before.title
           } to ${changes.after.title}`;
+        case "copied":
+          return `copied ${showThisOrTitle(fromTask, changes.title)} from ${
+            changes.title
+          } in list ${changes.parent_title}`;
         default:
           throw new Error(`Unknown activity: ${description}`);
       }
