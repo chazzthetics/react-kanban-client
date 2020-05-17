@@ -23,7 +23,6 @@ const BoardHeader = () => {
       justify="space-between"
       py={2}
       px={4}
-      w="100%"
     >
       {/* Left Side */}
       <Flex justify="flex-start" align="center">

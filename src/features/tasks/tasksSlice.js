@@ -30,7 +30,8 @@ const tasksSlice = createSlice({
   name: "tasks",
   initialState: tasksAdapter.getInitialState({
     status: "idle",
-    error: null
+    error: null,
+    dragDisabled: false
   }),
   reducers: {
     created(state, action) {
@@ -254,6 +255,22 @@ const tasksSlice = createSlice({
       );
       state.status = status;
       state.error = error;
+    },
+    quickEditOpened(state, action) {
+      const { taskId } = action.payload;
+      state.dragDisabled = true;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { isQuickOpen: true }
+      });
+    },
+    quickEditClosed(state, action) {
+      const { taskId } = action.payload;
+      state.dragDisabled = false;
+      tasksAdapter.updateOne(state, {
+        id: taskId,
+        changes: { isQuickOpen: false }
+      });
     }
   },
   extraReducers: {
@@ -340,6 +357,7 @@ const tasksSlice = createSlice({
 });
 
 export const tasksSelectors = tasksAdapter.getSelectors(state => state.tasks);
+
 export const {
   created,
   removed,
@@ -359,7 +377,9 @@ export const {
   checklistItemToggled,
   reordered,
   reorderedBetween,
-  sortedBy
+  sortedBy,
+  quickEditOpened,
+  quickEditClosed
 } = tasksSlice.actions;
 export default tasksSlice.reducer;
 

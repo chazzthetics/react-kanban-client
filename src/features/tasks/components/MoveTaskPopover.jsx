@@ -16,7 +16,7 @@ import SelectBox from "../../../components/SelectBox";
 import SaveButton from "../../../components/SaveButton";
 
 // FIXME: close only popover after submit
-const MoveTaskPopover = ({ taskId, columnId }) => {
+const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
 
@@ -91,7 +91,13 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
 
   return (
     <PopoverContainer
-      trigger={<SideModalTrigger icon="arrow-forward" label="Move" />}
+      trigger={
+        trigger ? (
+          trigger
+        ) : (
+          <SideModalTrigger icon="arrow-forward" label="Move" />
+        )
+      }
       heading="Move Card"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -166,7 +172,8 @@ const MoveTaskPopover = ({ taskId, columnId }) => {
 
 MoveTaskPopover.propTypes = {
   taskId: PropTypes.string.isRequired,
-  columnId: PropTypes.string.isRequired
+  columnId: PropTypes.string.isRequired,
+  trigger: PropTypes.element
 };
 
 export default MoveTaskPopover;

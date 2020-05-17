@@ -41,9 +41,10 @@ const ColumnItem = ({ columnId }) => {
         <ColumnHeader columnId={columnId} />
       </Box>
       <Box
-        maxH="74vh"
+        maxH="70vh"
         overflowX="hidden"
-        overflowY={"auto"}
+        overflowY="hidden"
+        // overflowY="auto"
         // overflowY={isOverflow ? "auto" : "hidden"}
         className="scrollbar"
         ref={scrollRef}
@@ -63,9 +64,7 @@ const ColumnItem = ({ columnId }) => {
           )}
         </Droppable>
       </Box>
-      <Box position="sticky" bottom={0}>
-        <CreateTaskForm columnId={columnId} />
-      </Box>
+      <CreateTaskForm columnId={columnId} />
     </PseudoBox>
   );
 };

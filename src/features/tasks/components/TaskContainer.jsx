@@ -9,7 +9,7 @@ const TaskContainer = ({ onHover, onLeave, onOpen, children }) => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({
         block: "center",
-        inline: "start"
+        inline: "nearest"
       });
     }
   }, [scrollRef]);
@@ -17,7 +17,6 @@ const TaskContainer = ({ onHover, onLeave, onOpen, children }) => {
   return (
     <PseudoBox
       ref={scrollRef}
-      className="TaskItem"
       cursor="pointer"
       bg="white"
       px={2}

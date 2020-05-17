@@ -7,7 +7,7 @@ import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
 import RemoveButton from "../../../components/RemoveButton";
 
-const RemoveTaskPopover = ({ taskId, columnId }) => {
+const RemoveTaskPopover = ({ taskId, columnId, trigger }) => {
   const dispatch = useDispatch();
 
   const handleRemoveTask = useCallback(() => {
@@ -16,7 +16,9 @@ const RemoveTaskPopover = ({ taskId, columnId }) => {
 
   return (
     <PopoverContainer
-      trigger={<SideModalTrigger icon="delete" label="Remove" />}
+      trigger={
+        trigger ? trigger : <SideModalTrigger icon="delete" label="Remove" />
+      }
       heading="Remove Card?"
     >
       <Flex flexDir="column" align="stretch" justify="space-between">
@@ -31,7 +33,8 @@ const RemoveTaskPopover = ({ taskId, columnId }) => {
 
 RemoveTaskPopover.propTypes = {
   taskId: PropTypes.string.isRequired,
-  columnId: PropTypes.string.isRequired
+  columnId: PropTypes.string.isRequired,
+  trigger: PropTypes.element
 };
 
 export default RemoveTaskPopover;

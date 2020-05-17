@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
+import { tasksSelectors } from "../tasksSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
 import { Box } from "@chakra-ui/core";
 import TaskItem from "./TaskItem";
@@ -27,11 +28,17 @@ function getStyle(style, snapshot) {
 
 const TaskList = ({ columnId }) => {
   const columns = useSelector(state => columnsSelectors.selectEntities(state));
+  const tasks = useSelector(state => tasksSelectors.selectEntities(state));
 
   return (
     columns &&
     columns[columnId].tasks.map((task, index) => (
-      <Draggable key={`drag-${task}`} draggableId={task} index={index}>
+      <Draggable
+        key={`drag-${task}`}
+        draggableId={task}
+        index={index}
+        isDragDisabled={tasks[task].isQuickOpen}
+      >
         {(provided, snapshot) => (
           <Box
             cursor="pointer"
@@ -40,7 +47,6 @@ const TaskList = ({ columnId }) => {
             {...provided.draggableProps}
             isDragging={snapshot.isDragging}
             style={getStyle(provided.draggableProps.style, snapshot)}
-            transform={snapshot.isDragging ? "rotate(5deg)" : ""}
           >
             <TaskItem taskId={task} columnId={columnId} />
           </Box>

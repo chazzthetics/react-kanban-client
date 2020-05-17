@@ -28,6 +28,7 @@ const RemoveBoardButton = () => {
 
   return (
     <PopoverContainer
+      placement="bottom"
       trigger={
         <IconButton
           icon="delete"

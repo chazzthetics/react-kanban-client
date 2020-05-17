@@ -12,7 +12,7 @@ const MainBoard = () => {
     <Box className="MainBoard" h="calc(100vh - 2.5rem)">
       <BoardHeader />
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Box overflowX="auto" minH="80vh">
+        <Box>
           <ColumnList />
         </Box>
       </DragDropContext>

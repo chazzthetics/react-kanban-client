@@ -16,7 +16,7 @@ const PopoverContainer = ({ trigger, heading, footer, children, ...rest }) => {
       <PopoverTrigger>{trigger}</PopoverTrigger>
       <PopoverContent
         w="18rem"
-        zIndex={4}
+        zIndex={16}
         _focus={{ boxShadow: "none", outline: "none" }}
       >
         <PopoverHeader textAlign="center" fontSize="0.9rem" opacity={0.8}>
