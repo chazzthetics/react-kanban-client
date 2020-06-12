@@ -69,6 +69,17 @@ export const copyChecklist = checklist => {
     : null;
 };
 
+export const copyTask = (task, { title, position }) => {
+  return {
+    ...task,
+    uuid: nanoid(),
+    title,
+    position,
+    checklist: copyChecklist(task.checklist),
+    activities: []
+  };
+};
+
 export const copyTasks = (taskIds, tasks) => {
   return taskIds.map(id => ({
     ...tasks[id],

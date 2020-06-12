@@ -22,37 +22,39 @@ const ColumnList = () => {
   return (
     <Droppable droppableId="all-columns" direction="horizontal" type="column">
       {provided => (
-        <Flex
+        <Box
           px={4}
-          minH="18.75rem"
+          minH="21rem"
           overflowX="auto"
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          {currentBoard &&
-            currentBoard.columns.map((column, index) => (
-              <Draggable
-                key={`drag-${column}`}
-                index={index}
-                draggableId={`drag-${column}`}
-                isDragDisabled={isDragDisabled(column) || dragDisabled}
-              >
-                {provided => (
-                  <Box
-                    h="100%"
-                    w="auto"
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <ColumnItem columnId={column} />
-                  </Box>
-                )}
-              </Draggable>
-            ))}
-          {provided.placeholder}
-          <CreateColumnForm />
-        </Flex>
+          <Flex>
+            {currentBoard &&
+              currentBoard.columns.map((column, index) => (
+                <Draggable
+                  key={`drag-${column}`}
+                  index={index}
+                  draggableId={`drag-${column}`}
+                  isDragDisabled={isDragDisabled(column) || dragDisabled}
+                >
+                  {provided => (
+                    <Box
+                      h="100%"
+                      w="auto"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <ColumnItem columnId={column} />
+                    </Box>
+                  )}
+                </Draggable>
+              ))}
+            {provided.placeholder}
+            <CreateColumnForm />
+          </Flex>
+        </Box>
       )}
     </Droppable>
   );

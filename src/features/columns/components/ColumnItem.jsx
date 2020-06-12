@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Droppable } from "react-beautiful-dnd";
-import { PseudoBox, Flex, Box } from "@chakra-ui/core";
+import { Flex, Box } from "@chakra-ui/core";
 import ColumnHeader from "./ColumnHeader";
 import CreateTaskForm from "../../tasks/components/CreateTaskForm";
 import TaskList from "../../tasks/components/TaskList";
@@ -29,13 +29,14 @@ const ColumnItem = ({ columnId }) => {
   // }, [scrollRef]);
 
   return (
-    <PseudoBox
+    <Box
       px={2}
       mr={2}
       bg="#ebecf0"
       borderRadius={3}
       cursor="pointer"
       w="17rem"
+      h="100%"
     >
       <Box>
         <ColumnHeader columnId={columnId} />
@@ -65,7 +66,7 @@ const ColumnItem = ({ columnId }) => {
         </Droppable>
       </Box>
       <CreateTaskForm columnId={columnId} />
-    </PseudoBox>
+    </Box>
   );
 };
 

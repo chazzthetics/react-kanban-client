@@ -6,14 +6,14 @@ import { labelsSelectors } from "../../labels/labelsSlice";
 import { Stack } from "@chakra-ui/core";
 import TaskLabelItem from "./TaskLabelItem";
 
-const TaskLabelList = ({ taskId, ...rest }) => {
+const TaskLabelList = ({ taskId, marginBottom = 1, ...rest }) => {
   const labels = useSelector(state => labelsSelectors.selectEntities(state));
   const { labels: taskLabels } = useSelector(state =>
     tasksSelectors.selectById(state, taskId)
   );
 
   return taskLabels && taskLabels.length > 0 ? (
-    <Stack isInline spacing={1} mb={1}>
+    <Stack isInline spacing={1} mb={marginBottom}>
       {taskLabels.map(label => (
         <TaskLabelItem
           key={label}
@@ -27,7 +27,8 @@ const TaskLabelList = ({ taskId, ...rest }) => {
 };
 
 TaskLabelList.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
+  marginBottom: PropTypes.number
 };
 
 export default memo(TaskLabelList);

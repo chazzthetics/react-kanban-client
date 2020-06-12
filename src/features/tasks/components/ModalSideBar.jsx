@@ -5,6 +5,7 @@ import DueDatePopover from "./DueDatePopover";
 import RemoveTaskPopover from "./RemoveTaskPopover";
 import MoveTaskPopover from "./MoveTaskPopover";
 import ChecklistPopover from "./ChecklistPopover";
+import CopyTaskPopover from "./CopyTaskPopover";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import PriorityPopover from "../../priorities/components/PriorityPopover";
 
@@ -46,6 +47,7 @@ const ModalSideBar = ({ taskId, columnId }) => {
         </Heading>
         <Flex flexDir="column" my={2}>
           <MoveTaskPopover taskId={taskId} columnId={columnId} />
+          <CopyTaskPopover taskId={taskId} columnId={columnId} />
           <RemoveTaskPopover taskId={taskId} columnId={columnId} />
         </Flex>
       </Flex>

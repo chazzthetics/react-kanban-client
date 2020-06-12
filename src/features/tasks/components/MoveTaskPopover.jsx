@@ -2,21 +2,18 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import {
-  boardsSelectors,
-  selectCurrentBoardId
-} from "../../boards/boardsSlice";
+import { selectCurrentBoardId } from "../../boards/boardsSlice";
 import { columnsSelectors } from "../../columns/columnsSlice";
 import { tasksSelectors, reorderTask, reorderBetween } from "../tasksSlice";
 import { reorder } from "../../../utils/reorder";
-import { Box, Flex, Heading } from "@chakra-ui/core";
+import { Box, Heading, useDisclosure } from "@chakra-ui/core";
 import PopoverContainer from "../../../components/PopoverContainer";
 import SideModalTrigger from "../../../components/SideModalTrigger";
-import SelectBox from "../../../components/SelectBox";
 import SaveButton from "../../../components/SaveButton";
+import SelectGrid from "./SelectGrid";
 
-// FIXME: close only popover after submit
 const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const currentBoardId = useSelector(selectCurrentBoardId);
 
@@ -30,19 +27,12 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
 
   const selectedIds = watch(["board", "list"]);
 
-  const { columns: endColumns } = useSelector(state =>
-    boardsSelectors.selectById(state, selectedIds.board)
-  );
-
-  const boards = useSelector(state => boardsSelectors.selectAll(state));
-
-  const columns = useSelector(state => columnsSelectors.selectEntities(state));
-
   const { tasks: startTasks } = useSelector(state =>
     columnsSelectors.selectById(state, columnId)
   );
+
   const { tasks: endTasks } = useSelector(state =>
-    columnsSelectors.selectById(state, selectedIds.list)
+    columnsSelectors.selectById(state, selectedIds.list || columnId)
   );
 
   //FIXME: refactor everything
@@ -55,6 +45,7 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
         const startIndex = startTasks.indexOf(taskId);
         const newOrder = reorder(endTasks, startIndex, endIndex);
         dispatch(reorderTask({ columnId, newOrder: newOrder }));
+        onClose();
       }
 
       // Move task to another column
@@ -76,7 +67,6 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
           })
         );
       }
-      return;
     },
     [
       dispatch,
@@ -85,7 +75,8 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
       endTasks,
       selectedIds,
       startTasks,
-      taskId
+      taskId,
+      onClose
     ]
   );
 
@@ -99,6 +90,9 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
         )
       }
       heading="Move Card"
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box pb={4}>
@@ -112,57 +106,12 @@ const MoveTaskPopover = ({ taskId, columnId, trigger }) => {
           >
             Select Destination
           </Heading>
-          <SelectBox label="Board" name="board" ref={register}>
-            {boards &&
-              boards
-                .filter(board => board.columns.length > 0)
-                .map(board => (
-                  <option key={board.uuid} value={board.uuid}>
-                    {board.title}
-                  </option>
-                ))}
-          </SelectBox>
-          <Flex>
-            <SelectBox
-              label="List"
-              name="list"
-              w="67.5%"
-              mr="2.5%"
-              ref={register}
-            >
-              {endColumns &&
-                endColumns.map(column => (
-                  <option key={column} value={column}>
-                    {columns[column].title}
-                  </option>
-                ))}
-            </SelectBox>
-            <SelectBox
-              label="Position"
-              name="position"
-              w="30.5%"
-              ref={register}
-            >
-              {endTasks.length === 0 ? (
-                <option key="first" value={0}>
-                  1
-                </option>
-              ) : (
-                <>
-                  {endTasks.map((task, index) => (
-                    <option key={task} value={index}>
-                      {index + 1}
-                    </option>
-                  ))}
-                  {selectedIds.list !== columnId && (
-                    <option key="last" value={endTasks.length}>
-                      {endTasks.length + 1}
-                    </option>
-                  )}
-                </>
-              )}
-            </SelectBox>
-          </Flex>
+          <SelectGrid
+            selectedIds={selectedIds}
+            columnId={columnId}
+            move={true}
+            ref={register}
+          />
           <SaveButton label="Move" mt={2} px={6} />
         </Box>
       </form>

@@ -10,6 +10,9 @@ export const tasksService = {
   update: (taskId, data) => {
     return axios.patch(`/tasks/${taskId}`, data);
   },
+  copy: (taskId, data) => {
+    return axios.post(`/tasks/${taskId}/copy`, data);
+  },
   reorder: (columnId, data) => {
     return axios.patch(`/columns/${columnId}/tasks/reorder`, data);
   },

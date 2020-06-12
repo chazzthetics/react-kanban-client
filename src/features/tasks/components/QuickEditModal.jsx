@@ -7,6 +7,7 @@ import { tasksSelectors, updateTaskTitle } from "../tasksSlice";
 import { Box, Textarea } from "@chakra-ui/core";
 import SaveButton from "../../../components/SaveButton";
 import QuickEditSideBar from "./QuickEditSideBar";
+import TaskLabelList from "./TaskLabelList";
 
 const QuickEditModal = ({ taskId, columnId, onClose }) => {
   const task = useSelector(state => tasksSelectors.selectById(state, taskId));
@@ -51,9 +52,7 @@ const QuickEditModal = ({ taskId, columnId, onClose }) => {
         cursor="default"
       />
       <Box
-        onClick={e => {
-          e.stopPropagation();
-        }}
+        ref={container}
         zIndex={160}
         borderRadius={3}
         position="absolute"
@@ -61,22 +60,47 @@ const QuickEditModal = ({ taskId, columnId, onClose }) => {
         mb={2}
         w="16rem"
         cursor="default"
-        ref={container}
+        onClick={e => {
+          e.stopPropagation();
+        }}
       >
-        <form onSubmit={handleSubmit}>
-          <Textarea
-            size="sm"
-            borderRadius={3}
-            autoFocus={true}
-            px={2}
-            mb={4}
+        <Box>
+          <Box
+            bg="white"
             w="100%"
-            value={taskTitle}
-            onChange={handleChange}
-            _focus={{ border: "none", outline: "none" }}
-          />
-          <SaveButton px={6} />
-        </form>
+            px={2}
+            pb={1}
+            pt="6px"
+            borderTopLeftRadius={3}
+            borderTopRightRadius={3}
+          >
+            <TaskLabelList taskId={taskId} marginBottom={0} />
+          </Box>
+          <form onSubmit={handleSubmit}>
+            <Textarea
+              size="sm"
+              borderTopLeftRadius={0}
+              borderTopRightRadius={0}
+              borderBottomLeftRadius={3}
+              borderBottomRightRadius={3}
+              mb={4}
+              pt={0}
+              px={2}
+              w="100%"
+              minH="5rem"
+              h="100%"
+              bg="white"
+              fontSize="0.875rem"
+              value={taskTitle}
+              onChange={handleChange}
+              autoFocus={true}
+              border="none"
+              _focus={{ border: "none", outline: "none" }}
+            />
+
+            <SaveButton px={6} />
+          </form>
+        </Box>
         <QuickEditSideBar taskId={taskId} columnId={columnId} />
       </Box>
     </>

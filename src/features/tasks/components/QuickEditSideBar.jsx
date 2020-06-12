@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FiTag } from "react-icons/fi";
 import { Box } from "@chakra-ui/core";
+import QuickEditButton from "./QuickEditButton";
 import LabelsPopover from "../../labels/components/LabelsPopover";
 import MoveTaskPopover from "./MoveTaskPopover";
 import DueDatePopover from "./DueDatePopover";
-import QuickEditButton from "./QuickEditButton";
 import RemoveTaskPopover from "./RemoveTaskPopover";
+import CopyTaskPopover from "./CopyTaskPopover";
 
 const QuickEditSideBar = ({ taskId, columnId }) => {
   return (
@@ -19,6 +20,11 @@ const QuickEditSideBar = ({ taskId, columnId }) => {
         taskId={taskId}
         columnId={columnId}
         trigger={<QuickEditButton icon="arrow-forward" label="Move" />}
+      />
+      <CopyTaskPopover
+        taskId={taskId}
+        columnId={columnId}
+        trigger={<QuickEditButton icon="copy" label="Copy" />}
       />
       <DueDatePopover
         taskId={taskId}

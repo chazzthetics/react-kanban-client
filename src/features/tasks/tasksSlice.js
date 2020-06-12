@@ -45,6 +45,7 @@ const tasksSlice = createSlice({
       tasksAdapter.removeOne(state, taskId);
       state.status = status;
       state.error = error;
+      state.dragDisabled = false;
     },
     titleUpdated(state, action) {
       const {
@@ -155,6 +156,7 @@ const tasksSlice = createSlice({
       });
       state.status = status;
       state.error = error;
+      state.dragDisabled = false;
     },
     dueDateRemoved(state, action) {
       const { taskId, status = "success", error = null } = action.payload;
@@ -166,6 +168,7 @@ const tasksSlice = createSlice({
       });
       state.status = status;
       state.error = error;
+      state.dragDisabled = false;
     },
     checklistAdded(state, action) {
       const {
@@ -271,6 +274,24 @@ const tasksSlice = createSlice({
         id: taskId,
         changes: { isQuickOpen: false }
       });
+    },
+    copied(state, action) {
+      const { task, status = "success", error = null } = action.payload;
+      tasksAdapter.addOne(state, task);
+
+      const tasksToUpdate = state.ids
+        .filter(id => id !== task.uuid)
+        .filter(id => state.entities[id].position >= task.position);
+
+      tasksAdapter.updateMany(
+        state,
+        tasksToUpdate.map(
+          id => (state.entities[id].position = state.entities[id].position + 1)
+        )
+      );
+      state.status = status;
+      state.error = error;
+      state.dragDisabled = false;
     }
   },
   extraReducers: {
@@ -379,7 +400,8 @@ export const {
   reorderedBetween,
   sortedBy,
   quickEditOpened,
-  quickEditClosed
+  quickEditClosed,
+  copied
 } = tasksSlice.actions;
 export default tasksSlice.reducer;
 
@@ -670,5 +692,15 @@ export const reorderBetween = ({
         endOrder: prevEndOrder
       })
     );
+  }
+};
+
+export const copyTask = ({ columnId, taskId, task }) => async dispatch => {
+  try {
+    dispatch(copied({ columnId, taskId, task }));
+    await tasksService.copy(taskId, { columnId, task });
+    dispatch(fetchMostRecentActivity());
+  } catch (ex) {
+    //TODO:
   }
 };

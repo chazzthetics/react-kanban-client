@@ -195,6 +195,11 @@ const columnsSlice = createSlice({
         id: endColumnId,
         changes: { tasks: endOrder }
       });
+    },
+    "tasks/copied": (state, action) => {
+      const { columnId, task } = action.payload;
+      const tasks = state.entities[columnId].tasks;
+      tasks.splice(task.position, 0, task.uuid);
     }
   }
 });
@@ -370,5 +375,7 @@ export const copyColumn = ({
     dispatch(copied({ boardId, columnId, column, tasks }));
     await columnsService.copy(columnId, { column, tasks });
     dispatch(fetchActivities());
-  } catch (ex) {}
+  } catch (ex) {
+    //TODO:
+  }
 };
